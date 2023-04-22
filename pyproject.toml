@@ -8,9 +8,8 @@ authors = [{name = "Lamin Labs", email = "laminlabs@gmail.com"}]
 readme = "README.md"
 dynamic = ["version", "description"]
 dependencies = [
-    # do not pin a lamindb version
-    # just set a lower bound
-    "lamindb[bionty,wetlab]==0.38.0",
+    "lnschema_core",
+    "lnbase_biolab",
     "openpyxl",
     "psycopg2-binary",
     "gcsfs",
@@ -28,6 +27,7 @@ test = [
     "pytest>=6.0",
     "pytest-cov",
     "nbproject_test>=0.4.1",
+    "lamindb[bionty],
 ]
 
 [tool.black]
