@@ -22,7 +22,7 @@ class Experiment(ExperimentBase, table=True):  # type: ignore
     """Experiments."""
 
     experiment_type_id: str = Field(
-        default=None, foreign_key="wetlab.experiment_type.id", index=True
+        default=None, foreign_key="lamin1.experiment_type.id", index=True
     )
     files: File = Relationship(
         back_populates="experiments",
