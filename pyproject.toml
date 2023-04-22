@@ -27,7 +27,7 @@ test = [
     "pytest>=6.0",
     "pytest-cov",
     "nbproject_test>=0.4.1",
-    "lamindb[bionty],
+    "lamindb[bionty]",
 ]
 
 [tool.black]
