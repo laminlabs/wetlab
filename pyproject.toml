@@ -1,0 +1,44 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "lnschema_lamin1"
+authors = [{name = "Lamin Labs", email = "laminlabs@gmail.com"}]
+readme = "README.md"
+dynamic = ["version", "description"]
+dependencies = [
+    # do not pin a lamindb version
+    # just set a lower bound
+    "lamindb[bionty,wetlab]==0.38.0",
+    "openpyxl",
+    "psycopg2-binary",
+    "gcsfs",
+]
+
+[project.urls]
+Home = "https://github.com/laminlabs/lnschema-lamin1"
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "nox",
+]
+test = [
+    "pytest>=6.0",
+    "pytest-cov",
+    "nbproject_test>=0.4.1",
+]
+
+[tool.black]
+preview = true
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.run]
+omit = [
+    "lnschema_lamin1/*",
+]
