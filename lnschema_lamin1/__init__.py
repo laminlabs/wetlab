@@ -26,7 +26,7 @@ Development tools:
 
 _schema_id = "tvhn"
 _name = "lamin1"
-_migration = None
+_migration = "652443621d5a"
 __version__ = "0.15.1"
 
 # prints warning of python versions
