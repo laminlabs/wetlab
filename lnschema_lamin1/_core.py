@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship
 from sqlmodel import Field, Relationship
 
 from . import _name as schema_name
-from .link import BiosampleTechsample, FileBiosample, FileExperiment
+from .link import BiosampleTechsample, FileBiosample, FileCellType, FileExperiment
 
 _, prefix, schema_arg = schema_sqlmodel(schema_name)
 
@@ -71,8 +71,7 @@ class Biosample(BiosampleBase, table=True):  # type: ignore
 File.biosamples = relationship(
     Biosample, back_populates="files", secondary=FileBiosample.__table__
 )
-File.__sqlmodel_relationships__["biosamples"] = None
-
+File.cell_types = relationship(CellType, secondary=FileCellType.__table__)
 add_relationship_keys(Biosample)
 
 

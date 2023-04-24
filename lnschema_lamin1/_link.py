@@ -40,3 +40,12 @@ class FileBiosample(SQLModel, table=True):  # type: ignore
 
     file_id: str = Field(foreign_key="core.file.id", primary_key=True)
     biosample_id: str = Field(foreign_key="lamin1.biosample.id", primary_key=True)
+
+
+class FileCellType(SQLModel, table=True):  # type: ignore
+    """Links for `File` and `CellType`."""
+
+    __tablename__ = f"{prefix}file_cell_type"
+
+    file_id: str = Field(foreign_key="core.file.id", primary_key=True)
+    cell_type_id: str = Field(foreign_key="bionty.cell_type.id", primary_key=True)
