@@ -25,7 +25,7 @@ repos:
         language_version: python3
         args:
           - --max-line-length=176
-          - --ignore=E203
+          - --ignore=E203,BLK100
         exclude: |
           (?x)(
               __init__.py

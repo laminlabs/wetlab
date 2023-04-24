@@ -22,12 +22,8 @@ def upgrade() -> None:
             ["bionty.cell_type.id"],
             name=op.f("fk_file_cell_type_cell_type_id_cell_type"),
         ),
-        sa.ForeignKeyConstraint(
-            ["file_id"], ["core.file.id"], name=op.f("fk_file_cell_type_file_id_file")
-        ),
-        sa.PrimaryKeyConstraint(
-            "file_id", "cell_type_id", name=op.f("pk_file_cell_type")
-        ),
+        sa.ForeignKeyConstraint(["file_id"], ["core.file.id"], name=op.f("fk_file_cell_type_file_id_file")),
+        sa.PrimaryKeyConstraint("file_id", "cell_type_id", name=op.f("pk_file_cell_type")),
         schema=schema,
     )
 
