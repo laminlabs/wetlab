@@ -29,7 +29,6 @@ class Experiment(ExperimentBase, table=True):  # type: ignore
 
 
 File.experiments = relationship(Experiment, back_populates="files", secondary=FileExperiment.__table__)
-File.__sqlmodel_relationships__["experiments"] = None
 
 
 class ExperimentType(ExperimentTypeBase, table=True):  # type: ignore
@@ -58,7 +57,7 @@ class Biosample(BiosampleBase, table=True):  # type: ignore
 
 File.biosamples = relationship(Biosample, back_populates="files", secondary=FileBiosample.__table__)
 File.cell_types = relationship(CellType, secondary=FileCellType.__table__)
-add_relationship_keys(Biosample)
+add_relationship_keys(File)
 
 
 class Techsample(TechsampleBase, table=True):  # type: ignore
@@ -70,3 +69,4 @@ class Techsample(TechsampleBase, table=True):  # type: ignore
 
 Biosample.techsamples = relationship(Techsample, back_populates="biosamples", secondary=BiosampleTechsample.__table__)
 Biosample.__sqlmodel_relationships__["techsamples"] = None
+add_relationship_keys(Biosample)
