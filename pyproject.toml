@@ -8,11 +8,7 @@ authors = [{name = "Lamin Labs", email = "laminlabs@gmail.com"}]
 readme = "README.md"
 dynamic = ["version", "description"]
 dependencies = [
-    "lnschema_core",
-    "lnbase_biolab",
-    "openpyxl",
-    "psycopg2-binary",
-    "gcsfs",
+    "lamindb[bionty,lamin1]",
 ]
 
 [project.urls]
@@ -27,7 +23,6 @@ test = [
     "pytest>=6.0",
     "pytest-cov",
     "nbproject_test>=0.4.1",
-    "lamindb[bionty]",
 ]
 
 [tool.black]
