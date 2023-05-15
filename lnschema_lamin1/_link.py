@@ -24,6 +24,24 @@ class FileExperiment(SQLModel, table=True):  # type: ignore
     experiment_id: str = Field(foreign_key="lamin1.experiment.id", primary_key=True)
 
 
+class FileTreatment(SQLModel, table=True):  # type: ignore
+    """Links for `File` and `Treatment`."""
+
+    __tablename__ = f"{prefix}file_treatment"
+
+    file_id: str = Field(foreign_key="core.file.id", primary_key=True)
+    treatment_id: str = Field(foreign_key="lamin1.treatment.id", primary_key=True)
+
+
+class BiosampleTreatment(SQLModel, table=True):  # type: ignore
+    """Links for `Biosample` and `Treatment`."""
+
+    __tablename__ = f"{prefix}biosample_treatment"
+
+    biosample_id: str = Field(foreign_key="lamin1.biosample.id", primary_key=True)
+    treatment_id: str = Field(foreign_key="lamin1.treatment.id", primary_key=True)
+
+
 class BiosampleTechsample(SQLModel, table=True):  # type: ignore
     """Links for `Biosample` and `Techsample`."""
 
