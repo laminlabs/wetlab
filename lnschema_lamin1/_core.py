@@ -38,13 +38,13 @@ class Experiment(ExperimentBase, table=True):  # type: ignore
     )
 
 
-File.experiments = relationship(Experiment, back_populates="files", secondary=FileExperiment.__table__)
-
-
 class ExperimentType(ExperimentTypeBase, table=True):  # type: ignore
     """Experiment types."""
 
     __tablename__ = f"{prefix}experiment_type"
+
+
+File.experiments = relationship(Experiment, back_populates="files", secondary=FileExperiment.__table__)
 
 
 class Biosample(BiosampleBase, table=True):  # type: ignore
@@ -77,10 +77,14 @@ class Treatment(TreatmentBase, table=True):  # type: ignore
     off_target_score: Optional[float] = Field(default=None, index=True)
     ontology_id: Optional[str] = Field(default=None, index=True)
     pubchem_id: Optional[str] = Field(default=None, index=True)
+    files: File = Relationship(
+        back_populates="treatments",
+        sa_relationship_kwargs=dict(secondary=FileTreatment.__table__),
+    )
 
 
+File.treatments = relationship(Treatment, back_populates="files", secondary=FileTreatment.__table__)
 File.cell_types = relationship(CellType, secondary=FileCellType.__table__)
-File.treatments = relationship(Treatment, secondary=FileTreatment.__table__)
 add_relationship_keys(File)
 
 
@@ -94,3 +98,6 @@ class Techsample(TechsampleBase, table=True):  # type: ignore
 Biosample.techsamples = relationship(Techsample, back_populates="biosamples", secondary=BiosampleTechsample.__table__)
 Biosample.treatments = relationship(Treatment, secondary=BiosampleTreatment.__table__)
 add_relationship_keys(Biosample)
+
+Treatment.biosamples = relationship(Biosample, back_populates="treatments", secondary=BiosampleTreatment.__table__)
+add_relationship_keys(Treatment)
