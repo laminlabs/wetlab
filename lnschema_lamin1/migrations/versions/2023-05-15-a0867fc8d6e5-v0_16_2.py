@@ -1,4 +1,4 @@
-"""vX.X.X."""
+"""v0.16.2."""
 import sqlalchemy as sa  # noqa
 import sqlmodel  # noqa
 from alembic import op
