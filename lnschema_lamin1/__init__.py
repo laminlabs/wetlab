@@ -13,6 +13,7 @@ Examples of derived classes, typically configured:
    ExperimentType
    Biosample
    Techsample
+   Treatment
 
 Development tools:
 
@@ -26,7 +27,7 @@ Development tools:
 
 _schema_id = "tvhn"
 _name = "lamin1"
-_migration = "652443621d5a"
+_migration = "a0867fc8d6e5"
 __version__ = "0.16.1"
 
 # prints warning of python versions
@@ -36,4 +37,4 @@ py_version_warning("3.8", "3.10")
 
 
 from . import dev, link
-from ._core import Biosample, Experiment, ExperimentType, Techsample  # noqa
+from ._core import Biosample, Experiment, ExperimentType, Techsample, Treatment  # noqa

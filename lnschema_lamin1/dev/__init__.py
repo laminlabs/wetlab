@@ -16,5 +16,5 @@ Tracking versions & migrations:
    migration_tvhn
 
 """
-from . import id
+from . import id, type
 from ._versions import migration_tvhn, version_tvhn
