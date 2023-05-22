@@ -83,6 +83,9 @@ class Well(SQLModel, table=True):  # type: ignore
     )
 
 
+File.wells = relationship(Well, secondary=FileWell.__table__)
+
+
 class Treatment(TreatmentBase, table=True):  # type: ignore
     type: tp.treatment_type = Field(nullable=False, index=True)
     system: tp.treatment_system = Field(default=None, index=True)
@@ -101,7 +104,6 @@ class Treatment(TreatmentBase, table=True):  # type: ignore
 File.treatments = relationship(Treatment, back_populates="files", secondary=FileTreatment.__table__)
 File.cell_types = relationship(CellType, secondary=FileCellType.__table__)
 File.cell_line = relationship(CellLine, secondary=FileCellLine.__table__)
-File.wells = relationship(Well, secondary=FileWell.__table__)
 add_relationship_keys(File)
 
 
