@@ -19,5 +19,7 @@ from ._link import (  # noqa
     FileCellType,
     FileExperiment,
     FileTreatment,
+    FileCellLine,
+    FileWell,
     ProjectExperiment,
 )

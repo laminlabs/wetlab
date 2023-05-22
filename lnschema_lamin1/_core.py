@@ -7,11 +7,11 @@ from lnbase_biolab import (
     TechsampleBase,
     TreatmentBase,
 )
-from lnschema_bionty import CellType, Disease, Species, Tissue
+from lnschema_bionty import CellType, Disease, Species, Tissue, CellLine
 from lnschema_core import File
 from lnschema_core.dev.sqlmodel import add_relationship_keys, schema_sqlmodel
 from sqlalchemy.orm import relationship
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 from lnschema_lamin1.dev import type as tp
 
@@ -23,6 +23,8 @@ from .link import (
     FileCellType,
     FileExperiment,
     FileTreatment,
+    FileCellLine,
+    FileWell
 )
 
 _, prefix, schema_arg = schema_sqlmodel(schema_name)
@@ -85,6 +87,7 @@ class Treatment(TreatmentBase, table=True):  # type: ignore
 
 File.treatments = relationship(Treatment, back_populates="files", secondary=FileTreatment.__table__)
 File.cell_types = relationship(CellType, secondary=FileCellType.__table__)
+File.cell_line = relationship(CellLine, secondary=FileCellLine.__table__)
 add_relationship_keys(File)
 
 
@@ -101,3 +104,12 @@ add_relationship_keys(Biosample)
 
 Treatment.biosamples = relationship(Biosample, back_populates="treatments", secondary=BiosampleTreatment.__table__)
 add_relationship_keys(Treatment)
+
+class Well(SQLModel, table=True):  # type: ignore
+    row: Optional[str] = Field(default=None, index=True)
+    column: Optional[int] = Field(default=None, index=True)
+
+    files: File = Relationship(
+        back_populates="wells",
+        sa_relationship_kwargs=dict(secondary=FileWell.__table__),
+    )
