@@ -67,3 +67,21 @@ class FileCellType(SQLModel, table=True):  # type: ignore
 
     file_id: str = Field(foreign_key="core.file.id", primary_key=True)
     cell_type_id: str = Field(foreign_key="bionty.cell_type.id", primary_key=True)
+
+
+class FileCellLine(SQLModel, table=True):  # type: ignore
+    """Links for `File` and `CellLine`."""
+
+    __tablename__ = f"{prefix}file_cell_line"
+
+    file_id: str = Field(foreign_key="core.file.id", primary_key=True)
+    cell_line_id: str = Field(foreign_key="bionty.cell_line.id", primary_key=True)
+
+
+class FileWell(SQLModel, table=True):  # type: ignore
+    """Links for `File` and `Well`."""
+
+    __tablename__ = f"{prefix}file_well"
+
+    file_id: str = Field(foreign_key="core.file.id", primary_key=True)
+    well_id: str = Field(foreign_key="lamin1.well.id", primary_key=True)
