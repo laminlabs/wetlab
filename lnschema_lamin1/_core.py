@@ -7,7 +7,7 @@ from lnbase_biolab import (
     TechsampleBase,
     TreatmentBase,
 )
-from lnschema_bionty import CellType, Disease, Species, Tissue
+from lnschema_bionty import CellLine, CellType, Disease, Species, Tissue
 from lnschema_core import File
 from lnschema_core.dev.sqlmodel import add_relationship_keys, schema_sqlmodel
 from sqlalchemy.orm import relationship
@@ -20,12 +20,14 @@ from .link import (
     BiosampleTechsample,
     BiosampleTreatment,
     FileBiosample,
+    FileCellLine,
     FileCellType,
     FileExperiment,
     FileTreatment,
+    FileWell,
 )
 
-_, prefix, schema_arg = schema_sqlmodel(schema_name)
+SQLModel, prefix, schema_arg = schema_sqlmodel(schema_name)
 
 
 class Experiment(ExperimentBase, table=True):  # type: ignore
@@ -68,6 +70,21 @@ class Biosample(BiosampleBase, table=True):  # type: ignore
 File.biosamples = relationship(Biosample, back_populates="files", secondary=FileBiosample.__table__)
 
 
+class Well(SQLModel, table=True):  # type: ignore
+    """Wells in a experimental plate."""
+
+    row: str = Field(primary_key=True)
+    column: int = Field(primary_key=True)
+
+    files: File = Relationship(
+        back_populates="wells",
+        sa_relationship_kwargs=dict(secondary=FileWell.__table__),
+    )
+
+
+File.wells = relationship(Well, secondary=FileWell.__table__)
+
+
 class Treatment(TreatmentBase, table=True):  # type: ignore
     type: tp.treatment_type = Field(nullable=False, index=True)
     system: tp.treatment_system = Field(default=None, index=True)
@@ -85,6 +102,7 @@ class Treatment(TreatmentBase, table=True):  # type: ignore
 
 File.treatments = relationship(Treatment, back_populates="files", secondary=FileTreatment.__table__)
 File.cell_types = relationship(CellType, secondary=FileCellType.__table__)
+File.cell_line = relationship(CellLine, secondary=FileCellLine.__table__)
 add_relationship_keys(File)
 
 
