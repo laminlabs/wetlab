@@ -35,18 +35,18 @@ schema_sqlmodel(schema_name)
 SQLModel = get_orm(module_name)
 
 
+class ExperimentType(ExperimentTypeBase, table=True):  # type: ignore
+    """Experiment types."""
+
+
 class Experiment(ExperimentBase, table=True):  # type: ignore
     """Experiments."""
 
-    experiment_type_id: str = Field(default=None, foreign_key="lnschema_lamin1_experimenttype.id", index=True)
+    experiment_type_id: str = Field(default=None, foreign_key=ExperimentType.id, index=True)
     files: File = Relationship(
         back_populates="experiments",
         sa_relationship_kwargs=dict(secondary=FileExperiment.__table__),
     )
-
-
-class ExperimentType(ExperimentTypeBase, table=True):  # type: ignore
-    """Experiment types."""
 
 
 File.experiments = relationship(Experiment, back_populates="files", secondary=FileExperiment.__table__)
@@ -56,13 +56,13 @@ class Biosample(BiosampleBase, table=True):  # type: ignore
     """Biological samples that are registered in experiments."""
 
     batch: Optional[str] = None
-    species_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_species.id", index=True)
+    species_id: Optional[str] = Field(default=None, foreign_key=Species.id, index=True)
     species: Species = Relationship()
-    tissue_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_tissue.id", index=True)
+    tissue_id: Optional[str] = Field(default=None, foreign_key=Tissue.id, index=True)
     tissue: Tissue = Relationship()
-    cell_type_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_cell_type.id", index=True)
+    cell_type_id: Optional[str] = Field(default=None, foreign_key=CellType.id, index=True)
     cell_type: CellType = Relationship()
-    disease_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_disease.id", index=True)
+    disease_id: Optional[str] = Field(default=None, foreign_key=Disease.id, index=True)
     disease: Disease = Relationship()
     files: File = Relationship(
         back_populates="biosamples",

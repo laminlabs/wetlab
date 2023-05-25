@@ -1,4 +1,4 @@
-from lnschem_core.dev.sqlmodel import get_orm
+from lnschema_core.dev.sqlmodel import get_orm
 from sqlmodel import Field, ForeignKeyConstraint
 
 from . import __name__ as module_name
@@ -52,14 +52,14 @@ class FileCellType(SQLModel, table=True):  # type: ignore
     """Links for `File` and `CellType`."""
 
     file_id: str = Field(foreign_key="lnschema_core_file.id", primary_key=True)
-    cell_type_id: str = Field(foreign_key="lnschema_bionty_cell_type.id", primary_key=True)
+    cell_type_id: str = Field(foreign_key="lnschema_bionty_celltype.id", primary_key=True)
 
 
 class FileCellLine(SQLModel, table=True):  # type: ignore
     """Links for `File` and `CellLine`."""
 
     file_id: str = Field(foreign_key="lnschema_core_file.id", primary_key=True)
-    cell_line_id: str = Field(foreign_key="lnschema_bionty_cell_line.id", primary_key=True)
+    cell_line_id: str = Field(foreign_key="lnschema_bionty_cellline.id", primary_key=True)
 
 
 class FileWell(SQLModel, table=True):  # type: ignore
@@ -69,7 +69,9 @@ class FileWell(SQLModel, table=True):  # type: ignore
     well_row: str = Field(primary_key=True)
     well_column: int = Field(primary_key=True)
 
-    __table_args__ = ForeignKeyConstraint(
-        ["well_row", "well_column"],
-        ["lnschema_lamin1_well.row", "lnschema_lamin1_well.column"],
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["well_row", "well_column"],
+            ["lnschema_lamin1_well.row", "lnschema_lamin1_well.column"],
+        ),
     )
