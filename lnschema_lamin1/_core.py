@@ -9,12 +9,13 @@ from lnbase_biolab import (
 )
 from lnschema_bionty import CellLine, CellType, Disease, Species, Tissue
 from lnschema_core import File
-from lnschema_core.dev.sqlmodel import add_relationship_keys, schema_sqlmodel
+from lnschema_core.dev.sqlmodel import add_relationship_keys, get_orm, schema_sqlmodel
 from sqlalchemy.orm import relationship
 from sqlmodel import Field, Relationship
 
 from lnschema_lamin1.dev import type as tp
 
+from . import __name__ as module_name
 from . import _name as schema_name
 from .link import (
     BiosampleTechsample,
@@ -27,13 +28,17 @@ from .link import (
     FileWell,
 )
 
-SQLModel, prefix, schema_arg = schema_sqlmodel(schema_name)
+# this is for backward compat
+schema_sqlmodel(schema_name)
+
+# this is the current way
+SQLModel = get_orm(module_name)
 
 
 class Experiment(ExperimentBase, table=True):  # type: ignore
     """Experiments."""
 
-    experiment_type_id: str = Field(default=None, foreign_key="lamin1.experiment_type.id", index=True)
+    experiment_type_id: str = Field(default=None, foreign_key="lnschema_lamin1_experimenttype.id", index=True)
     files: File = Relationship(
         back_populates="experiments",
         sa_relationship_kwargs=dict(secondary=FileExperiment.__table__),
@@ -43,8 +48,6 @@ class Experiment(ExperimentBase, table=True):  # type: ignore
 class ExperimentType(ExperimentTypeBase, table=True):  # type: ignore
     """Experiment types."""
 
-    __tablename__ = f"{prefix}experiment_type"
-
 
 File.experiments = relationship(Experiment, back_populates="files", secondary=FileExperiment.__table__)
 
@@ -53,13 +56,13 @@ class Biosample(BiosampleBase, table=True):  # type: ignore
     """Biological samples that are registered in experiments."""
 
     batch: Optional[str] = None
-    species_id: Optional[str] = Field(default=None, foreign_key="bionty.species.id", index=True)
+    species_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_species.id", index=True)
     species: Species = Relationship()
-    tissue_id: Optional[str] = Field(default=None, foreign_key="bionty.tissue.id", index=True)
+    tissue_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_tissue.id", index=True)
     tissue: Tissue = Relationship()
-    cell_type_id: Optional[str] = Field(default=None, foreign_key="bionty.cell_type.id", index=True)
+    cell_type_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_cell_type.id", index=True)
     cell_type: CellType = Relationship()
-    disease_id: Optional[str] = Field(default=None, foreign_key="bionty.disease.id", index=True)
+    disease_id: Optional[str] = Field(default=None, foreign_key="lnschema_bionty_disease.id", index=True)
     disease: Disease = Relationship()
     files: File = Relationship(
         back_populates="biosamples",
