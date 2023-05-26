@@ -14,6 +14,7 @@ Examples of derived classes, typically configured:
    Biosample
    Techsample
    Treatment
+   Well
 
 Development tools:
 
@@ -37,4 +38,11 @@ py_version_warning("3.8", "3.10")
 
 
 from . import dev, link
-from ._core import Biosample, Experiment, ExperimentType, Techsample, Treatment  # noqa
+from ._core import (  # noqa
+    Biosample,
+    Experiment,
+    ExperimentType,
+    Techsample,
+    Treatment,
+    Well,
+)
