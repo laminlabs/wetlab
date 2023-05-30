@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
-🏗️ Remove SQL-level schema modules | [9](https://github.com/laminlabs/lnschema-lamin1/pull/9) | [falexwolf](https://github.com/falexwolf) | 2023-05-25 | 0.17a2
+🏗️ Remove SQL-level schema modules | [9](https://github.com/laminlabs/lnschema-lamin1/pull/9) | [falexwolf](https://github.com/falexwolf) | 2023-05-25 | 0.17.0
 🎨 Add `Well` table, File.cell_lines | [8](https://github.com/laminlabs/lnschema-lamin1/pull/8) | [sunnyosun](https://github.com/sunnyosun) | 2023-05-23 | 0.16.3
 💚 Removed treatment relationships | [4](https://github.com/laminlabs/lnschema-lamin1/pull/4) | [sunnyosun](https://github.com/sunnyosun) | 2023-05-15 | 0.16.2
 ✨ Added `Treatment` table | [3](https://github.com/laminlabs/lnschema-lamin1/pull/3) | [sunnyosun](https://github.com/sunnyosun) | 2023-05-15 |
