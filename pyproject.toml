@@ -8,18 +8,17 @@ authors = [{name = "Lamin Labs", email = "laminlabs@gmail.com"}]
 readme = "README.md"
 dynamic = ["version", "description"]
 dependencies = [
-    "lamindb[bionty,biolab]>=0.41a5",  # do not pin lamindb, lamindb pins lnschema_lamin1!
+    "lnschema_bionty",  # do not pin lamindb, lamindb pins lnschema_lamin1!
 ]
 
 [project.urls]
 Home = "https://github.com/laminlabs/lnschema-lamin1"
 
 [project.optional-dependencies]
-dev = [
+test = [
+    "lamindb[bionty]",
     "pre-commit",
     "nox",
-]
-test = [
     "pytest>=6.0",
     "pytest-cov",
     "nbproject_test>=0.4.1",
