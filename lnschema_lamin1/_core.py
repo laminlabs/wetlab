@@ -46,9 +46,10 @@ class ExperimentType(SQLModel, table=True):  # type: ignore
 class Experiment(SQLModel, table=True):  # type: ignore
     """Experiments."""
 
-    id: str = Field(default_factory=idg.experiment_type, primary_key=True)
+    id: str = Field(default_factory=idg.experiment, primary_key=True)
     name: str = Field(default=None, index=True)
-    efo_id: str = Field(default=None, unique=True)
+    date: datetime = Field(default=None, index=True)
+    """Date on which the experiment is performed."""
     created_by: str = CreatedBy
     created_at: datetime = CreatedAt
     updated_at: Optional[datetime] = UpdatedAt
