@@ -16,7 +16,7 @@ Home = "https://github.com/laminlabs/lnschema-lamin1"
 
 [project.optional-dependencies]
 test = [
-    "lamindb[bionty]",
+    "lamindb[bionty]==0.42.2",
     "pre-commit",
     "nox",
     "pytest>=6.0",
