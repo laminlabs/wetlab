@@ -1,3 +1,11 @@
+"""Custom types.
+
+.. autosummary::
+   :toctree: .
+
+    treatment_type
+    treatment_system
+"""
 from enum import Enum
 
 
