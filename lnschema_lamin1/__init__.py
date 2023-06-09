@@ -28,14 +28,7 @@ Development tools:
 
 _schema_id = "tvhn"
 _name = "lamin1"
-_migration = "be880ab5ad00"
 __version__ = "0.18a1"
-
-# prints warning of python versions
-from lamin_logger import py_version_warning
-
-py_version_warning("3.8", "3.10")
-
 
 from . import dev, link
 from ._core import (  # noqa
