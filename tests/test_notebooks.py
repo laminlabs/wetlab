@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from nbproject._logger import logger
-from nbproject.dev import test
+import nbproject_test as test
 
 
 def test_notebooks():
@@ -12,5 +11,4 @@ def test_notebooks():
         # these are the notebook testpaths
         if not str(check_folder).endswith("guide"):
             continue
-        logger.debug(f"\n{check_folder}")
         test.execute_notebooks(check_folder, write=True)
