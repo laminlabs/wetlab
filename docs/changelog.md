@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+🚚 Finish first proper draft of migration | [12](https://github.com/laminlabs/lnschema-lamin1/pull/12) | [falexwolf](https://github.com/falexwolf) | 2023-06-11 |
 🚧 Partial migration to Django | [11](https://github.com/laminlabs/lnschema-lamin1/pull/11) | [falexwolf](https://github.com/falexwolf) | 2023-06-09 |
 ➖ Remove lnbase-biolab | [10](https://github.com/laminlabs/lnschema-lamin1/pull/10) | [falexwolf](https://github.com/falexwolf) | 2023-06-01 | 0.18a1
 🏗️ Remove SQL-level schema modules | [9](https://github.com/laminlabs/lnschema-lamin1/pull/9) | [falexwolf](https://github.com/falexwolf) | 2023-05-25 | 0.17.0
