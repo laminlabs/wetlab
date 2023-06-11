@@ -70,7 +70,7 @@ class Treatment(BaseORM):  # type: ignore
     id = models.CharField(max_length=12, default=Base62(12), primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     description = models.CharField(max_length=255, default=None, db_index=True)
-    type = models.CharField(max_length=20, choices=TreatmentType.choices(), nullable=False, db_index=True)
+    type = models.CharField(max_length=20, choices=TreatmentType.choices(), db_index=True)
     system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
     target = models.CharField(max_length=60, default=None, db_index=True)
     sequence = models.TextField(default=None, db_index=True)
