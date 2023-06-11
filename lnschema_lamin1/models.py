@@ -56,12 +56,7 @@ class Experiment(BaseORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_experiments",
-    )
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_experiments")
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -93,12 +88,7 @@ class Treatment(BaseORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_storages",
-    )
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_storages")
     """Creator of record, a :class:`~lamindb.User`."""
 
 
