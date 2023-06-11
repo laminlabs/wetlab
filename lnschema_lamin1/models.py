@@ -60,7 +60,7 @@ class Well(BaseORM):  # type: ignore
 
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
-    files = models.ManyToManyField(File, PROTECT, related_name="wells")
+    files = models.ManyToManyField(File, related_name="wells")
 
     class Meta:
         unique_together = (("row", "column"),)
@@ -94,11 +94,11 @@ class Biosample(BaseORM):  # type: ignore
     name = models.CharField(max_length=255, default=None, db_index=True, null=True)
     batch_name = models.CharField(max_length=60, default=None, null=True, db_index=True)
     species = models.ForeignKey(Species, PROTECT, related_name="biosamples")
-    tissue = models.ManyToManyField(Tissue, PROTECT, related_name="biosamples")
-    cell_line = models.ManyToManyField(CellLine, PROTECT, related_name="biosamples")
-    cell_type = models.ManyToManyField(CellType, PROTECT, related_name="biosamples")
-    disease = models.ManyToManyField(Disease, PROTECT, related_name="biosamples")
-    files = models.ManyToManyField(File, PROTECT, related_name="biosamples")
+    tissue = models.ManyToManyField(Tissue, related_name="biosamples")
+    cell_line = models.ManyToManyField(CellLine, related_name="biosamples")
+    cell_type = models.ManyToManyField(CellType, related_name="biosamples")
+    disease = models.ManyToManyField(Disease, related_name="biosamples")
+    files = models.ManyToManyField(File, related_name="biosamples")
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
