@@ -2,10 +2,11 @@ from enum import Enum
 from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty import CellLine, CellType, Disease, Species, Tissue
-from lnschema_core._users import current_user_id
+from lnschema_core.users import current_user_id
 from lnschema_core.models import BaseORM, User, File
 from lnschema_core.ids import Base62
 from lnschema_core.types import ChoicesMixin
+
 
 class ExperimentType(BaseORM):  # type: ignore
     """Experiment types."""
@@ -63,6 +64,43 @@ class Experiment(BaseORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
+class Well(BaseORM):  # type: ignore
+    """Wells in a experimental plate."""
+
+    row = models.CharField(max_length=4, default=None)
+    column = models.IntegerField()
+    files = models.ManyToManyField(File, PROTECT, related_name="wells")
+
+    class Meta:
+        unique_together = (("row", "column"),)
+
+
+class Treatment(BaseORM):  # type: ignore
+    id = models.CharField(max_length=12, default=Base62(12), primary_key=True)
+    name = models.CharField(max_length=255,default=None, db_index=True)
+    description = models.CharField(max_length=255, default=None, db_index=True)
+    type = models.CharField(max_length=20, choices=TreatmentType.choices(), nullable=False, db_index=True)
+    system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
+    target = models.CharField(max_length=60, default=None, db_index=True)
+    sequence = models.TextField(default=None, db_index=True)
+    on_target_score = models.FloatField(default=None, null=True, db_index=True)
+    off_target_score = models.FloatField(default=None, null=True, db_index=True)
+    ontology_id = models.CharField(max_length=20, default=None, db_index=True)
+    pubchem_id = models.CharField(max_length=20, default=None, db_index=True)
+    files = models.ManyToManyField(File, related_name="treatments")
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    """Time of creation of record."""
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    """Time of last update to record."""
+    created_by = models.ForeignKey(
+        User,
+        PROTECT,
+        default=current_user_id,
+        related_name="created_storages",
+    )
+    """Creator of record, a :class:`~lamindb.User`."""
+
+
 class Biosample(BaseORM):  # type: ignore
     """Biological samples that are registered in experiments."""
 
@@ -87,52 +125,11 @@ class Biosample(BaseORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Well(BaseORM):  # type: ignore
-    """Wells in a experimental plate."""
-
-    row = models.CharField(max_length=4, default=None)
-    column = models.IntegerField()
-    files = models.ManyToManyField(File, PROTECT, related_name="wells")
-
-    class Meta:
-        unique_together = (("row", "column"),)
-
-
-class Treatment(BaseORM):  # type: ignore
-    id = models.CharField(max_length=12, default=Base62(12), primary_key=True)
-    name = models.CharField(max_length=255,default=None, db_index=True)
-    description = models.CharField(max_length=255, default=None, db_index=True)
-    type = models.CharField(max_length=20, choices=TreatmentType.choices(), nullable=False, db_index=True)
-    system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
-    target = models.CharField(max_length=60, default=None, db_index=True)
-    sequence = models.CharField(max_length=60, default=None, db_index=True)
-    on_target_score = models.FloatField(default=None, null=True, db_index=True)
-    off_target_score = models.FloatField(default=None, null=True, db_index=True)
-    ontology_id = models.CharField(max_length=,default=None, db_index=True)
-    pubchem_id = models.CharField(max_length=,default=None, db_index=True)
-    files: File = Relationship(
-        back_populates="treatments",
-        sa_relationship_kwargs=dict(secondary=FileTreatment.__table__),
-    )
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_storages",
-    )
-    """Creator of record, a :class:`~lamindb.User`."""
-
-
 class Techsample(BaseORM):  # type: ignore
-    id: str = models.CharField(max_length=,default=idg.techsample, primary_key=True)
-    name: Optional[str] = models.CharField(max_length=,default=None, db_index=True)
-    batch: Optional[str] = None
-    filepath_r1: Optional[str] = None
-    filepath_r2: Optional[str] = None
+    id: str = models.CharField(max_length=12, default=Base62(12), primary_key=True)
+    name = models.CharField(max_length=255, default=None, db_index=True)
+    batch = models.CharField(max_length=60, default=None, db_index=True)
+    biosamples = models.ManyToManyField(Biosample, related_name="techsamples")
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -144,7 +141,3 @@ class Techsample(BaseORM):  # type: ignore
         related_name="created_storages",
     )
     """Creator of record, a :class:`~lamindb.User`."""
-    biosamples: Biosample = Relationship(
-        back_populates="techsamples",
-        sa_relationship_kwargs=dict(secondary=BiosampleTechsample.__table__),
-    )

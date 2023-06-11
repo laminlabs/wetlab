@@ -1,10 +1,10 @@
-"""Lamin's `lamin1` lab schema (`tvhn`).
+"""Lamin's `lamin1` exemplary lab schema.
 
 Import the package::
 
    import lnschema_lamin1
 
-Examples of derived classes, typically configured:
+ORMs:
 
 .. autosummary::
    :toctree: .
@@ -16,26 +16,20 @@ Examples of derived classes, typically configured:
    Treatment
    Well
 
-Development tools:
-
-.. autosummary::
-   :toctree: .
-
-   dev
-   link
-
 """
 
 _schema_id = "tvhn"
 _name = "lamin1"
 __version__ = "0.18a1"
 
-from . import dev, link
-from ._core import (  # noqa
-    Biosample,
-    Experiment,
-    ExperimentType,
-    Techsample,
-    Treatment,
-    Well,
-)
+from lamindb_setup import _check_instance_setup
+
+if _check_instance_setup():
+   from .models import (  # noqa
+      Biosample,
+      Experiment,
+      ExperimentType,
+      Techsample,
+      Treatment,
+      Well,
+   )
