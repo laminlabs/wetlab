@@ -25,11 +25,11 @@ __version__ = "0.18a1"
 from lamindb_setup import _check_instance_setup
 
 if _check_instance_setup():
-   from .models import (  # noqa
-      Biosample,
-      Experiment,
-      ExperimentType,
-      Techsample,
-      Treatment,
-      Well,
-   )
+    from .models import (  # noqa
+        Biosample,
+        Experiment,
+        ExperimentType,
+        Techsample,
+        Treatment,
+        Well,
+    )

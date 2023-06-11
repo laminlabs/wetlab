@@ -1,11 +1,12 @@
 from enum import Enum
+
 from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty import CellLine, CellType, Disease, Species, Tissue
-from lnschema_core.users import current_user_id
-from lnschema_core.models import BaseORM, User, File
 from lnschema_core.ids import Base62
+from lnschema_core.models import BaseORM, File, User
 from lnschema_core.types import ChoicesMixin
+from lnschema_core.users import current_user_id
 
 
 class ExperimentType(BaseORM):  # type: ignore
@@ -46,7 +47,7 @@ class Experiment(BaseORM):  # type: ignore
     """Experiments."""
 
     id: str = models.CharField(max_length=8, default=Base62(8), primary_key=True)
-    name: str = models.CharField(max_length=255,default=None, db_index=True)
+    name: str = models.CharField(max_length=255, default=None, db_index=True)
     date = models.DateTimeField(default=None, null=True, db_index=True)
     experiment_type = models.ForeignKey(ExperimentType, PROTECT, related_name="experiments")
     files = models.ManyToManyField(File, related_name="experiments")
@@ -77,7 +78,7 @@ class Well(BaseORM):  # type: ignore
 
 class Treatment(BaseORM):  # type: ignore
     id = models.CharField(max_length=12, default=Base62(12), primary_key=True)
-    name = models.CharField(max_length=255,default=None, db_index=True)
+    name = models.CharField(max_length=255, default=None, db_index=True)
     description = models.CharField(max_length=255, default=None, db_index=True)
     type = models.CharField(max_length=20, choices=TreatmentType.choices(), nullable=False, db_index=True)
     system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
@@ -108,7 +109,8 @@ class Biosample(BaseORM):  # type: ignore
     name = models.CharField(max_length=255, default=None, db_index=True, null=True)
     batch_name = models.CharField(max_length=60, default=None, null=True, db_index=True)
     species = models.ForeignKey(Species, PROTECT, related_name="biosamples")
-    tissue = models.ManyToManyField(Tissue, PROTECT, related_name="biosamples" )
+    tissue = models.ManyToManyField(Tissue, PROTECT, related_name="biosamples")
+    cell_line = models.ManyToManyField(CellLine, PROTECT, related_name="biosamples")
     cell_type = models.ManyToManyField(CellType, PROTECT, related_name="biosamples")
     disease = models.ManyToManyField(Disease, PROTECT, related_name="biosamples")
     files = models.ManyToManyField(File, PROTECT, related_name="biosamples")
