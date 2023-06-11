@@ -1,3 +1,3 @@
-# lnschema-lamin1: Customized schema of Lamin (`tvhn`)
+# `lnschema_lamin1`: Examplary lab schema
 
-Latest developer docs: [netlify](https://lnschema-lamin1-tvhn.netlify.app/docs/lnschema-lamin1/).
+Latest dev docs: [netlify](https://lnschema-lamin1-tvhn.netlify.app).
