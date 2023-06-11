@@ -19,12 +19,7 @@ class ExperimentType(BaseORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_experiment_types",
-    )
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_experiment_types")
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -108,12 +103,7 @@ class Biosample(BaseORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_storages",
-    )
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_storages")
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -126,10 +116,5 @@ class Techsample(BaseORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_storages",
-    )
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_storages")
     """Creator of record, a :class:`~lamindb.User`."""
