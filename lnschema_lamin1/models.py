@@ -2,7 +2,7 @@ from enum import Enum
 
 from django.db import models
 from django.db.models import PROTECT
-from lnschema_bionty import CellLine, CellType, Disease, Species, Tissue
+from lnschema_bionty.models import CellLine, CellType, Disease, Species, Tissue
 from lnschema_core.ids import Base62
 from lnschema_core.models import BaseORM, File, User
 from lnschema_core.types import ChoicesMixin
