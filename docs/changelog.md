@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+:recycle: Prettify | [13](https://github.com/laminlabs/lnschema-lamin1/pull/13) | [falexwolf](https://github.com/falexwolf) | 2023-06-12 |
 🚚 Finish first proper draft of migration | [12](https://github.com/laminlabs/lnschema-lamin1/pull/12) | [falexwolf](https://github.com/falexwolf) | 2023-06-11 |
 🚧 Partial migration to Django | [11](https://github.com/laminlabs/lnschema-lamin1/pull/11) | [falexwolf](https://github.com/falexwolf) | 2023-06-09 |
 ➖ Remove lnbase-biolab | [10](https://github.com/laminlabs/lnschema-lamin1/pull/10) | [falexwolf](https://github.com/falexwolf) | 2023-06-01 | 0.18a1
