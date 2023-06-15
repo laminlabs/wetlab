@@ -15,6 +15,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # only necessary for legacy instances
+        # migrations.RunSQL("alter table lnschema_lamin1_biosample rename to lnschema_lamin1_legacy_biosample"),
+        # migrations.RunSQL("alter table lnschema_lamin1_techsample rename to lnschema_lamin1_legacy_techsample"),
+        # migrations.RunSQL("alter table lnschema_lamin1_treatment rename to lnschema_lamin1_legacy_treatment"),
+        # migrations.RunSQL("alter table lnschema_lamin1_experimenttype rename to lnschema_lamin1_legacy_experimenttype"),
+        # migrations.RunSQL("alter table lnschema_lamin1_experiment rename to lnschema_lamin1_legacy_experiment"),
+        # migrations.RunSQL("alter table lnschema_lamin1_well rename to lnschema_lamin1_legacy_well"),
         migrations.CreateModel(
             name="Biosample",
             fields=[
@@ -36,10 +43,7 @@ class Migration(migrations.Migration):
                 ("species", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name="biosamples", to="lnschema_bionty.species")),
                 ("tissue", models.ManyToManyField(related_name="biosamples", to="lnschema_bionty.tissue")),
             ],
-            options={
-                "managed": False,
-                "abstract": False,
-            },
+            options={},
         ),
         migrations.CreateModel(
             name="Treatment",
@@ -81,10 +85,7 @@ class Migration(migrations.Migration):
                 ),
                 ("files", models.ManyToManyField(related_name="treatments", to="lnschema_core.file")),
             ],
-            options={
-                "managed": False,
-                "abstract": False,
-            },
+            options={},
         ),
         migrations.CreateModel(
             name="Techsample",
@@ -102,10 +103,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "managed": False,
-                "abstract": False,
-            },
+            options={},
         ),
         migrations.CreateModel(
             name="ExperimentType",
@@ -125,10 +123,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "managed": False,
-                "abstract": False,
-            },
+            options={},
         ),
         migrations.CreateModel(
             name="Experiment",
@@ -147,10 +142,7 @@ class Migration(migrations.Migration):
                 ("experiment_type", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name="experiments", to="lnschema_lamin1.experimenttype")),
                 ("files", models.ManyToManyField(related_name="experiments", to="lnschema_core.file")),
             ],
-            options={
-                "managed": False,
-                "abstract": False,
-            },
+            options={},
         ),
         migrations.CreateModel(
             name="Well",
@@ -161,7 +153,6 @@ class Migration(migrations.Migration):
                 ("files", models.ManyToManyField(related_name="wells", to="lnschema_core.file")),
             ],
             options={
-                "managed": False,
                 "unique_together": {("row", "column")},
             },
         ),
