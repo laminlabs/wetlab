@@ -10,6 +10,6 @@ jobs:
     steps:
       - uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN_DEPLOY_LAMINAPP }}
+          token: ${{ secrets.GH_TOKEN_DEPLOY_LAMINAPP }}
           repository: "laminlabs/laminapp"
           event-type: deploy
