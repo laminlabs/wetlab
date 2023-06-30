@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+⬆️ Upgrade to 0.45.0 | [17](https://github.com/laminlabs/lnschema-lamin1/pull/17) | [sunnyosun](https://github.com/sunnyosun) | 2023-06-30 |
 ⬆️ Bump lamindb to 0.44.0 | [16](https://github.com/laminlabs/lnschema-lamin1/pull/16) | [falexwolf](https://github.com/falexwolf) | 2023-06-21 | 0.19.0
 👷 Add app deploy workflow | [15](https://github.com/laminlabs/lnschema-lamin1/pull/15) | [falexwolf](https://github.com/falexwolf) | 2023-06-20 | 0.19a3
 ⬆️ Bump lamindb to 0.43.0 | [14](https://github.com/laminlabs/lnschema-lamin1/pull/14) | [fredericenard](https://github.com/fredericenard) | 2023-06-19 | 0.19a2
