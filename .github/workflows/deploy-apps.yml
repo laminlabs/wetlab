@@ -8,14 +8,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: peter-evans/repository-dispatch@v2
+      - name: Deploy lamindata laminapp
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_TOKEN_DEPLOY_LAMINAPP }}
           repository: "laminlabs/laminapp"
           event-type: deploy
           client-payload: '{"branch": "releases/lamindata/0.1"}'
 
-      - uses: peter-evans/repository-dispatch@v2
+      - name: Deploy altos laminapp
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_TOKEN_DEPLOY_LAMINAPP }}
           repository: "laminlabs/laminapp"
