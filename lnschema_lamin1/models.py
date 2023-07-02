@@ -4,12 +4,12 @@ from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Species, Tissue
 from lnschema_core import ids
-from lnschema_core.models import BaseORM, File, User
+from lnschema_core.models import ORM, File, User
 from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
 
-class ExperimentType(BaseORM):  # type: ignore
+class ExperimentType(ORM):  # type: ignore
     """Experiment types."""
 
     id: str = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
@@ -38,7 +38,7 @@ class TreatmentSystem(ChoicesMixin, Enum):
     transient_transfection = "transient transfection"
 
 
-class Experiment(BaseORM):  # type: ignore
+class Experiment(ORM):  # type: ignore
     """Experiments."""
 
     id: str = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
@@ -55,7 +55,7 @@ class Experiment(BaseORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Well(BaseORM):  # type: ignore
+class Well(ORM):  # type: ignore
     """Wells in a experimental plate."""
 
     row = models.CharField(max_length=4, default=None)
@@ -66,7 +66,7 @@ class Well(BaseORM):  # type: ignore
         unique_together = (("row", "column"),)
 
 
-class Treatment(BaseORM):  # type: ignore
+class Treatment(ORM):  # type: ignore
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     description = models.CharField(max_length=255, default=None, db_index=True)
@@ -87,7 +87,7 @@ class Treatment(BaseORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Biosample(BaseORM):  # type: ignore
+class Biosample(ORM):  # type: ignore
     """Biological samples that are registered in experiments."""
 
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
@@ -107,7 +107,7 @@ class Biosample(BaseORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Techsample(BaseORM):  # type: ignore
+class Techsample(ORM):  # type: ignore
     id: str = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     batch = models.CharField(max_length=60, default=None, db_index=True)
