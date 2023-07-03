@@ -69,22 +69,36 @@ class Well(ORM):  # type: ignore
 class Treatment(ORM):  # type: ignore
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
-    description = models.CharField(max_length=255, default=None, db_index=True)
+    """Name of the treatment."""
     type = models.CharField(max_length=20, choices=TreatmentType.choices(), db_index=True)
+    """Type of the treatment.
+    "genetic" or "chemical"
+    """
     system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
+    """System used for the genetic treatment."""
+    description = models.TextField(null=True, default=None)
+    """Description of the treatment."""
     target = models.CharField(max_length=60, default=None, db_index=True)
+    """Target of the treatment."""
     target_genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatments")
-    sequence = models.TextField(default=None, db_index=True)
+    """Target genes of the treatment, link to :class:`~lnschema_bionty.Gene` records."""
+    sequence = models.TextField(null=True, default=None, db_index=True)
+    """Sequence of the treatment."""
     on_target_score = models.FloatField(default=None, null=True, db_index=True)
+    """On-target score of the treatment."""
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
-    ontology_id = models.CharField(max_length=20, default=None, db_index=True)
-    pubchem_id = models.CharField(max_length=20, default=None, db_index=True)
+    """Off-target score of the treatment."""
+    ontology_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
+    """Ontology ID of the treatment."""
+    pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
+    """Pubchem ID of the chemical treatment."""
     files = models.ManyToManyField(File, related_name="treatments")
+    """Files linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_storages")
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_treatments")
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -104,7 +118,7 @@ class Biosample(ORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_storages")
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_biosamples")
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -117,5 +131,5 @@ class Techsample(ORM):  # type: ignore
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_storages")
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_techsamples")
     """Creator of record, a :class:`~lamindb.User`."""
