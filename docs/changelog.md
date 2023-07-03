@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+✨ Added target_genes | [19](https://github.com/laminlabs/lnschema-lamin1/pull/19) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-03 |
 🚚 Rename `BaesORM` to `ORM` | [18](https://github.com/laminlabs/lnschema-lamin1/pull/18) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-02 |
 ⬆️ Upgrade to 0.45.0 | [17](https://github.com/laminlabs/lnschema-lamin1/pull/17) | [sunnyosun](https://github.com/sunnyosun) | 2023-06-30 | 0.19.2
 ⬆️ Bump lamindb to 0.44.0 | [16](https://github.com/laminlabs/lnschema-lamin1/pull/16) | [falexwolf](https://github.com/falexwolf) | 2023-06-21 | 0.19.0
