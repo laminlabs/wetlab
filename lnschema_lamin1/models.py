@@ -73,6 +73,7 @@ class Treatment(ORM):  # type: ignore
     type = models.CharField(max_length=20, choices=TreatmentType.choices(), db_index=True)
     system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
     target = models.CharField(max_length=60, default=None, db_index=True)
+    target_genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatments")
     sequence = models.TextField(default=None, db_index=True)
     on_target_score = models.FloatField(default=None, null=True, db_index=True)
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
