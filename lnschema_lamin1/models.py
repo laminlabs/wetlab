@@ -76,7 +76,7 @@ class TreatmentTarget(ORM):
     """Description of the treatment target."""
     genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatment_targets")
     """Target genes of the treatment, link to :class:`~lnschema_bionty.Gene` records."""
-    files = models.ManyToManyField(File, related_name="genetic_perturbations")
+    files = models.ManyToManyField(File, related_name="treatment_targets")
     """Files linked to the treatment target."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
@@ -86,7 +86,7 @@ class TreatmentTarget(ORM):
         User,
         PROTECT,
         default=current_user_id,
-        related_name="created_genetic_perturbations",
+        related_name="created_treatment_targets",
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
