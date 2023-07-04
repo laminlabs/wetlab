@@ -14,6 +14,7 @@ ORMs:
    Biosample
    Techsample
    Treatment
+   TreatmentTarget
    Well
 
 """
@@ -31,5 +32,6 @@ if _check_instance_setup():
         ExperimentType,
         Techsample,
         Treatment,
+        TreatmentTarget,
         Well,
     )

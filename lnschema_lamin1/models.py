@@ -66,6 +66,31 @@ class Well(ORM):  # type: ignore
         unique_together = (("row", "column"),)
 
 
+class TreatmentTarget(ORM):
+    """Treatment target."""
+
+    id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
+    name = models.CharField(max_length=60, default=None, db_index=True)
+    """Name of the treatment target."""
+    description = models.TextField(null=True, default=None)
+    """Description of the treatment target."""
+    genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatment_targets")
+    """Target genes of the treatment, link to :class:`~lnschema_bionty.Gene` records."""
+    files = models.ManyToManyField(File, related_name="genetic_perturbations")
+    """Files linked to the treatment target."""
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    """Time of creation of record."""
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    """Time of last update to record."""
+    created_by = models.ForeignKey(
+        User,
+        PROTECT,
+        default=current_user_id,
+        related_name="created_genetic_perturbations",
+    )
+    """Creator of record, a :class:`~lamindb.User`."""
+
+
 class Treatment(ORM):  # type: ignore
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
@@ -78,10 +103,8 @@ class Treatment(ORM):  # type: ignore
     """System used for the genetic treatment."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment."""
-    target = models.CharField(max_length=60, default=None, db_index=True)
+    target = models.ForeignKey(TreatmentTarget, PROTECT, related_name="treatments")
     """Target of the treatment."""
-    target_genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatments")
-    """Target genes of the treatment, link to :class:`~lnschema_bionty.Gene` records."""
     sequence = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
     on_target_score = models.FloatField(default=None, null=True, db_index=True)
