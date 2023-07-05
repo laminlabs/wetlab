@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+🏷️ Change target to targets in Treatment | [23](https://github.com/laminlabs/lnschema-lamin1/pull/23) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-05 |
 🐛 Fix related names of TreatmentTarget | [22](https://github.com/laminlabs/lnschema-lamin1/pull/22) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-04 |
 ✨ Added TreatmentTarget | [21](https://github.com/laminlabs/lnschema-lamin1/pull/21) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-04 |
 🐛 Fix non-required fields | [20](https://github.com/laminlabs/lnschema-lamin1/pull/20) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-03 |
