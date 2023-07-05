@@ -103,8 +103,8 @@ class Treatment(ORM):  # type: ignore
     """System used for the genetic treatment."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment."""
-    target = models.ForeignKey(TreatmentTarget, PROTECT, related_name="treatments")
-    """Target of the treatment."""
+    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    """Targets of the treatment."""
     sequence = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
     on_target_score = models.FloatField(default=None, null=True, db_index=True)
