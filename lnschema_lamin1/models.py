@@ -14,7 +14,11 @@ class ExperimentType(ORM):  # type: ignore
 
     id: str = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
     name: str = models.CharField(max_length=255, default=None, db_index=True)
-    efo_id: str = models.CharField(max_length=30, default=None)
+    """Name of the experiment type."""
+    description = models.TextField(null=True, default=None)
+    """Description of the experiment."""
+    ontology_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
+    """Ontology ID (EFO) of the experiment type."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -43,8 +47,13 @@ class Experiment(ORM):  # type: ignore
 
     id: str = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
     name: str = models.CharField(max_length=255, default=None, db_index=True)
-    date = models.DateTimeField(default=None, null=True, db_index=True)
-    experiment_type = models.ForeignKey(ExperimentType, PROTECT, related_name="experiments")
+    """Name of the experiment."""
+    description = models.TextField(null=True, default=None)
+    """Description of the experiment."""
+    date = models.DateField(default=None, null=True, db_index=True)
+    """Date of the experiment."""
+    experiment_type = models.ForeignKey(ExperimentType, PROTECT, null=True, related_name="experiments")
+    """Type of the experiment."""
     files = models.ManyToManyField(File, related_name="experiments")
     """Date on which the experiment is performed."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -75,7 +84,7 @@ class TreatmentTarget(ORM):
     description = models.TextField(null=True, default=None)
     """Description of the treatment target."""
     genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatment_targets")
-    """Target genes of the treatment, link to :class:`~lnschema_bionty.Gene` records."""
+    """Genes of the treatment target, link to :class:`~lnschema_bionty.Gene` records."""
     files = models.ManyToManyField(File, related_name="treatment_targets")
     """Files linked to the treatment target."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -130,13 +139,23 @@ class Biosample(ORM):  # type: ignore
 
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True, null=True)
-    batch_name = models.CharField(max_length=60, default=None, null=True, db_index=True)
-    species = models.ForeignKey(Species, PROTECT, related_name="biosamples")
-    tissue = models.ManyToManyField(Tissue, related_name="biosamples")
-    cell_line = models.ManyToManyField(CellLine, related_name="biosamples")
-    cell_type = models.ManyToManyField(CellType, related_name="biosamples")
-    disease = models.ManyToManyField(Disease, related_name="biosamples")
+    """Name of the biosample."""
+    batch = models.CharField(max_length=60, default=None, null=True, db_index=True)
+    """Batch label of the biosample."""
+    description = models.TextField(null=True, default=None)
+    """Description of the biosample."""
+    species = models.ForeignKey(Species, PROTECT, null=True, related_name="biosamples")
+    """Species of the biosample."""
+    tissues = models.ManyToManyField(Tissue, related_name="biosamples")
+    """Tissues linked to the biosample."""
+    cell_lines = models.ManyToManyField(CellLine, related_name="biosamples")
+    """Cell lines linked to the biosample."""
+    cell_types = models.ManyToManyField(CellType, related_name="biosamples")
+    """Cell types linked to the biosample."""
+    diseases = models.ManyToManyField(Disease, related_name="biosamples")
+    """Diseases linked to the biosample."""
     files = models.ManyToManyField(File, related_name="biosamples")
+    """Files linked to the biosample."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -148,8 +167,13 @@ class Biosample(ORM):  # type: ignore
 class Techsample(ORM):  # type: ignore
     id: str = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
+    """Name of the techsample."""
     batch = models.CharField(max_length=60, default=None, db_index=True)
+    """Batch label of the techsample."""
+    description = models.TextField(null=True, default=None)
+    """Description of the techsample."""
     biosamples = models.ManyToManyField(Biosample, related_name="techsamples")
+    """Linked biosamples."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
