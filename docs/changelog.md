@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
-🍱 Added description to tables, change DateTime to Date field | [24](https://github.com/laminlabs/lnschema-lamin1/pull/24) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-06 | 0.20.0
+🍱 Added description to tables, change DateTime to Date field | [24](https://github.com/laminlabs/lnschema-lamin1/pull/24) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-06 | 0.20.2
 🏷️ Change target to targets in Treatment | [23](https://github.com/laminlabs/lnschema-lamin1/pull/23) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-05 |
 🐛 Fix related names of TreatmentTarget | [22](https://github.com/laminlabs/lnschema-lamin1/pull/22) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-04 |
 ✨ Added TreatmentTarget | [21](https://github.com/laminlabs/lnschema-lamin1/pull/21) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-04 |
