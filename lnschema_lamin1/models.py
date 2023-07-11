@@ -9,7 +9,7 @@ from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
 
-class ExperimentType(ORM):  # type: ignore
+class ExperimentType(ORM):
     """Experiment types."""
 
     id: str = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
@@ -42,7 +42,7 @@ class TreatmentSystem(ChoicesMixin, Enum):
     transient_transfection = "transient transfection"
 
 
-class Experiment(ORM):  # type: ignore
+class Experiment(ORM):
     """Experiments."""
 
     id: str = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
@@ -64,15 +64,16 @@ class Experiment(ORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Well(ORM):  # type: ignore
+class PlateWell(ORM):
     """Wells in a experimental plate."""
 
+    plate = models.IntegerField()
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
     files = models.ManyToManyField(File, related_name="wells")
 
     class Meta:
-        unique_together = (("row", "column"),)
+        unique_together = (("plate", "row", "column"),)
 
 
 class TreatmentTarget(ORM):
@@ -100,7 +101,7 @@ class TreatmentTarget(ORM):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Treatment(ORM):  # type: ignore
+class Treatment(ORM):
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
@@ -134,7 +135,7 @@ class Treatment(ORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Biosample(ORM):  # type: ignore
+class Biosample(ORM):
     """Biological samples that are registered in experiments."""
 
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
@@ -164,7 +165,7 @@ class Biosample(ORM):  # type: ignore
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Techsample(ORM):  # type: ignore
+class Techsample(ORM):
     id: str = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
