@@ -1,4 +1,4 @@
-name: Deploy altos laminapp
+name: Deploy laminapp REST API for altos
 
 on:
   release:
@@ -8,10 +8,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy altos laminapp
+      - name: Deploy laminapp REST API for altos
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_TOKEN_DEPLOY_LAMINAPP }}
           repository: "laminlabs/laminapp"
           event-type: deploy
-          client-payload: '{"branch": "releases/altos"}'
+          client-payload: '{"branch": "deploy-rest-api-altos"}'
