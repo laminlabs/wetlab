@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+⬆️ Lamindb 0.48a2 | [28](https://github.com/laminlabs/lnschema-lamin1/pull/28) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-21 |
 🔥 Remove altos instance delopyment | [27](https://github.com/laminlabs/lnschema-lamin1/pull/27) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-20 |
 🚚 Rename Well to PlateWell | [26](https://github.com/laminlabs/lnschema-lamin1/pull/26) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-11 | 0.21.0
 ⬆️ Upgrade to lamindb 0.47 | [25](https://github.com/laminlabs/lnschema-lamin1/pull/25) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-11 | 0.20.4
