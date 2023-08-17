@@ -4,12 +4,12 @@ from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Species, Tissue
 from lnschema_core import ids
-from lnschema_core.models import ORM, File, User
+from lnschema_core.models import File, Registry, User
 from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
 
-class ExperimentType(ORM):
+class ExperimentType(Registry):
     """Experiment types."""
 
     id: str = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
@@ -42,7 +42,7 @@ class TreatmentSystem(ChoicesMixin, Enum):
     transient_transfection = "transient transfection"
 
 
-class Experiment(ORM):
+class Experiment(Registry):
     """Experiments."""
 
     id: str = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
@@ -64,7 +64,7 @@ class Experiment(ORM):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class PlateWell(ORM):
+class PlateWell(Registry):
     """Wells in a experimental plate."""
 
     plate = models.IntegerField()
@@ -76,7 +76,7 @@ class PlateWell(ORM):
         unique_together = (("plate", "row", "column"),)
 
 
-class TreatmentTarget(ORM):
+class TreatmentTarget(Registry):
     """Treatment target."""
 
     id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
@@ -101,7 +101,7 @@ class TreatmentTarget(ORM):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Treatment(ORM):
+class Treatment(Registry):
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
@@ -135,7 +135,7 @@ class Treatment(ORM):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Biosample(ORM):
+class Biosample(Registry):
     """Biological samples that are registered in experiments."""
 
     id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
@@ -165,7 +165,7 @@ class Biosample(ORM):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Techsample(ORM):
+class Techsample(Registry):
     id: str = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
