@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+⬆️ Upgrade to lamindb 0.51 | [31](https://github.com/laminlabs/lnschema-lamin1/pull/31) | [sunnyosun](https://github.com/sunnyosun) | 2023-08-25 |
 ⬆️ Upgrade lamindb | [30](https://github.com/laminlabs/lnschema-lamin1/pull/30) | [fredericenard](https://github.com/fredericenard) | 2023-08-04 |
 ⬆️ Update to lamindb 0.49 | [29](https://github.com/laminlabs/lnschema-lamin1/pull/29) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-31 | 0.22.1
 ⬆️ Lamindb 0.48a2 | [28](https://github.com/laminlabs/lnschema-lamin1/pull/28) | [sunnyosun](https://github.com/sunnyosun) | 2023-07-21 |
