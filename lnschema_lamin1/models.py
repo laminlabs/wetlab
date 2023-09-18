@@ -12,8 +12,8 @@ from lnschema_core.users import current_user_id
 class ExperimentType(Registry):
     """Experiment types."""
 
-    id: str = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
-    name: str = models.CharField(max_length=255, default=None, db_index=True)
+    id = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
+    name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment type."""
     description = models.TextField(null=True, default=None)
     """Description of the experiment."""
@@ -45,8 +45,8 @@ class TreatmentSystem(ChoicesMixin, Enum):
 class Experiment(Registry):
     """Experiments."""
 
-    id: str = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
-    name: str = models.CharField(max_length=255, default=None, db_index=True)
+    id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
+    name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment."""
     description = models.TextField(null=True, default=None)
     """Description of the experiment."""
@@ -67,6 +67,7 @@ class Experiment(Registry):
 class PlateWell(Registry):
     """Wells in a experimental plate."""
 
+    id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
     plate = models.IntegerField()
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
@@ -166,7 +167,7 @@ class Biosample(Registry):
 
 
 class Techsample(Registry):
-    id: str = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
+    id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
     batch = models.CharField(max_length=60, default=None, db_index=True)
