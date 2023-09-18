@@ -15,7 +15,7 @@ ORMs:
    Techsample
    Treatment
    TreatmentTarget
-   PlateWell
+   Well
 
 """
 
@@ -30,8 +30,8 @@ if _check_instance_setup():
         Biosample,
         Experiment,
         ExperimentType,
-        PlateWell,
         Techsample,
         Treatment,
         TreatmentTarget,
+        Well,
     )

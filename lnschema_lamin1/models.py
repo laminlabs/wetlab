@@ -64,17 +64,17 @@ class Experiment(Registry):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class PlateWell(Registry):
+class Well(Registry):
     """Wells in a experimental plate."""
 
-    id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
-    plate = models.IntegerField()
+    id = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
+    name = models.CharField(max_length=32, default=None, null=True, unique=True, db_index=True)
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
     files = models.ManyToManyField(File, related_name="wells")
 
     class Meta:
-        unique_together = (("plate", "row", "column"),)
+        unique_together = (("row", "column"),)
 
 
 class TreatmentTarget(Registry):
