@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_lamin1", "0010_rename_platewell_well"),
         ("lnschema_core", "0023_export_legacy_data"),
+        ("lnschema_bionty", "0016_export_legacy_data"),
     ]
 
     operations = []  # type: ignore

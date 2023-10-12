@@ -12,7 +12,8 @@ from lnschema_core.users import current_user_id
 class ExperimentType(Registry):
     """Experiment types."""
 
-    id = models.CharField(max_length=4, default=ids.base62_4)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=4, default=ids.base62_4)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment type."""
     description = models.TextField(null=True, default=None)

@@ -23,8 +23,8 @@ class Migration(migrations.Migration):
     ]
 
     dependencies = [
-        ("lnschema_core", "0001_initial_squashed_0023"),
-        ("lnschema_bionty", "0001_initial_squashed_0016"),
+        ("lnschema_core", "0023_export_legacy_data"),
+        ("lnschema_bionty", "0016_export_legacy_data"),
     ]
 
     operations = []  # type: ignore
@@ -154,7 +154,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="ExperimentType",
             fields=[
-                ("id", models.CharField(default=lnschema_core.ids.base62_4, max_length=4)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("description", models.TextField(default=None, null=True)),
                 ("ontology_id", models.CharField(db_index=True, default=None, max_length=32, null=True)),
