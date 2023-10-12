@@ -12,7 +12,7 @@ from lnschema_core.users import current_user_id
 class ExperimentType(Registry):
     """Experiment types."""
 
-    id = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
+    id = models.CharField(max_length=4, default=ids.base62_4)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment type."""
     description = models.TextField(null=True, default=None)
@@ -45,7 +45,8 @@ class TreatmentSystem(ChoicesMixin, Enum):
 class Experiment(Registry):
     """Experiments."""
 
-    id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=8, default=ids.base62_8)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment."""
     description = models.TextField(null=True, default=None)
@@ -69,7 +70,8 @@ class Experiment(Registry):
 class Well(Registry):
     """Wells in a experimental plate."""
 
-    id = models.CharField(max_length=4, default=ids.base62_4, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=4, default=ids.base62_4)
     name = models.CharField(max_length=32, default=None, null=True, unique=True, db_index=True)
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
@@ -83,7 +85,8 @@ class Well(Registry):
 class TreatmentTarget(Registry):
     """Treatment target."""
 
-    id = models.CharField(max_length=8, default=ids.base62_8, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=8, default=ids.base62_8)
     name = models.CharField(max_length=60, default=None, db_index=True)
     """Name of the treatment target."""
     description = models.TextField(null=True, default=None)
@@ -106,7 +109,8 @@ class TreatmentTarget(Registry):
 
 
 class Treatment(Registry):
-    id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=12, default=ids.base62_12)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
     type = models.CharField(max_length=20, choices=TreatmentType.choices(), db_index=True)
@@ -144,7 +148,8 @@ class Treatment(Registry):
 class Biosample(Registry):
     """Biological samples that are registered in experiments."""
 
-    id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=12, default=ids.base62_12)
     name = models.CharField(max_length=255, default=None, db_index=True, null=True)
     """Name of the biosample."""
     batch = models.CharField(max_length=60, default=None, null=True, db_index=True)
@@ -174,7 +179,8 @@ class Biosample(Registry):
 
 
 class Techsample(Registry):
-    id = models.CharField(max_length=12, default=ids.base62_12, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=12, default=ids.base62_12)
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
     batch = models.CharField(max_length=60, default=None, db_index=True)
