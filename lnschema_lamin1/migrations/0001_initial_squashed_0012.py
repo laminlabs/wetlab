@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             name="Biosample",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("uid", models.CharField(default=lnschema_core.ids.base62_12, max_length=12)),
+                ("uid", models.CharField(unique=True, default=lnschema_core.ids.base62_12, max_length=12)),
                 ("name", models.CharField(db_index=True, default=None, max_length=255, null=True)),
                 ("batch", models.CharField(db_index=True, default=None, max_length=60, null=True)),
                 ("description", models.TextField(default=None, null=True)),
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
             name="TreatmentTarget",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("uid", models.CharField(default=lnschema_core.ids.base62_8, max_length=8)),
+                ("uid", models.CharField(unique=True, default=lnschema_core.ids.base62_8, max_length=8)),
                 ("name", models.CharField(db_index=True, default=None, max_length=60)),
                 ("description", models.TextField(default=None, null=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
@@ -87,7 +87,7 @@ class Migration(migrations.Migration):
             name="Treatment",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("uid", models.CharField(default=lnschema_core.ids.base62_12, max_length=12)),
+                ("uid", models.CharField(unique=True, default=lnschema_core.ids.base62_12, max_length=12)),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("type", models.CharField(choices=[("genetic", "genetic"), ("chemical", "chemical")], db_index=True, max_length=20)),
                 (
@@ -133,7 +133,7 @@ class Migration(migrations.Migration):
             name="Techsample",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("uid", models.CharField(default=lnschema_core.ids.base62_12, max_length=12)),
+                ("uid", models.CharField(unique=True, default=lnschema_core.ids.base62_12, max_length=12)),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("batch", models.CharField(db_index=True, default=None, max_length=60)),
                 ("description", models.TextField(default=None, null=True)),
@@ -178,7 +178,7 @@ class Migration(migrations.Migration):
             name="Experiment",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("uid", models.CharField(default=lnschema_core.ids.base62_8, max_length=8)),
+                ("uid", models.CharField(unique=True, default=lnschema_core.ids.base62_8, max_length=8)),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("description", models.TextField(default=None, null=True)),
                 ("date", models.DateField(db_index=True, default=None, null=True)),
@@ -202,7 +202,7 @@ class Migration(migrations.Migration):
             name="Well",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("uid", models.CharField(default=lnschema_core.ids.base62_4, max_length=4)),
+                ("uid", models.CharField(unique=True, default=lnschema_core.ids.base62_4, max_length=4)),
                 ("name", models.CharField(db_index=True, default=None, max_length=32, null=True, unique=True)),
                 ("row", models.CharField(default=None, max_length=4)),
                 ("column", models.IntegerField()),
