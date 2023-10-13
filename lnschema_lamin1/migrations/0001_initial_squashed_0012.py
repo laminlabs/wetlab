@@ -155,6 +155,7 @@ class Migration(migrations.Migration):
             name="ExperimentType",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("uid", models.CharField(default=lnschema_core.ids.base62_4, max_length=4, unique=True)),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("description", models.TextField(default=None, null=True)),
                 ("ontology_id", models.CharField(db_index=True, default=None, max_length=32, null=True)),
