@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
-⬆️ Upgrade lamindb | [37](https://github.com/laminlabs/lnschema-lamin1/pull/37) | [fredericenard](https://github.com/fredericenard) | 2023-10-18 |
+⬆️ Upgrade lamindb | [37](https://github.com/laminlabs/lnschema-lamin1/pull/37) | [fredericenard](https://github.com/fredericenard) | 2023-10-18 | 0.23.3
 🚚 Migrate to integer primary keys | [36](https://github.com/laminlabs/lnschema-lamin1/pull/36) | [falexwolf](https://github.com/falexwolf) | 2023-10-13 |
 ⬆️ Upgrade to lamindb 0.55 | [35](https://github.com/laminlabs/lnschema-lamin1/pull/35) | [sunnyosun](https://github.com/sunnyosun) | 2023-10-03 | 0.23.2
 🎨 Add test and trigger | [34](https://github.com/laminlabs/lnschema-lamin1/pull/34) | [falexwolf](https://github.com/falexwolf) | 2023-09-29 |
