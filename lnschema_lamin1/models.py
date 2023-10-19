@@ -2,7 +2,7 @@ from enum import Enum
 
 from django.db import models
 from django.db.models import PROTECT
-from lnschema_bionty.models import CellLine, CellType, Disease, Species, Tissue
+from lnschema_bionty.models import CellLine, CellType, Disease, Organism, Tissue
 from lnschema_core import ids
 from lnschema_core.models import Dataset, File, Registry, User
 from lnschema_core.types import ChoicesMixin
@@ -157,8 +157,8 @@ class Biosample(Registry):
     """Batch label of the biosample."""
     description = models.TextField(null=True, default=None)
     """Description of the biosample."""
-    species = models.ForeignKey(Species, PROTECT, null=True, related_name="biosamples")
-    """Species of the biosample."""
+    organism = models.ForeignKey(Organism, PROTECT, null=True, related_name="biosamples")
+    """Organism of the biosample."""
     tissues = models.ManyToManyField(Tissue, related_name="biosamples")
     """Tissues linked to the biosample."""
     cell_lines = models.ManyToManyField(CellLine, related_name="biosamples")
