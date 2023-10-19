@@ -21,7 +21,7 @@ ORMs:
 
 _schema_id = "tvhn"
 _name = "lamin1"
-__version__ = "0.23.4"
+__version__ = "0.23.5"
 
 from lamindb_setup import _check_instance_setup
 
