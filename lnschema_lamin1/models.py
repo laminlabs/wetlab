@@ -4,12 +4,12 @@ from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Organism, Tissue
 from lnschema_core import ids
-from lnschema_core.models import Dataset, File, Registry, User
+from lnschema_core.models import CanValidate, Dataset, File, Registry, User
 from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
 
-class ExperimentType(Registry):
+class ExperimentType(Registry, CanValidate):
     """Experiment types."""
 
     id = models.AutoField(primary_key=True)
@@ -43,7 +43,7 @@ class TreatmentSystem(ChoicesMixin, Enum):
     transient_transfection = "transient transfection"
 
 
-class Experiment(Registry):
+class Experiment(Registry, CanValidate):
     """Experiments."""
 
     id = models.AutoField(primary_key=True)
@@ -68,7 +68,7 @@ class Experiment(Registry):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Well(Registry):
+class Well(Registry, CanValidate):
     """Wells in a experimental plate."""
 
     id = models.AutoField(primary_key=True)
@@ -83,7 +83,7 @@ class Well(Registry):
         unique_together = (("row", "column"),)
 
 
-class TreatmentTarget(Registry):
+class TreatmentTarget(Registry, CanValidate):
     """Treatment target."""
 
     id = models.AutoField(primary_key=True)
@@ -109,7 +109,7 @@ class TreatmentTarget(Registry):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Treatment(Registry):
+class Treatment(Registry, CanValidate):
     id = models.AutoField(primary_key=True)
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     name = models.CharField(max_length=255, default=None, db_index=True)
@@ -146,7 +146,7 @@ class Treatment(Registry):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Biosample(Registry):
+class Biosample(Registry, CanValidate):
     """Biological samples that are registered in experiments."""
 
     id = models.AutoField(primary_key=True)
@@ -179,7 +179,7 @@ class Biosample(Registry):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Techsample(Registry):
+class Techsample(Registry, CanValidate):
     id = models.AutoField(primary_key=True)
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     name = models.CharField(max_length=255, default=None, db_index=True)
