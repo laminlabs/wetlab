@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
-♻️ Add CanValidate | [40](https://github.com/laminlabs/lnschema-lamin1/pull/40) | [falexwolf](https://github.com/falexwolf) | 2023-11-06 |
+♻️ Add CanValidate | [40](https://github.com/laminlabs/lnschema-lamin1/pull/40) | [falexwolf](https://github.com/falexwolf) | 2023-11-06 | 0.23.7
 ⬆️ Update to lamindb 0.58.2 | [39](https://github.com/laminlabs/lnschema-lamin1/pull/39) | [sunnyosun](https://github.com/sunnyosun) | 2023-10-27 |
 🚚 Rename species to organism | [38](https://github.com/laminlabs/lnschema-lamin1/pull/38) | [sunnyosun](https://github.com/sunnyosun) | 2023-10-19 | 0.23.5
 ⬆️ Upgrade lamindb | [37](https://github.com/laminlabs/lnschema-lamin1/pull/37) | [fredericenard](https://github.com/fredericenard) | 2023-10-18 | 0.23.3
