@@ -13,7 +13,9 @@ class ExperimentType(Registry, CanValidate):
     """Experiment types."""
 
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=4, default=ids.base62_4)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment type."""
     description = models.TextField(null=True, default=None)
@@ -47,7 +49,9 @@ class Experiment(Registry, CanValidate):
     """Experiments."""
 
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=8, default=ids.base62_8)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment."""
     description = models.TextField(null=True, default=None)
@@ -69,10 +73,12 @@ class Experiment(Registry, CanValidate):
 
 
 class Well(Registry, CanValidate):
-    """Wells in a experimental plate."""
+    """Wells."""
 
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=4, default=ids.base62_4)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=32, default=None, null=True, unique=True, db_index=True)
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
@@ -84,10 +90,12 @@ class Well(Registry, CanValidate):
 
 
 class TreatmentTarget(Registry, CanValidate):
-    """Treatment target."""
+    """Treatment targets."""
 
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=8, default=ids.base62_8)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=60, default=None, db_index=True)
     """Name of the treatment target."""
     description = models.TextField(null=True, default=None)
@@ -110,8 +118,12 @@ class TreatmentTarget(Registry, CanValidate):
 
 
 class Treatment(Registry, CanValidate):
+    """Treatments."""
+
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
     type = models.CharField(max_length=20, choices=TreatmentType.choices(), db_index=True)
@@ -147,10 +159,12 @@ class Treatment(Registry, CanValidate):
 
 
 class Biosample(Registry, CanValidate):
-    """Biological samples that are registered in experiments."""
+    """Biological samples."""
 
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True, null=True)
     """Name of the biosample."""
     batch = models.CharField(max_length=60, default=None, null=True, db_index=True)
@@ -180,8 +194,12 @@ class Biosample(Registry, CanValidate):
 
 
 class Techsample(Registry, CanValidate):
+    """Technical samples."""
+
     id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
     batch = models.CharField(max_length=60, default=None, db_index=True)
