@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Organism, Tissue
 from lnschema_core import ids
-from lnschema_core.models import CanValidate, Dataset, File, Registry, User
+from lnschema_core.models import Artifact, CanValidate, Dataset, Registry, User
 from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
@@ -60,8 +60,8 @@ class Experiment(Registry, CanValidate):
     """Date of the experiment."""
     experiment_type = models.ForeignKey(ExperimentType, PROTECT, null=True, related_name="experiments")
     """Type of the experiment."""
-    files = models.ManyToManyField(File, related_name="experiments")
-    """Files linked to the experiment."""
+    artifacts = models.ManyToManyField(Artifact, related_name="experiments")
+    """Artifacts linked to the experiment."""
     datasets = models.ManyToManyField(Dataset, related_name="experiments")
     """Datasets linked to the experiment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -82,7 +82,7 @@ class Well(Registry, CanValidate):
     name = models.CharField(max_length=32, default=None, null=True, unique=True, db_index=True)
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
-    files = models.ManyToManyField(File, related_name="wells")
+    artifacts = models.ManyToManyField(Artifact, related_name="wells")
     datasets = models.ManyToManyField(Dataset, related_name="wells")
 
     class Meta:
@@ -102,8 +102,8 @@ class TreatmentTarget(Registry, CanValidate):
     """Description of the treatment target."""
     genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatment_targets")
     """Genes of the treatment target, link to :class:`~lnschema_bionty.Gene` records."""
-    files = models.ManyToManyField(File, related_name="treatment_targets")
-    """Files linked to the treatment target."""
+    artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
+    """Artifacts linked to the treatment target."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -146,8 +146,8 @@ class Treatment(Registry, CanValidate):
     """Ontology ID of the treatment."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
     """Pubchem ID of the chemical treatment."""
-    files = models.ManyToManyField(File, related_name="treatments")
-    """Files linked to the treatment."""
+    artifacts = models.ManyToManyField(Artifact, related_name="treatments")
+    """Artifacts linked to the treatment."""
     datasets = models.ManyToManyField(Dataset, related_name="treatments")
     """Datasets linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -181,8 +181,8 @@ class Biosample(Registry, CanValidate):
     """Cell types linked to the biosample."""
     diseases = models.ManyToManyField(Disease, related_name="biosamples")
     """Diseases linked to the biosample."""
-    files = models.ManyToManyField(File, related_name="biosamples")
-    """Files linked to the biosample."""
+    artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
+    """Artifacts linked to the biosample."""
     datasets = models.ManyToManyField(Dataset, related_name="biosamples")
     """Datasets linked to the biosample."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
