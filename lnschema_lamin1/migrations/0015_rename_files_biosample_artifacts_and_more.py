@@ -6,6 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_lamin1", "0014_rename_species_biosample_organism"),
+        ("lnschema_core", "0031_rename_file_to_artifact"),
     ]
 
     operations = [
