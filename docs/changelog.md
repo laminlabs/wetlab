@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+🚚 Rename `Dataset` to `Collection` | [44](https://github.com/laminlabs/lnschema-lamin1/pull/44) | [falexwolf](https://github.com/falexwolf) | 2024-01-02 |
 🚚 Rename File to Artifact | [43](https://github.com/laminlabs/lnschema-lamin1/pull/43) | [falexwolf](https://github.com/falexwolf) | 2023-12-12 | 0.24.0
 📝 Prettify docstrings | [42](https://github.com/laminlabs/lnschema-lamin1/pull/42) | [falexwolf](https://github.com/falexwolf) | 2023-11-14 |
 ⬆️ Upgrade lamindb | [41](https://github.com/laminlabs/lnschema-lamin1/pull/41) | [fredericenard](https://github.com/fredericenard) | 2023-11-11 | 0.23.8
