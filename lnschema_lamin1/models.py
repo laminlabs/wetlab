@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Organism, Tissue
 from lnschema_core import ids
-from lnschema_core.models import Artifact, CanValidate, Dataset, Registry, User
+from lnschema_core.models import Artifact, CanValidate, Collection, Registry, User
 from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
@@ -62,8 +62,8 @@ class Experiment(Registry, CanValidate):
     """Type of the experiment."""
     artifacts = models.ManyToManyField(Artifact, related_name="experiments")
     """Artifacts linked to the experiment."""
-    datasets = models.ManyToManyField(Dataset, related_name="experiments")
-    """Datasets linked to the experiment."""
+    collections = models.ManyToManyField(Collection, related_name="experiments")
+    """Collections linked to the experiment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -83,7 +83,7 @@ class Well(Registry, CanValidate):
     row = models.CharField(max_length=4, default=None)
     column = models.IntegerField()
     artifacts = models.ManyToManyField(Artifact, related_name="wells")
-    datasets = models.ManyToManyField(Dataset, related_name="wells")
+    collections = models.ManyToManyField(Collection, related_name="wells")
 
     class Meta:
         unique_together = (("row", "column"),)
@@ -148,8 +148,8 @@ class Treatment(Registry, CanValidate):
     """Pubchem ID of the chemical treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatments")
     """Artifacts linked to the treatment."""
-    datasets = models.ManyToManyField(Dataset, related_name="treatments")
-    """Datasets linked to the treatment."""
+    collections = models.ManyToManyField(Collection, related_name="treatments")
+    """Collections linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -183,8 +183,8 @@ class Biosample(Registry, CanValidate):
     """Diseases linked to the biosample."""
     artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
     """Artifacts linked to the biosample."""
-    datasets = models.ManyToManyField(Dataset, related_name="biosamples")
-    """Datasets linked to the biosample."""
+    collections = models.ManyToManyField(Collection, related_name="biosamples")
+    """Collections linked to the biosample."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
