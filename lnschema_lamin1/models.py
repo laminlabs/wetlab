@@ -2,7 +2,7 @@ from enum import Enum
 
 from django.db import models
 from django.db.models import PROTECT
-from lnschema_bionty.models import CellLine, CellType, Disease, Organism, Tissue
+from lnschema_bionty.models import CellLine, CellType, Disease, Tissue
 from lnschema_core import ids
 from lnschema_core.models import Artifact, CanValidate, Collection, Registry, User
 from lnschema_core.types import ChoicesMixin
@@ -171,7 +171,9 @@ class Biosample(Registry, CanValidate):
     """Batch label of the biosample."""
     description = models.TextField(null=True, default=None)
     """Description of the biosample."""
-    organism = models.ForeignKey(Organism, PROTECT, null=True, related_name="biosamples")
+    # organism = models.ForeignKey(
+    #     Organism, PROTECT, null=True, related_name="biosamples"
+    # )
     """Organism of the biosample."""
     tissues = models.ManyToManyField(Tissue, related_name="biosamples")
     """Tissues linked to the biosample."""
@@ -181,7 +183,7 @@ class Biosample(Registry, CanValidate):
     """Cell types linked to the biosample."""
     diseases = models.ManyToManyField(Disease, related_name="biosamples")
     """Diseases linked to the biosample."""
-    artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
+    # artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
     """Artifacts linked to the biosample."""
     collections = models.ManyToManyField(Collection, related_name="biosamples")
     """Collections linked to the biosample."""
@@ -189,7 +191,9 @@ class Biosample(Registry, CanValidate):
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_biosamples")
+    # created_by = models.ForeignKey(
+    #     User, PROTECT, default=current_user_id, related_name="created_biosamples"
+    # )
     """Creator of record, a :class:`~lamindb.User`."""
 
 
