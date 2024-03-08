@@ -41,21 +41,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="biosample",
             name="datasets",
-            field=models.ManyToManyField(related_name="biosamples", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(related_name="biosamples", to="lnschema_core.collection"),
         ),
         migrations.AddField(
             model_name="experiment",
             name="datasets",
-            field=models.ManyToManyField(related_name="experiments", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(related_name="experiments", to="lnschema_core.collection"),
         ),
         migrations.AddField(
             model_name="treatment",
             name="datasets",
-            field=models.ManyToManyField(related_name="treatments", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(related_name="treatments", to="lnschema_core.collection"),
         ),
         migrations.AddField(
             model_name="well",
             name="datasets",
-            field=models.ManyToManyField(related_name="wells", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(related_name="wells", to="lnschema_core.collection"),
         ),
     ]

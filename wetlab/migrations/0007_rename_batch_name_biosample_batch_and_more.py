@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="biosamples",
-                to="lnschema_bionty.species",
+                to="lnschema_bionty.organism",
             ),
         ),
         migrations.AlterField(

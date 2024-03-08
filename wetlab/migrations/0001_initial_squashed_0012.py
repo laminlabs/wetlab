@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "datasets",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_core.dataset"),
+                    models.ManyToManyField(related_name="biosamples", to="lnschema_core.collection"),
                 ),
                 (
                     "diseases",
@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "files",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="biosamples", to="lnschema_core.artifact"),
                 ),
                 (
                     "species",
@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="biosamples",
-                        to="lnschema_bionty.species",
+                        to="lnschema_bionty.organism",
                     ),
                 ),
                 (
@@ -119,7 +119,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "files",
-                    models.ManyToManyField(related_name="treatment_targets", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="treatment_targets", to="lnschema_core.artifact"),
                 ),
                 (
                     "genes",
@@ -195,11 +195,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "datasets",
-                    models.ManyToManyField(related_name="treatments", to="lnschema_core.dataset"),
+                    models.ManyToManyField(related_name="treatments", to="lnschema_core.collection"),
                 ),
                 (
                     "files",
-                    models.ManyToManyField(related_name="treatments", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="treatments", to="lnschema_core.artifact"),
                 ),
                 (
                     "targets",
@@ -295,7 +295,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "datasets",
-                    models.ManyToManyField(related_name="experiments", to="lnschema_core.dataset"),
+                    models.ManyToManyField(related_name="experiments", to="lnschema_core.collection"),
                 ),
                 (
                     "experiment_type",
@@ -308,7 +308,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "files",
-                    models.ManyToManyField(related_name="experiments", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="experiments", to="lnschema_core.artifact"),
                 ),
             ],
             options={
@@ -337,11 +337,11 @@ class Migration(migrations.Migration):
                 ("column", models.IntegerField()),
                 (
                     "datasets",
-                    models.ManyToManyField(related_name="wells", to="lnschema_core.dataset"),
+                    models.ManyToManyField(related_name="wells", to="lnschema_core.collection"),
                 ),
                 (
                     "files",
-                    models.ManyToManyField(related_name="wells", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="wells", to="lnschema_core.artifact"),
                 ),
             ],
             options={

@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ("column", models.IntegerField()),
                 (
                     "files",
-                    models.ManyToManyField(related_name="wells", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="wells", to="lnschema_core.artifact"),
                 ),
             ],
             options={
