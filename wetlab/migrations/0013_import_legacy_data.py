@@ -5,7 +5,7 @@ from pathlib import Path
 import lamindb_setup as ln_setup
 from django.db import migrations
 
-import lnschema_lamin1.models
+import wetlab.models
 
 CORE_MODELS = {
     "ExperimentType": False,
@@ -34,7 +34,7 @@ def import_db(apps, schema_editor):
     directory = Path(f"./lamindb_export/{ln_setup.settings.instance.identifier}/")
     if directory.exists():
         for model_name in CORE_MODELS.keys():
-            registry = getattr(lnschema_lamin1.models, model_name)
+            registry = getattr(wetlab.models, model_name)
             import_registry(registry, directory)
             many_to_many_names = [field.name for field in registry._meta.many_to_many]
             for many_to_many_name in many_to_many_names:
@@ -44,7 +44,7 @@ def import_db(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0001_initial_squashed_0012"),
+        ("wetlab", "0001_initial_squashed_0012"),
         ("lnschema_core", "0024_import_legacy_data"),
         ("lnschema_bionty", "0017_import_legacy_data"),
     ]

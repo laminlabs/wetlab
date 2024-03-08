@@ -2,9 +2,6 @@
 lamin-site-assets_test/
 tests/lamin-site-assets_test/
 testdb/
-lnschema_lamin1/alembic.ini
-lnschema_lamin1/migrations/env.py
-lnschema_lamin1/migrations/script.py.mako
 
 # macOS
 .DS_Store
@@ -110,12 +107,12 @@ ENV/
 
 # Lamin
 _build
-docs/lnschema_lamin1.*
+docs/wetlab.*
 lamin_sphinx
 docs/conf.py
 _docs_tmp*
 
 # db
-lamin1db/
+wetlab-storage/
 *.lndb
 bfx_run_001/

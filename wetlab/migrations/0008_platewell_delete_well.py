@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_core", "0008_file_hash_type_transform_parents"),
-        ("lnschema_lamin1", "0007_rename_batch_name_biosample_batch_and_more"),
+        ("wetlab", "0007_rename_batch_name_biosample_batch_and_more"),
     ]
 
     operations = [
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ("column", models.IntegerField()),
                 (
                     "files",
-                    models.ManyToManyField(related_name="wells", to="lnschema_core.file"),
+                    models.ManyToManyField(related_name="wells", to="lnschema_core.artifact"),
                 ),
             ],
             options={

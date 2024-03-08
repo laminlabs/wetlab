@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
             "lnschema_bionty",
             "0006_alter_biontysource_options_alter_cellline_options_and_more",
         ),
-        ("lnschema_lamin1", "0003_alter_biosample_created_by_and_more"),
+        ("wetlab", "0003_alter_biosample_created_by_and_more"),
     ]
 
     operations = [
@@ -48,7 +48,10 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "files",
-                    models.ManyToManyField(related_name="genetic_perturbations", to="lnschema_core.file"),
+                    models.ManyToManyField(
+                        related_name="genetic_perturbations",
+                        to="lnschema_core.artifact",
+                    ),
                 ),
                 (
                     "genes",
@@ -65,7 +68,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="treatments",
-                to="lnschema_lamin1.treatmenttarget",
+                to="wetlab.treatmenttarget",
             ),
         ),
     ]

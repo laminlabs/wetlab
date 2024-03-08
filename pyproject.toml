@@ -3,7 +3,7 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "lnschema_lamin1"
+name = "wetlab"
 authors = [{name = "Lamin Labs", email = "laminlabs@gmail.com"}]
 readme = "README.md"
 dynamic = ["version", "description"]
@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.urls]
-Home = "https://github.com/laminlabs/lnschema-lamin1"
+Home = "https://github.com/laminlabs/wetlab"
 
 [project.optional-dependencies]
 dev = [
@@ -33,5 +33,5 @@ testpaths = [
 
 [tool.coverage.run]
 omit = [
-    "lnschema_lamin1/*",
+    "wetlab/*",
 ]

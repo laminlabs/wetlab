@@ -2,7 +2,7 @@
 
 from django.db import connection, migrations, models
 
-import lnschema_lamin1.models
+import wetlab.models
 
 CORE_MODELS = {
     "ExperimentType": False,
@@ -17,7 +17,7 @@ CORE_MODELS = {
 
 def create_new_ids(apps, schema_editor):
     for model_name in CORE_MODELS.keys():
-        model_class = apps.get_model("lnschema_lamin1", model_name)
+        model_class = apps.get_model("wetlab", model_name)
         new_id = 1
         for record in model_class.objects.all().iterator(chunk_size=50):
             record.id = new_id
@@ -27,7 +27,7 @@ def create_new_ids(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0010_rename_platewell_well"),
+        ("wetlab", "0010_rename_platewell_well"),
         ("lnschema_core", "0023_export_legacy_data"),
         ("lnschema_bionty", "0016_export_legacy_data"),
     ]
@@ -52,7 +52,7 @@ for model_name, big in CORE_MODELS.items():
         migrations.AddField(
             model_name=model_name,
             name="id",
-            field=models.BigIntegerField(editable=False, null=True) if big else models.IntegerField(editable=False, null=True),
+            field=(models.BigIntegerField(editable=False, null=True) if big else models.IntegerField(editable=False, null=True)),
             preserve_default=False,
         )
     )
@@ -66,7 +66,7 @@ for model_name, big in CORE_MODELS.items():
         migrations.AlterField(
             model_name=model_name,
             name="id",
-            field=models.BigIntegerField(editable=False, unique=True) if big else models.IntegerField(editable=False, unique=True),
+            field=(models.BigIntegerField(editable=False, unique=True) if big else models.IntegerField(editable=False, unique=True)),
             preserve_default=False,
         )
     )
@@ -87,7 +87,7 @@ def add_new_column_foreign_keys(apps, schema_editor):
             add_new_column_foreign_keys_orm(link_orm)
 
     for model_name in CORE_MODELS.keys():
-        registry = getattr(lnschema_lamin1.models, model_name)
+        registry = getattr(wetlab.models, model_name)
         add_new_column_foreign_keys_orm(registry)
 
 
@@ -113,5 +113,5 @@ def populate_tmp_column_foreign_keys(orm):
 
 # populate temporary fields
 for model_name in CORE_MODELS.keys():
-    registry = getattr(lnschema_lamin1.models, model_name)
+    registry = getattr(wetlab.models, model_name)
     Migration.operations += populate_tmp_column_foreign_keys(registry)

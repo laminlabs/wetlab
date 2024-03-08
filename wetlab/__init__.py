@@ -1,8 +1,8 @@
-"""Lamin's `lamin1` exemplary lab schema.
+"""Lamin's `wetlab` exemplary lab schema.
 
 Import the package::
 
-   import lnschema_lamin1
+   import wetlab
 
 ORMs:
 

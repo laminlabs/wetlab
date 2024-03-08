@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
             "lnschema_bionty",
             "0006_alter_biontysource_options_alter_cellline_options_and_more",
         ),
-        ("lnschema_lamin1", "0006_remove_treatment_target_treatment_targets"),
+        ("wetlab", "0006_remove_treatment_target_treatment_targets"),
     ]
 
     operations = [
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="biosamples",
-                to="lnschema_bionty.species",
+                to="lnschema_bionty.organism",
             ),
         ),
         migrations.AlterField(
@@ -90,7 +90,7 @@ class Migration(migrations.Migration):
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="experiments",
-                to="lnschema_lamin1.experimenttype",
+                to="wetlab.experimenttype",
             ),
         ),
     ]

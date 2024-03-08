@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0008_platewell_delete_well"),
+        ("wetlab", "0008_platewell_delete_well"),
     ]
 
     operations = [
