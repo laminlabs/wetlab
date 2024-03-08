@@ -40,8 +40,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="treatment",
             name="target_genes",
-            field=models.ManyToManyField(
-                related_name="treatments", to="lnschema_bionty.gene"
-            ),
+            field=models.ManyToManyField(related_name="treatments", to="lnschema_bionty.gene"),
         ),
     ]

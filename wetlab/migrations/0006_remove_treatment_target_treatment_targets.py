@@ -16,8 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="treatment",
             name="targets",
-            field=models.ManyToManyField(
-                related_name="treatments", to="wetlab.treatmenttarget"
-            ),
+            field=models.ManyToManyField(related_name="treatments", to="wetlab.treatmenttarget"),
         ),
     ]

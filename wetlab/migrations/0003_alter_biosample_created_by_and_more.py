@@ -53,16 +53,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="treatment",
             name="ontology_id",
-            field=models.CharField(
-                db_index=True, default=None, max_length=32, null=True
-            ),
+            field=models.CharField(db_index=True, default=None, max_length=32, null=True),
         ),
         migrations.AlterField(
             model_name="treatment",
             name="pubchem_id",
-            field=models.CharField(
-                db_index=True, default=None, max_length=32, null=True
-            ),
+            field=models.CharField(db_index=True, default=None, max_length=32, null=True),
         ),
         migrations.AlterField(
             model_name="treatment",

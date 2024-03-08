@@ -23,14 +23,10 @@ def import_registry(registry, directory):
 
     table_name = registry._meta.db_table
     df = pd.read_parquet(directory / f"{table_name}.parquet")
-    old_foreign_key_columns = [
-        column for column in df.columns if column.endswith("_old")
-    ]
+    old_foreign_key_columns = [column for column in df.columns if column.endswith("_old")]
     for column in old_foreign_key_columns:
         df.drop(column, axis=1, inplace=True)
-    df.to_sql(
-        table_name, ln_setup.settings.instance.db, if_exists="append", index=False
-    )
+    df.to_sql(table_name, ln_setup.settings.instance.db, if_exists="append", index=False)
 
 
 def import_db(apps, schema_editor):
@@ -53,6 +49,4 @@ class Migration(migrations.Migration):
         ("lnschema_bionty", "0017_import_legacy_data"),
     ]
 
-    operations = [
-        migrations.RunPython(import_db, reverse_code=migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(import_db, reverse_code=migrations.RunPython.noop)]

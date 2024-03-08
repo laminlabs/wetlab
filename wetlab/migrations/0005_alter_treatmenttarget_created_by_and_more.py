@@ -28,8 +28,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="treatmenttarget",
             name="files",
-            field=models.ManyToManyField(
-                related_name="treatment_targets", to="lnschema_core.file"
-            ),
+            field=models.ManyToManyField(related_name="treatment_targets", to="lnschema_core.file"),
         ),
     ]

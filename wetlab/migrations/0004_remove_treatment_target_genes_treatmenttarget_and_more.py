@@ -48,15 +48,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "files",
-                    models.ManyToManyField(
-                        related_name="genetic_perturbations", to="lnschema_core.file"
-                    ),
+                    models.ManyToManyField(related_name="genetic_perturbations", to="lnschema_core.file"),
                 ),
                 (
                     "genes",
-                    models.ManyToManyField(
-                        related_name="treatment_targets", to="lnschema_bionty.gene"
-                    ),
+                    models.ManyToManyField(related_name="treatment_targets", to="lnschema_bionty.gene"),
                 ),
             ],
             options={
