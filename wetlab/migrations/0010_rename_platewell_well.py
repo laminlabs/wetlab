@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_core", "0019_dataset_reference_dataset_reference_type_and_more"),
-        ("lnschema_lamin1", "0009_alter_platewell_id"),
+        ("wetlab", "0009_alter_platewell_id"),
     ]
 
     operations = [
@@ -22,7 +22,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="well",
             name="name",
-            field=models.CharField(db_index=True, default=None, max_length=32, null=True, unique=True),
+            field=models.CharField(
+                db_index=True, default=None, max_length=32, null=True, unique=True
+            ),
         ),
         migrations.RemoveField(
             model_name="well",
@@ -41,21 +43,29 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="biosample",
             name="datasets",
-            field=models.ManyToManyField(related_name="biosamples", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(
+                related_name="biosamples", to="lnschema_core.dataset"
+            ),
         ),
         migrations.AddField(
             model_name="experiment",
             name="datasets",
-            field=models.ManyToManyField(related_name="experiments", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(
+                related_name="experiments", to="lnschema_core.dataset"
+            ),
         ),
         migrations.AddField(
             model_name="treatment",
             name="datasets",
-            field=models.ManyToManyField(related_name="treatments", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(
+                related_name="treatments", to="lnschema_core.dataset"
+            ),
         ),
         migrations.AddField(
             model_name="well",
             name="datasets",
-            field=models.ManyToManyField(related_name="wells", to="lnschema_core.dataset"),
+            field=models.ManyToManyField(
+                related_name="wells", to="lnschema_core.dataset"
+            ),
         ),
     ]

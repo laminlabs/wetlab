@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_core", "0007_feature_synonyms_featureset_field_and_more"),
         (
-            "lnschema_lamin1",
+            "wetlab",
             "0002_alter_biosample_options_alter_experiment_options_and_more",
         ),
     ]
@@ -53,12 +53,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="treatment",
             name="ontology_id",
-            field=models.CharField(db_index=True, default=None, max_length=32, null=True),
+            field=models.CharField(
+                db_index=True, default=None, max_length=32, null=True
+            ),
         ),
         migrations.AlterField(
             model_name="treatment",
             name="pubchem_id",
-            field=models.CharField(db_index=True, default=None, max_length=32, null=True),
+            field=models.CharField(
+                db_index=True, default=None, max_length=32, null=True
+            ),
         ),
         migrations.AlterField(
             model_name="treatment",

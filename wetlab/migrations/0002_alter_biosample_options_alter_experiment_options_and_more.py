@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
             "lnschema_bionty",
             "0006_alter_biontysource_options_alter_cellline_options_and_more",
         ),
-        ("lnschema_lamin1", "0001_initial"),
+        ("wetlab", "0001_initial"),
     ]
 
     operations = [
@@ -40,6 +40,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="treatment",
             name="target_genes",
-            field=models.ManyToManyField(related_name="treatments", to="lnschema_bionty.gene"),
+            field=models.ManyToManyField(
+                related_name="treatments", to="lnschema_bionty.gene"
+            ),
         ),
     ]

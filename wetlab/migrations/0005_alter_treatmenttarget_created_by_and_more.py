@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_core", "0007_feature_synonyms_featureset_field_and_more"),
         (
-            "lnschema_lamin1",
+            "wetlab",
             "0004_remove_treatment_target_genes_treatmenttarget_and_more",
         ),
     ]
@@ -28,6 +28,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="treatmenttarget",
             name="files",
-            field=models.ManyToManyField(related_name="treatment_targets", to="lnschema_core.file"),
+            field=models.ManyToManyField(
+                related_name="treatment_targets", to="lnschema_core.file"
+            ),
         ),
     ]

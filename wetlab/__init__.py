@@ -2,7 +2,7 @@
 
 Import the package::
 
-   import lnschema_lamin1
+   import wetlab
 
 ORMs:
 
@@ -19,7 +19,7 @@ ORMs:
 
 """
 
-__version__ = "0.25.1"
+__version__ = "0.26.0"
 
 from lamindb_setup import _check_instance_setup
 

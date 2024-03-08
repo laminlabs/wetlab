@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0005_alter_treatmenttarget_created_by_and_more"),
+        ("wetlab", "0005_alter_treatmenttarget_created_by_and_more"),
     ]
 
     operations = [
@@ -16,6 +16,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="treatment",
             name="targets",
-            field=models.ManyToManyField(related_name="treatments", to="lnschema_lamin1.treatmenttarget"),
+            field=models.ManyToManyField(
+                related_name="treatments", to="wetlab.treatmenttarget"
+            ),
         ),
     ]

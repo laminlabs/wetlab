@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0015_rename_files_biosample_artifacts_and_more"),
+        ("wetlab", "0015_rename_files_biosample_artifacts_and_more"),
     ]
 
     operations = [

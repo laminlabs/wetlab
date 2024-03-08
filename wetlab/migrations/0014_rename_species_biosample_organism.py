@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0013_import_legacy_data"),
+        ("wetlab", "0013_import_legacy_data"),
     ]
 
     operations = [

@@ -16,12 +16,12 @@ class Migration(migrations.Migration):
 
     operations = [
         # only necessary for legacy instances
-        # migrations.RunSQL("alter table lnschema_lamin1_biosample rename to lnschema_lamin1_legacy_biosample"),
-        # migrations.RunSQL("alter table lnschema_lamin1_techsample rename to lnschema_lamin1_legacy_techsample"),
-        # migrations.RunSQL("alter table lnschema_lamin1_treatment rename to lnschema_lamin1_legacy_treatment"),
-        # migrations.RunSQL("alter table lnschema_lamin1_experimenttype rename to lnschema_lamin1_legacy_experimenttype"),
-        # migrations.RunSQL("alter table lnschema_lamin1_experiment rename to lnschema_lamin1_legacy_experiment"),
-        # migrations.RunSQL("alter table lnschema_lamin1_well rename to lnschema_lamin1_legacy_well"),
+        # migrations.RunSQL("alter table wetlab_biosample rename to wetlab_legacy_biosample"),
+        # migrations.RunSQL("alter table wetlab_techsample rename to wetlab_legacy_techsample"),
+        # migrations.RunSQL("alter table wetlab_treatment rename to wetlab_legacy_treatment"),
+        # migrations.RunSQL("alter table wetlab_experimenttype rename to wetlab_legacy_experimenttype"),
+        # migrations.RunSQL("alter table wetlab_experiment rename to wetlab_legacy_experiment"),
+        # migrations.RunSQL("alter table wetlab_well rename to wetlab_legacy_well"),
         migrations.CreateModel(
             name="Biosample",
             fields=[
@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
                 ("batch", models.CharField(db_index=True, default=None, max_length=60)),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
-                ("biosamples", models.ManyToManyField(related_name="techsamples", to="lnschema_lamin1.biosample")),
+                ("biosamples", models.ManyToManyField(related_name="techsamples", to="wetlab.biosample")),
                 (
                     "created_by",
                     models.ForeignKey(
@@ -139,7 +139,7 @@ class Migration(migrations.Migration):
                         default=lnschema_core.users.current_user_id, on_delete=django.db.models.deletion.PROTECT, related_name="created_experiments", to="lnschema_core.user"
                     ),
                 ),
-                ("experiment_type", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name="experiments", to="lnschema_lamin1.experimenttype")),
+                ("experiment_type", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name="experiments", to="wetlab.experimenttype")),
                 ("files", models.ManyToManyField(related_name="experiments", to="lnschema_core.file")),
             ],
             options={},
