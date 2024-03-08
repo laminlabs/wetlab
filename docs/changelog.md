@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
-🔥 Temporarily remove a few biosample fields | [45](https://github.com/laminlabs/lnschema-lamin1/pull/45) | [sunnyosun](https://github.com/sunnyosun) | 2024-02-07 |
+🔥 Temporarily remove a few biosample fields | [45](https://github.com/laminlabs/lnschema-lamin1/pull/45) | [sunnyosun](https://github.com/sunnyosun) | 2024-02-07 | 0.26.0
 🚚 Rename `Dataset` to `Collection` | [44](https://github.com/laminlabs/lnschema-lamin1/pull/44) | [falexwolf](https://github.com/falexwolf) | 2024-01-02 | 0.25.0
 🚚 Rename `File` to `Artifact` | [43](https://github.com/laminlabs/lnschema-lamin1/pull/43) | [falexwolf](https://github.com/falexwolf) | 2023-12-12 | 0.24.0
 📝 Prettify docstrings | [42](https://github.com/laminlabs/lnschema-lamin1/pull/42) | [falexwolf](https://github.com/falexwolf) | 2023-11-14 |
