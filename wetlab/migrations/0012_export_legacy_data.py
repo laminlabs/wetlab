@@ -6,7 +6,7 @@ import lamindb_setup as ln_setup
 import pandas as pd
 from django.db import migrations
 
-import lnschema_lamin1.models
+import wetlab.models
 
 CORE_MODELS = {
     "ExperimentType": False,
@@ -30,7 +30,7 @@ def export_database(apps, schema_editor):
     directory.mkdir(parents=True, exist_ok=True)
     print(f"\nExporting data to parquet files in: {directory}\n")
     for model_name in CORE_MODELS.keys():
-        registry = getattr(lnschema_lamin1.models, model_name)
+        registry = getattr(wetlab.models, model_name)
         export_registry(registry, directory)
         many_to_many_names = [field.name for field in registry._meta.many_to_many]
         for many_to_many_name in many_to_many_names:
@@ -40,7 +40,7 @@ def export_database(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_lamin1", "0011_migrate_to_integer_pks"),
+        ("wetlab", "0011_migrate_to_integer_pks"),
     ]
 
     operations = [migrations.RunPython(export_database, reverse_code=migrations.RunPython.noop)]

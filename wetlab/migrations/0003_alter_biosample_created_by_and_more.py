@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_core", "0007_feature_synonyms_featureset_field_and_more"),
         (
-            "lnschema_lamin1",
+            "wetlab",
             "0002_alter_biosample_options_alter_experiment_options_and_more",
         ),
     ]

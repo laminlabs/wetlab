@@ -2,7 +2,7 @@
 
 Import the package::
 
-   import lnschema_lamin1
+   import wetlab
 
 ORMs:
 

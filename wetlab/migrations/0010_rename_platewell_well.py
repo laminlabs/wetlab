@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("lnschema_core", "0019_dataset_reference_dataset_reference_type_and_more"),
-        ("lnschema_lamin1", "0009_alter_platewell_id"),
+        ("wetlab", "0009_alter_platewell_id"),
     ]
 
     operations = [

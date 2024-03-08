@@ -8,18 +8,18 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     replaces = [
-        ("lnschema_lamin1", "0001_initial"),
-        ("lnschema_lamin1", "0002_alter_biosample_options_alter_experiment_options_and_more"),
-        ("lnschema_lamin1", "0003_alter_biosample_created_by_and_more"),
-        ("lnschema_lamin1", "0004_remove_treatment_target_genes_treatmenttarget_and_more"),
-        ("lnschema_lamin1", "0005_alter_treatmenttarget_created_by_and_more"),
-        ("lnschema_lamin1", "0006_remove_treatment_target_treatment_targets"),
-        ("lnschema_lamin1", "0007_rename_batch_name_biosample_batch_and_more"),
-        ("lnschema_lamin1", "0008_platewell_delete_well"),
-        ("lnschema_lamin1", "0009_alter_platewell_id"),
-        ("lnschema_lamin1", "0010_rename_platewell_well"),
-        ("lnschema_lamin1", "0011_migrate_to_integer_pks"),
-        ("lnschema_lamin1", "0012_export_legacy_data"),
+        ("wetlab", "0001_initial"),
+        ("wetlab", "0002_alter_biosample_options_alter_experiment_options_and_more"),
+        ("wetlab", "0003_alter_biosample_created_by_and_more"),
+        ("wetlab", "0004_remove_treatment_target_genes_treatmenttarget_and_more"),
+        ("wetlab", "0005_alter_treatmenttarget_created_by_and_more"),
+        ("wetlab", "0006_remove_treatment_target_treatment_targets"),
+        ("wetlab", "0007_rename_batch_name_biosample_batch_and_more"),
+        ("wetlab", "0008_platewell_delete_well"),
+        ("wetlab", "0009_alter_platewell_id"),
+        ("wetlab", "0010_rename_platewell_well"),
+        ("wetlab", "0011_migrate_to_integer_pks"),
+        ("wetlab", "0012_export_legacy_data"),
     ]
 
     dependencies = [
@@ -123,7 +123,7 @@ class Migration(migrations.Migration):
                 ),
                 ("datasets", models.ManyToManyField(related_name="treatments", to="lnschema_core.dataset")),
                 ("files", models.ManyToManyField(related_name="treatments", to="lnschema_core.file")),
-                ("targets", models.ManyToManyField(related_name="treatments", to="lnschema_lamin1.treatmenttarget")),
+                ("targets", models.ManyToManyField(related_name="treatments", to="wetlab.treatmenttarget")),
             ],
             options={
                 "abstract": False,
@@ -139,7 +139,7 @@ class Migration(migrations.Migration):
                 ("description", models.TextField(default=None, null=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
-                ("biosamples", models.ManyToManyField(related_name="techsamples", to="lnschema_lamin1.biosample")),
+                ("biosamples", models.ManyToManyField(related_name="techsamples", to="wetlab.biosample")),
                 (
                     "created_by",
                     models.ForeignKey(
@@ -192,7 +192,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("datasets", models.ManyToManyField(related_name="experiments", to="lnschema_core.dataset")),
-                ("experiment_type", models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name="experiments", to="lnschema_lamin1.experimenttype")),
+                ("experiment_type", models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name="experiments", to="wetlab.experimenttype")),
                 ("files", models.ManyToManyField(related_name="experiments", to="lnschema_core.file")),
             ],
             options={
