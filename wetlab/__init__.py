@@ -1,4 +1,4 @@
-"""Lamin's `lamin1` exemplary lab schema.
+"""Lamin's `wetlab` exemplary lab schema.
 
 Import the package::
 

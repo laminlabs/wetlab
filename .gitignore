@@ -113,6 +113,6 @@ docs/conf.py
 _docs_tmp*
 
 # db
-lamin1db/
+wetlab-storage/
 *.lndb
 bfx_run_001/
