@@ -26,7 +26,7 @@ def export_database(apps, schema_editor):
         df.to_parquet(directory / f"{table_name}.parquet")
 
     # export data to parquet files
-    directory = Path(f"./lamindb_export/{ln_setup.settings.instance.identifier}/")
+    directory = Path(f"./lamindb_export/{ln_setup.settings.instance.slug}/")
     directory.mkdir(parents=True, exist_ok=True)
     print(f"\nExporting data to parquet files in: {directory}\n")
     for model_name in CORE_MODELS.keys():

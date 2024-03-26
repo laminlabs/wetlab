@@ -31,7 +31,7 @@ def import_registry(registry, directory):
 
 def import_db(apps, schema_editor):
     # import data from parquet files
-    directory = Path(f"./lamindb_export/{ln_setup.settings.instance.identifier}/")
+    directory = Path(f"./lamindb_export/{ln_setup.settings.instance.slug}/")
     if directory.exists():
         for model_name in CORE_MODELS.keys():
             registry = getattr(wetlab.models, model_name)
