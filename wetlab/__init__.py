@@ -1,10 +1,10 @@
-"""Lamin's `wetlab` exemplary lab schema.
+"""Lamin's default `wetlab` lab schema.
 
 Import the package::
 
-   import wetlab
+   import wetlab as wl
 
-ORMs:
+Registries:
 
 .. autosummary::
    :toctree: .
@@ -33,6 +33,7 @@ def __getattr__(name):
 
 
 if _check_instance_setup():
+    del __getattr__  # delete so that imports work out
     from .models import (  # noqa
         Biosample,
         Experiment,

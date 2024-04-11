@@ -101,7 +101,7 @@ class TreatmentTarget(Registry, CanValidate):
     description = models.TextField(null=True, default=None)
     """Description of the treatment target."""
     genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatment_targets")
-    """Genes of the treatment target, link to :class:`~lnschema_bionty.Gene` records."""
+    """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
