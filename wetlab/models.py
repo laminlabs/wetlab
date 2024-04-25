@@ -84,6 +84,12 @@ class Well(Registry, CanValidate):
     column = models.IntegerField()
     artifacts = models.ManyToManyField(Artifact, related_name="wells")
     collections = models.ManyToManyField(Collection, related_name="wells")
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    """Time of creation of record."""
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    """Time of last update to record."""
+    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_wells")
+    """Creator of record, a :class:`~lamindb.User`."""
 
     class Meta:
         unique_together = (("row", "column"),)
