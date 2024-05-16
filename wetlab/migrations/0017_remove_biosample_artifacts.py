@@ -8,17 +8,4 @@ class Migration(migrations.Migration):
         ("wetlab", "0016_rename_datasets_biosample_collections_and_more"),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name="biosample",
-            name="artifacts",
-        ),
-        migrations.RemoveField(
-            model_name="biosample",
-            name="created_by",
-        ),
-        migrations.RemoveField(
-            model_name="biosample",
-            name="organism",
-        ),
-    ]
+    operations = []  # type: ignore

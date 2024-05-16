@@ -8,30 +8,4 @@ class Migration(migrations.Migration):
         ("wetlab", "0014_rename_species_biosample_organism"),
     ]
 
-    operations = [
-        migrations.RenameField(
-            model_name="biosample",
-            old_name="files",
-            new_name="artifacts",
-        ),
-        migrations.RenameField(
-            model_name="experiment",
-            old_name="files",
-            new_name="artifacts",
-        ),
-        migrations.RenameField(
-            model_name="treatment",
-            old_name="files",
-            new_name="artifacts",
-        ),
-        migrations.RenameField(
-            model_name="treatmenttarget",
-            old_name="files",
-            new_name="artifacts",
-        ),
-        migrations.RenameField(
-            model_name="well",
-            old_name="files",
-            new_name="artifacts",
-        ),
-    ]
+    operations = []  # type: ignore

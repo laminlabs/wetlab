@@ -8,10 +8,4 @@ class Migration(migrations.Migration):
         ("wetlab", "0013_import_legacy_data"),
     ]
 
-    operations = [
-        migrations.RenameField(
-            model_name="biosample",
-            old_name="species",
-            new_name="organism",
-        ),
-    ]
+    operations = []  # type: ignore
