@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
     ]
 
     dependencies = [
-        ("lnschema_bionty", "0001_initial_squashed_0025"),
+        ("lnschema_bionty", "0025_squashed"),
     ]
 
     operations = [

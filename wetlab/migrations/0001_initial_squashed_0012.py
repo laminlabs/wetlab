@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("lnschema_bionty", "0022_rename_datasets_cellline_collections_and_more.py"),
+        ("lnschema_bionty", "0022_rename_datasets_cellline_collections_and_more"),
     ]
 
     operations = []  # type: ignore
