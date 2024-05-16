@@ -7,24 +7,11 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    replaces = [
-        ("wetlab", "0001_initial"),
-        ("wetlab", "0002_alter_biosample_options_alter_experiment_options_and_more"),
-        ("wetlab", "0003_alter_biosample_created_by_and_more"),
-        ("wetlab", "0004_remove_treatment_target_genes_treatmenttarget_and_more"),
-        ("wetlab", "0005_alter_treatmenttarget_created_by_and_more"),
-        ("wetlab", "0006_remove_treatment_target_treatment_targets"),
-        ("wetlab", "0007_rename_batch_name_biosample_batch_and_more"),
-        ("wetlab", "0008_platewell_delete_well"),
-        ("wetlab", "0009_alter_platewell_id"),
-        ("wetlab", "0010_rename_platewell_well"),
-        ("wetlab", "0011_migrate_to_integer_pks"),
-        ("wetlab", "0012_export_legacy_data"),
-    ]
+    initial = True
 
     dependencies = [
-        ("lnschema_core", "0023_export_legacy_data"),
-        ("lnschema_bionty", "0016_export_legacy_data"),
+        # ("lnschema_bionty", "0001_initial_squashed_0016"),
+        ("lnschema_core", "0046_storage_instance_uid"),
     ]
 
     operations = []  # type: ignore
