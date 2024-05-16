@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+🔥 Prune migrations | [51](https://github.com/laminlabs/wetlab/pull/51) | [falexwolf](https://github.com/falexwolf) | 2024-05-16 |
 🔥  Delete old migrations and create a new squashed initial migration | [49](https://github.com/laminlabs/wetlab/pull/49) | [falexwolf](https://github.com/falexwolf) | 2024-05-16 |
 ✨ Updated at for Well | [48](https://github.com/laminlabs/wetlab/pull/48) | [sunnyosun](https://github.com/sunnyosun) | 2024-04-25 |
 🚚 Rename lnschema-lamin1 to wetlab | [47](https://github.com/laminlabs/wetlab/pull/47) | [sunnyosun](https://github.com/sunnyosun) | 2024-03-08 | 0.27.0
