@@ -45,8 +45,6 @@ def import_db(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ("wetlab", "0001_initial_squashed_0012"),
-        ("lnschema_core", "0024_import_legacy_data"),
-        ("lnschema_bionty", "0017_import_legacy_data"),
     ]
 
     operations = [migrations.RunPython(import_db, reverse_code=migrations.RunPython.noop)]

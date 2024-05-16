@@ -8,10 +8,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        (
-            "lnschema_core",
-            "0045_rename_replicated_outputs_run_replicated_output_artifacts_and_more",
-        ),
         ("wetlab", "0017_remove_biosample_artifacts"),
     ]
 
