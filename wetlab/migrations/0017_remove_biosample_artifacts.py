@@ -4,9 +4,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ("wetlab", "0016_rename_datasets_biosample_collections_and_more"),
-    ]
+    dependencies = []  # type: ignore
 
     operations = [
         migrations.RemoveField(
