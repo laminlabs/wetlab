@@ -25,8 +25,7 @@ class Migration(migrations.Migration):
     ]
 
     dependencies = [
-        ("lnschema_bionty", "0023_rename_publicsource_encode_uid"),
-        ("lnschema_core", "0046_storage_instance_uid"),
+        ("lnschema_bionty", "0001_initial_squashed_0025"),
     ]
 
     operations = [

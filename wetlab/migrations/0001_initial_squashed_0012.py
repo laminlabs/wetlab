@@ -10,8 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        # ("lnschema_bionty", "0001_initial_squashed_0016"),
-        ("lnschema_core", "0046_storage_instance_uid"),
+        ("lnschema_bionty", "0001_initial_squashed_0016"),
     ]
 
     operations = []  # type: ignore
