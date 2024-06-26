@@ -15,8 +15,6 @@ Create your instance mounting the module::
 
    lamin init --storage ./test-wetlab --schema bionty,wetlab
 
-Everything else works exactly as for any other schema module and the core registries.
-
 Import the package::
 
    import wetlab as wl
