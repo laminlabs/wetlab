@@ -136,7 +136,7 @@ class Treatment(Registry, CanValidate):
     """Type of the treatment.
     "genetic" or "chemical"
     """
-    system = models.CharField(max_length=20, choices=TreatmentSystem.choices(), default=None, db_index=True)
+    system = models.CharField(max_length=32, choices=TreatmentSystem.choices(), default=None, db_index=True)
     """System used for the genetic treatment."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment."""
