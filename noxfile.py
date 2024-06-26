@@ -11,7 +11,7 @@ def lint(session: nox.Session) -> None:
 
 @nox.session
 def install(session: nox.Session) -> None:
-    run(session, "uv pip install .[dev]")
+    run(session, "uv pip install --system .[dev]")
 
 
 @nox.session
