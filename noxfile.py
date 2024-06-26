@@ -1,5 +1,5 @@
 import nox
-from laminci.nox import build_docs, login_testuser1, run_pre_commit, run_pytest
+from laminci.nox import SYSTEM, build_docs, run, run_pre_commit, run_pytest
 
 nox.options.default_venv_backend = "none"
 
@@ -11,15 +11,15 @@ def lint(session: nox.Session) -> None:
 
 @nox.session
 def install(session: nox.Session) -> None:
-    session.run(*"pip install .[dev]".split())
+    run(session, f"uv pip install {SYSTEM} .[dev]")
 
 
 @nox.session
 def test(session: nox.Session) -> None:
-    login_testuser1(session)
-    run_pytest(session)
+    run_pytest(session, coverage=False)
 
 
 @nox.session
 def docs(session: nox.Session) -> None:
-    build_docs(session)
+    run(session, "lamin init --storage ./docsbuild --schema bionty,wetlab")
+    build_docs(session, strict=True)

@@ -1,3 +1,3 @@
-# `wetlab`: Examplary lab schema
+# `wetlab`: Default wetlab schema
 
-Latest dev docs: [netlify](https://wetlab-tvhn.netlify.app).
+Read the docs: [docs.lamin.ai/wetlab](https://docs.lamin.ai/wetlab).
