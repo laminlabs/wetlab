@@ -16,7 +16,7 @@ def install(session: nox.Session) -> None:
 
 @nox.session
 def test(session: nox.Session) -> None:
-    run_pytest(session)
+    run_pytest(session, coverage=False)
 
 
 @nox.session
