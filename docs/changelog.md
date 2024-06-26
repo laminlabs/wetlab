@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+✅ Add system check & fix tests | [52](https://github.com/laminlabs/wetlab/pull/52) | [falexwolf](https://github.com/falexwolf) | 2024-06-26 |
 🔥 Prune migrations | [51](https://github.com/laminlabs/wetlab/pull/51) | [falexwolf](https://github.com/falexwolf) | 2024-05-16 | 0.28.0
 🔥  Delete old migrations and create a new squashed initial migration | [49](https://github.com/laminlabs/wetlab/pull/49) | [falexwolf](https://github.com/falexwolf) | 2024-05-16 |
 ✨ Updated at for Well | [48](https://github.com/laminlabs/wetlab/pull/48) | [sunnyosun](https://github.com/sunnyosun) | 2024-04-25 |
