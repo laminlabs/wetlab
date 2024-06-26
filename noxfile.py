@@ -21,4 +21,5 @@ def test(session: nox.Session) -> None:
 
 @nox.session
 def docs(session: nox.Session) -> None:
+    run(session, "lamin init --storage ./docsbuild --schema bionty,wetlab")
     build_docs(session)
