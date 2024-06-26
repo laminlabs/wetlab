@@ -2,7 +2,7 @@ import lamindb_setup as ln_setup
 import pytest
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def setup_instance():
     ln_setup.init(storage="./testdb", schema="bionty,wetlab")
     yield
