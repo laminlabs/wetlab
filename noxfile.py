@@ -1,5 +1,5 @@
 import nox
-from laminci.nox import build_docs, run_pre_commit, run_pytest
+from laminci.nox import build_docs, run, run_pre_commit, run_pytest
 
 nox.options.default_venv_backend = "none"
 
@@ -11,7 +11,7 @@ def lint(session: nox.Session) -> None:
 
 @nox.session
 def install(session: nox.Session) -> None:
-    session.run(*"pip install .[dev]".split())
+    run(session, "uv pip install .[dev]")
 
 
 @nox.session
