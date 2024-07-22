@@ -2,6 +2,7 @@
 lamin-site-assets_test/
 tests/lamin-site-assets_test/
 testdb/
+test.ipynb
 
 # macOS
 .DS_Store

@@ -35,38 +35,54 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_12, max_length=12, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_12, max_length=12, unique=True
+                    ),
                 ),
                 (
                     "name",
-                    models.CharField(db_index=True, default=None, max_length=255, null=True),
+                    models.CharField(
+                        db_index=True, default=None, max_length=255, null=True
+                    ),
                 ),
                 (
                     "batch",
-                    models.CharField(db_index=True, default=None, max_length=60, null=True),
+                    models.CharField(
+                        db_index=True, default=None, max_length=60, null=True
+                    ),
                 ),
                 ("description", models.TextField(default=None, null=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "cell_lines",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_bionty.cellline"),
+                    models.ManyToManyField(
+                        related_name="biosamples", to="lnschema_bionty.cellline"
+                    ),
                 ),
                 (
                     "cell_types",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_bionty.celltype"),
+                    models.ManyToManyField(
+                        related_name="biosamples", to="lnschema_bionty.celltype"
+                    ),
                 ),
                 (
                     "collections",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_core.collection"),
+                    models.ManyToManyField(
+                        related_name="biosamples", to="lnschema_core.collection"
+                    ),
                 ),
                 (
                     "diseases",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_bionty.disease"),
+                    models.ManyToManyField(
+                        related_name="biosamples", to="lnschema_bionty.disease"
+                    ),
                 ),
                 (
                     "tissues",
-                    models.ManyToManyField(related_name="biosamples", to="lnschema_bionty.tissue"),
+                    models.ManyToManyField(
+                        related_name="biosamples", to="lnschema_bionty.tissue"
+                    ),
                 ),
             ],
             options={
@@ -80,13 +96,17 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_4, max_length=4, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_4, max_length=4, unique=True
+                    ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("description", models.TextField(default=None, null=True)),
                 (
                     "ontology_id",
-                    models.CharField(db_index=True, default=None, max_length=32, null=True),
+                    models.CharField(
+                        db_index=True, default=None, max_length=32, null=True
+                    ),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
@@ -111,7 +131,9 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_8, max_length=8, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_8, max_length=8, unique=True
+                    ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("description", models.TextField(default=None, null=True)),
@@ -120,11 +142,15 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "artifacts",
-                    models.ManyToManyField(related_name="experiments", to="lnschema_core.artifact"),
+                    models.ManyToManyField(
+                        related_name="experiments", to="lnschema_core.artifact"
+                    ),
                 ),
                 (
                     "collections",
-                    models.ManyToManyField(related_name="experiments", to="lnschema_core.collection"),
+                    models.ManyToManyField(
+                        related_name="experiments", to="lnschema_core.collection"
+                    ),
                 ),
                 (
                     "created_by",
@@ -156,7 +182,9 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_12, max_length=12, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_12, max_length=12, unique=True
+                    ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 ("batch", models.CharField(db_index=True, default=None, max_length=60)),
@@ -165,7 +193,9 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "biosamples",
-                    models.ManyToManyField(related_name="techsamples", to="wetlab.biosample"),
+                    models.ManyToManyField(
+                        related_name="techsamples", to="wetlab.biosample"
+                    ),
                 ),
                 (
                     "created_by",
@@ -188,7 +218,9 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_8, max_length=8, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_8, max_length=8, unique=True
+                    ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=60)),
                 ("description", models.TextField(default=None, null=True)),
@@ -196,7 +228,9 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "artifacts",
-                    models.ManyToManyField(related_name="treatment_targets", to="lnschema_core.artifact"),
+                    models.ManyToManyField(
+                        related_name="treatment_targets", to="lnschema_core.artifact"
+                    ),
                 ),
                 (
                     "created_by",
@@ -209,7 +243,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "genes",
-                    models.ManyToManyField(related_name="treatment_targets", to="lnschema_bionty.gene"),
+                    models.ManyToManyField(
+                        related_name="treatment_targets", to="lnschema_bionty.gene"
+                    ),
                 ),
             ],
             options={
@@ -223,7 +259,9 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_12, max_length=12, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_12, max_length=12, unique=True
+                    ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
                 (
@@ -263,21 +301,29 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "ontology_id",
-                    models.CharField(db_index=True, default=None, max_length=32, null=True),
+                    models.CharField(
+                        db_index=True, default=None, max_length=32, null=True
+                    ),
                 ),
                 (
                     "pubchem_id",
-                    models.CharField(db_index=True, default=None, max_length=32, null=True),
+                    models.CharField(
+                        db_index=True, default=None, max_length=32, null=True
+                    ),
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True, db_index=True)),
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "artifacts",
-                    models.ManyToManyField(related_name="treatments", to="lnschema_core.artifact"),
+                    models.ManyToManyField(
+                        related_name="treatments", to="lnschema_core.artifact"
+                    ),
                 ),
                 (
                     "collections",
-                    models.ManyToManyField(related_name="treatments", to="lnschema_core.collection"),
+                    models.ManyToManyField(
+                        related_name="treatments", to="lnschema_core.collection"
+                    ),
                 ),
                 (
                     "created_by",
@@ -290,7 +336,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "targets",
-                    models.ManyToManyField(related_name="treatments", to="wetlab.treatmenttarget"),
+                    models.ManyToManyField(
+                        related_name="treatments", to="wetlab.treatmenttarget"
+                    ),
                 ),
             ],
             options={
@@ -304,7 +352,9 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    models.CharField(default=lnschema_core.ids.base62_4, max_length=4, unique=True),
+                    models.CharField(
+                        default=lnschema_core.ids.base62_4, max_length=4, unique=True
+                    ),
                 ),
                 (
                     "name",
@@ -322,11 +372,15 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "artifacts",
-                    models.ManyToManyField(related_name="wells", to="lnschema_core.artifact"),
+                    models.ManyToManyField(
+                        related_name="wells", to="lnschema_core.artifact"
+                    ),
                 ),
                 (
                     "collections",
-                    models.ManyToManyField(related_name="wells", to="lnschema_core.collection"),
+                    models.ManyToManyField(
+                        related_name="wells", to="lnschema_core.collection"
+                    ),
                 ),
                 (
                     "created_by",

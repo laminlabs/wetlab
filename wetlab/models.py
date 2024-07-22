@@ -20,13 +20,17 @@ class ExperimentType(Registry, CanValidate):
     """Name of the experiment type."""
     description = models.TextField(null=True, default=None)
     """Description of the experiment."""
-    ontology_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
+    ontology_id = models.CharField(
+        max_length=32, db_index=True, null=True, default=None
+    )
     """Ontology ID (EFO) of the experiment type."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_experiment_types")
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_experiment_types"
+    )
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -58,7 +62,9 @@ class Experiment(Registry, CanValidate):
     """Description of the experiment."""
     date = models.DateField(default=None, null=True, db_index=True)
     """Date of the experiment."""
-    experiment_type = models.ForeignKey(ExperimentType, PROTECT, null=True, related_name="experiments")
+    experiment_type = models.ForeignKey(
+        ExperimentType, PROTECT, null=True, related_name="experiments"
+    )
     """Type of the experiment."""
     artifacts = models.ManyToManyField(Artifact, related_name="experiments")
     """Artifacts linked to the experiment."""
@@ -68,7 +74,9 @@ class Experiment(Registry, CanValidate):
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_experiments")
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_experiments"
+    )
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -79,7 +87,9 @@ class Well(Registry, CanValidate):
     """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=4, default=ids.base62_4)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=32, default=None, null=True, unique=True, db_index=True)
+    name = models.CharField(
+        max_length=32, default=None, null=True, unique=True, db_index=True
+    )
     """Name of the well."""
     row = models.CharField(max_length=4, default=None)
     """Horizontal position of the well in the microplate."""
@@ -93,7 +103,9 @@ class Well(Registry, CanValidate):
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_wells")
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_wells"
+    )
     """Creator of record, a :class:`~lamindb.User`."""
 
     class Meta:
@@ -111,7 +123,9 @@ class TreatmentTarget(Registry, CanValidate):
     """Name of the treatment target."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment target."""
-    genes = models.ManyToManyField("lnschema_bionty.Gene", related_name="treatment_targets")
+    genes = models.ManyToManyField(
+        "lnschema_bionty.Gene", related_name="treatment_targets"
+    )
     """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
@@ -137,11 +151,15 @@ class Treatment(Registry, CanValidate):
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
-    type = models.CharField(max_length=20, choices=TreatmentType.choices(), db_index=True)
+    type = models.CharField(
+        max_length=20, choices=TreatmentType.choices(), db_index=True
+    )
     """Type of the treatment.
     "genetic" or "chemical"
     """
-    system = models.CharField(max_length=32, choices=TreatmentSystem.choices(), default=None, db_index=True)
+    system = models.CharField(
+        max_length=32, choices=TreatmentSystem.choices(), default=None, db_index=True
+    )
     """System used for the genetic treatment."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment."""
@@ -153,7 +171,9 @@ class Treatment(Registry, CanValidate):
     """On-target score of the treatment."""
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
     """Off-target score of the treatment."""
-    ontology_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
+    ontology_id = models.CharField(
+        max_length=32, db_index=True, null=True, default=None
+    )
     """Ontology ID of the treatment."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
     """Pubchem ID of the chemical treatment."""
@@ -165,7 +185,9 @@ class Treatment(Registry, CanValidate):
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_treatments")
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_treatments"
+    )
     """Creator of record, a :class:`~lamindb.User`."""
 
 
@@ -227,5 +249,7 @@ class Techsample(Registry, CanValidate):
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
-    created_by = models.ForeignKey(User, PROTECT, default=current_user_id, related_name="created_techsamples")
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_techsamples"
+    )
     """Creator of record, a :class:`~lamindb.User`."""
