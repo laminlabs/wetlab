@@ -80,10 +80,15 @@ class Well(Registry, CanValidate):
     uid = models.CharField(unique=True, max_length=4, default=ids.base62_4)
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=32, default=None, null=True, unique=True, db_index=True)
+    """Name of the well."""
     row = models.CharField(max_length=4, default=None)
+    """Horizontal position of the well in the microplate."""
     column = models.IntegerField()
+    """Vertical position of the well in the microplate."""
     artifacts = models.ManyToManyField(Artifact, related_name="wells")
+    """Artifacts linked to the well."""
     collections = models.ManyToManyField(Collection, related_name="wells")
+    """Collections linked to the well."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
