@@ -34,12 +34,7 @@ class ExperimentType(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class TreatmentType(ChoicesMixin, Enum):
-    genetic = "genetic"
-    chemical = "chemical"
-
-
-class TreatmentSystem(ChoicesMixin, Enum):
+class GeneticTreatmentSystem(ChoicesMixin, Enum):
     CRISPR_Cas9 = "CRISPR Cas9"
     CRISPRi = "CRISPRi"
     CRISPRa = "CRISPRa"
@@ -127,6 +122,10 @@ class TreatmentTarget(Registry, CanValidate):
         "lnschema_bionty.Gene", related_name="treatment_targets"
     )
     """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
+    pathways = models.ManyToManyField(
+        "lnschema_bionty.Pathway", related_name="treatment_targets"
+    )
+    """Pathways of the treatment target, link to :class:`bionty.Pathway` records."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -142,6 +141,58 @@ class TreatmentTarget(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
+class Genetic(Registry, CanValidate):
+    """Genetic perturbations such as CRISPR."""
+
+    id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
+    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
+    system = models.CharField(
+        max_length=32,
+        choices=GeneticTreatmentSystem.choices(),
+        default=None,
+        db_index=True,
+    )
+    """System used for the genetic treatment."""
+    sequence = models.TextField(null=True, default=None, db_index=True)
+    """Sequence of the treatment."""
+    on_target_score = models.FloatField(default=None, null=True, db_index=True)
+    """On-target score of the treatment."""
+    off_target_score = models.FloatField(default=None, null=True, db_index=True)
+    """Off-target score of the treatment."""
+
+
+class Chemical(Registry, CanValidate):
+    """Chemical perturbations such as drugs."""
+
+    id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
+    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
+    pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
+    """Pubchem ID of the chemical treatment."""
+    concentration = models.PositiveIntegerField(null=True)
+    """Concentration of the chemical treatment."""
+    duration = models.PositiveBigIntegerField(null=True)
+    """Duration of the chemical treatment in seconds."""
+
+
+class Environmental(Registry, CanValidate):
+    """Environmental perturbations such as acid."""
+
+    id = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
+    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
+    value = models.IntegerField(null=True)
+    """The value of the environmental treatment such as a temperature"""
+    unit = models.CharField(max_length=32, null=True)
+    """Unit of the value such as 'degrees celius'"""
+    duration = models.PositiveBigIntegerField(null=True)
+    """Duration of the environmental treatment in seconds."""
+
+
 class Treatment(Registry, CanValidate):
     """Treatments."""
 
@@ -151,32 +202,22 @@ class Treatment(Registry, CanValidate):
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
-    type = models.CharField(
-        max_length=20, choices=TreatmentType.choices(), db_index=True
-    )
-    """Type of the treatment.
-    "genetic" or "chemical"
-    """
-    system = models.CharField(
-        max_length=32, choices=TreatmentSystem.choices(), default=None, db_index=True
-    )
-    """System used for the genetic treatment."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
     """Targets of the treatment."""
-    sequence = models.TextField(null=True, default=None, db_index=True)
-    """Sequence of the treatment."""
-    on_target_score = models.FloatField(default=None, null=True, db_index=True)
-    """On-target score of the treatment."""
-    off_target_score = models.FloatField(default=None, null=True, db_index=True)
-    """Off-target score of the treatment."""
     ontology_id = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the treatment."""
-    pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
-    """Pubchem ID of the chemical treatment."""
+    genetic = models.ForeignKey(Genetic, null=True, on_delete=models.CASCADE)
+    """Genetic perturbation of the treatment"""
+    chemical = models.ForeignKey(Chemical, null=True, on_delete=models.CASCADE)
+    """Chemical perturbation of the treatment."""
+    environmental = models.ForeignKey(
+        Environmental, null=True, on_delete=models.CASCADE
+    )
+    """Environmental perturbation of the treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatments")
     """Artifacts linked to the treatment."""
     collections = models.ManyToManyField(Collection, related_name="treatments")

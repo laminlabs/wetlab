@@ -51,8 +51,11 @@ if _check_instance_setup():
     del __getattr__  # delete so that imports work out
     from .models import (
         Biosample,
+        Chemical,
+        Environmental,
         Experiment,
         ExperimentType,
+        Genetic,
         Techsample,
         Treatment,
         TreatmentTarget,
