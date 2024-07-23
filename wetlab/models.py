@@ -1,6 +1,7 @@
 from enum import Enum
 
-from django.db import models
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Tissue
 from lnschema_core import ids
@@ -142,7 +143,10 @@ class TreatmentTarget(Registry, CanValidate):
 
 
 class Genetic(Registry, CanValidate):
-    """Genetic perturbations such as CRISPR."""
+    """Genetic perturbations such as CRISPR.
+
+    This record can only be saved through :class:`wetlab.Treatment`
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -161,25 +165,50 @@ class Genetic(Registry, CanValidate):
     """On-target score of the treatment."""
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
     """Off-target score of the treatment."""
+    _allow_save = False
+
+    def save(self, *args, **kwargs):
+        if not self._allow_save:
+            raise ValidationError(
+                "Genetic instances can only be saved through Treatment. "
+                "Please create a Treatment record using this instance and save the Treatment record."
+            )
+        super().save(*args, **kwargs)
 
 
-class Chemical(Registry, CanValidate):
-    """Chemical perturbations such as drugs."""
+class Compound(Registry, CanValidate):
+    """Compound perturbations such as drugs.
+
+    This record can only be saved through :class:`wetlab.Treatment`
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
-    """Pubchem ID of the chemical treatment."""
+    """Pubchem ID of the compound treatment."""
     concentration = models.PositiveIntegerField(null=True)
-    """Concentration of the chemical treatment."""
+    """Concentration of the compound treatment."""
     duration = models.PositiveBigIntegerField(null=True)
-    """Duration of the chemical treatment in seconds."""
+    """Duration of the compound treatment in seconds."""
+
+    _allow_save = False
+
+    def save(self, *args, **kwargs):
+        if not self._allow_save:
+            raise ValidationError(
+                "Compound instances can only be saved through Treatment. "
+                "Please create a Treatment record using this instance and save the Treatment record."
+            )
+        super().save(*args, **kwargs)
 
 
 class Environmental(Registry, CanValidate):
-    """Environmental perturbations such as acid."""
+    """Environmental perturbations such as acid.
+
+    This record can only be saved through :class:`wetlab.Treatment`
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -191,6 +220,16 @@ class Environmental(Registry, CanValidate):
     """Unit of the value such as 'degrees celius'"""
     duration = models.PositiveBigIntegerField(null=True)
     """Duration of the environmental treatment in seconds."""
+
+    _allow_save = False
+
+    def save(self, *args, **kwargs):
+        if not self._allow_save:
+            raise ValidationError(
+                "Environmental instances can only be saved through Treatment. "
+                "Please create a Treatment record using this instance and save the Treatment record."
+            )
+        super().save(*args, **kwargs)
 
 
 class Treatment(Registry, CanValidate):
@@ -212,8 +251,8 @@ class Treatment(Registry, CanValidate):
     """Ontology ID of the treatment."""
     genetic = models.ForeignKey(Genetic, null=True, on_delete=models.CASCADE)
     """Genetic perturbation of the treatment"""
-    chemical = models.ForeignKey(Chemical, null=True, on_delete=models.CASCADE)
-    """Chemical perturbation of the treatment."""
+    compound = models.ForeignKey(Compound, null=True, on_delete=models.CASCADE)
+    """Compound perturbation of the treatment."""
     environmental = models.ForeignKey(
         Environmental, null=True, on_delete=models.CASCADE
     )
@@ -230,6 +269,19 @@ class Treatment(Registry, CanValidate):
         User, PROTECT, default=current_user_id, related_name="created_treatments"
     )
     """Creator of record, a :class:`~lamindb.User`."""
+
+    def save(self, *args, **kwargs):
+        def _if_allowed_save(instance):
+            if instance:
+                instance._allow_save = True
+                instance.save()
+                instance._allow_save = False
+
+        with transaction.atomic():
+            _if_allowed_save(self.genetic)
+            _if_allowed_save(self.compound)
+            _if_allowed_save(self.environmental)
+            super().save(*args, **kwargs)
 
 
 class Biosample(Registry, CanValidate):
