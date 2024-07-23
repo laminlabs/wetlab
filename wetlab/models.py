@@ -250,13 +250,13 @@ class Treatment(Registry, CanValidate):
     )
     """Ontology ID of the treatment."""
     genetic = models.ForeignKey(Genetic, null=True, on_delete=models.CASCADE)
-    """Genetic perturbation of the treatment"""
+    """:class:`wetlab.Genetic` perturbation that is part of the treatment."""
     compound = models.ForeignKey(Compound, null=True, on_delete=models.CASCADE)
-    """Compound perturbation of the treatment."""
+    """:class:`wetlab.Compound` perturbation that is part of the treatment."""
     environmental = models.ForeignKey(
         Environmental, null=True, on_delete=models.CASCADE
     )
-    """Environmental perturbation of the treatment."""
+    """:class:`wetlab.Environmental` perturbation that is part of the treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatments")
     """Artifacts linked to the treatment."""
     collections = models.ManyToManyField(Collection, related_name="treatments")
