@@ -1,7 +1,8 @@
 from enum import Enum
+from typing import Iterable
 
 from django.db import models
-from django.db.models import PROTECT
+from django.db.models import PROTECT, QuerySet
 from lnschema_bionty.models import (
     CellLine,
     CellType,
@@ -16,7 +17,6 @@ from lnschema_core.models import (
     Artifact,
     CanValidate,
     Collection,
-    QuerySet,
     Registry,
     User,
 )
@@ -342,6 +342,41 @@ class CombinationTreatment(Registry, CanValidate):
     created_by = models.ForeignKey(
         User, PROTECT, default=current_user_id, related_name="created_treatments"
     )
+
+    def __init__(
+        self,
+        *args,
+        genetics: GeneticTreatment | Iterable[GeneticTreatment] | None = None,
+        compounds: CompoundTreatment | Iterable[CompoundTreatment] | None = None,
+        environmentals: EnvironmentalTreatment
+        | Iterable[EnvironmentalTreatment]
+        | None = None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self._genetics = (
+            [genetics] if isinstance(genetics, GeneticTreatment) else genetics
+        )
+        self._compounds = (
+            [compounds] if isinstance(compounds, CompoundTreatment) else compounds
+        )
+        self._environmentals = (
+            [environmentals]
+            if isinstance(environmentals, EnvironmentalTreatment)
+            else environmentals
+        )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self._genetics:
+            self.genetics.set(self._genetics)
+        if self._compounds:
+            self.compounds.set(self._compounds)
+        if self._environmentals:
+            self.environmentals.set(self._environmentals)
+        self._genetics = None
+        self._compounds = None
+        self._environmentals = None
 
     @property
     def members(self) -> QuerySet:
