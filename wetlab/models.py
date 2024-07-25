@@ -1,11 +1,17 @@
 from enum import Enum
 
-from django.core.exceptions import ValidationError
-from django.db import models, transaction
+from django.db import models
 from django.db.models import PROTECT
 from lnschema_bionty.models import CellLine, CellType, Disease, Tissue
 from lnschema_core import ids
-from lnschema_core.models import Artifact, CanValidate, Collection, Registry, User
+from lnschema_core.models import (
+    Artifact,
+    CanValidate,
+    Collection,
+    QuerySet,
+    Registry,
+    User,
+)
 from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
@@ -142,16 +148,15 @@ class TreatmentTarget(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Genetic(Registry, CanValidate):
-    """Genetic perturbations such as CRISPR.
-
-    This record can only be saved through :class:`wetlab.Treatment`
-    """
+class GeneticTreatment(Registry, CanValidate):
+    """Genetic perturbations such as CRISPR."""
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
+    name = models.CharField(max_length=255, default=None, db_index=True)
+    """Name of the Genetic treatment."""
     system = models.CharField(
         max_length=32,
         choices=GeneticTreatmentSystem.choices(),
@@ -159,80 +164,91 @@ class Genetic(Registry, CanValidate):
         db_index=True,
     )
     """System used for the genetic treatment."""
+    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    """Targets of the treatment."""
     sequence = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
     on_target_score = models.FloatField(default=None, null=True, db_index=True)
     """On-target score of the treatment."""
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
     """Off-target score of the treatment."""
-    _allow_save = False
+    artifacts = models.ManyToManyField(Artifact, related_name="treatments")
+    """Artifacts linked to the treatment."""
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    """Time of creation of record."""
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    """Time of last update to record."""
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_genetics"
+    )
+    """Creator of record, a :class:`~lamindb.User`."""
 
-    def save(self, *args, **kwargs):
-        if not self._allow_save:
-            raise ValidationError(
-                "Genetic instances can only be saved through Treatment. "
-                "Please create a Treatment record using this instance and save the Treatment record."
-            )
-        super().save(*args, **kwargs)
 
-
-class Compound(Registry, CanValidate):
-    """Compound perturbations such as drugs.
-
-    This record can only be saved through :class:`wetlab.Treatment`
-    """
+class CompoundTreatment(Registry, CanValidate):
+    """Compound perturbations such as drugs."""
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
+    name = models.CharField(max_length=255, default=None, db_index=True)
+    """Name of the Genetic treatment."""
+    ontology_id = models.CharField(
+        max_length=32, db_index=True, null=True, default=None
+    )
+    """Ontology ID of the compound."""
+    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    """Targets of the combination treatment."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
     """Pubchem ID of the compound treatment."""
     concentration = models.PositiveIntegerField(null=True)
     """Concentration of the compound treatment."""
     duration = models.PositiveBigIntegerField(null=True)
-    """Duration of the compound treatment in seconds."""
+    """Duration of the compound treatment."""
+    duration_unit = models.CharField(max_length=12, null=True)
+    """Unit of the duration."""
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    """Time of creation of record."""
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    """Time of last update to record."""
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_compounds"
+    )
 
-    _allow_save = False
 
-    def save(self, *args, **kwargs):
-        if not self._allow_save:
-            raise ValidationError(
-                "Compound instances can only be saved through Treatment. "
-                "Please create a Treatment record using this instance and save the Treatment record."
-            )
-        super().save(*args, **kwargs)
-
-
-class Environmental(Registry, CanValidate):
-    """Environmental perturbations such as acid.
-
-    This record can only be saved through :class:`wetlab.Treatment`
-    """
+class EnvironmentalTreatment(Registry, CanValidate):
+    """Environmental perturbations such as acid."""
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
+    name = models.CharField(max_length=255, default=None, db_index=True)
+    """Name of the Genetic treatment."""
+    ontology_id = models.CharField(
+        max_length=32, db_index=True, null=True, default=None
+    )
+    """Ontology ID of the environmental treatment."""
+    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    """Targets of the combination treatment."""
     value = models.IntegerField(null=True)
     """The value of the environmental treatment such as a temperature"""
     unit = models.CharField(max_length=32, null=True)
     """Unit of the value such as 'degrees celius'"""
     duration = models.PositiveBigIntegerField(null=True)
     """Duration of the environmental treatment in seconds."""
+    duration_unit = models.CharField(max_length=12, null=True)
+    """Unit of the duration."""
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    """Time of creation of record."""
+    updated_at = models.DateTimeField(auto_now=True, db_index=True)
+    """Time of last update to record."""
+    created_by = models.ForeignKey(
+        User, PROTECT, default=current_user_id, related_name="created_environmental"
+    )
 
-    _allow_save = False
 
-    def save(self, *args, **kwargs):
-        if not self._allow_save:
-            raise ValidationError(
-                "Environmental instances can only be saved through Treatment. "
-                "Please create a Treatment record using this instance and save the Treatment record."
-            )
-        super().save(*args, **kwargs)
-
-
-class Treatment(Registry, CanValidate):
+class CombinationTreatment(Registry, CanValidate):
     """Treatments."""
 
     id = models.AutoField(primary_key=True)
@@ -242,25 +258,25 @@ class Treatment(Registry, CanValidate):
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
     description = models.TextField(null=True, default=None)
-    """Description of the treatment."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
-    """Targets of the treatment."""
+    """Description of the combination treatment."""
     ontology_id = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the treatment."""
-    genetic = models.ForeignKey(Genetic, null=True, on_delete=models.CASCADE)
-    """:class:`wetlab.Genetic` perturbation that is part of the treatment."""
-    compound = models.ForeignKey(Compound, null=True, on_delete=models.CASCADE)
-    """:class:`wetlab.Compound` perturbation that is part of the treatment."""
-    environmental = models.ForeignKey(
-        Environmental, null=True, on_delete=models.CASCADE
+    genetics = models.ManyToManyField(
+        GeneticTreatment, related_name="genetic_treatments"
     )
-    """:class:`wetlab.Environmental` perturbation that is part of the treatment."""
+    """:class:`wetlab.GeneticTreatment` treatments."""
+    compounds = models.ManyToManyField(
+        CompoundTreatment, related_name="compound_treatments"
+    )
+    """:class:`wetlab.CompoundTreatment` treatments."""
+    environmentals = models.ManyToManyField(
+        EnvironmentalTreatment, related_name="environmental_treatments"
+    )
+    """:class:`wetlab.EnvironmentalTreatment` treatments."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatments")
     """Artifacts linked to the treatment."""
-    collections = models.ManyToManyField(Collection, related_name="treatments")
-    """Collections linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -268,20 +284,14 @@ class Treatment(Registry, CanValidate):
     created_by = models.ForeignKey(
         User, PROTECT, default=current_user_id, related_name="created_treatments"
     )
-    """Creator of record, a :class:`~lamindb.User`."""
 
-    def save(self, *args, **kwargs):
-        def _if_allowed_save(instance):
-            if instance:
-                instance._allow_save = True
-                instance.save()
-                instance._allow_save = False
+    @property
+    def members(self) -> QuerySet:
+        """Retrieve all related GeneticTreatment, CompoundTreatment, and EnvironmentalTreatment instances."""
+        if self._state.adding:
+            return self.__class__.objects.none()
 
-        with transaction.atomic():
-            _if_allowed_save(self.genetic)
-            _if_allowed_save(self.compound)
-            _if_allowed_save(self.environmental)
-            super().save(*args, **kwargs)
+        return self.genetic.all().union(self.compound.all(), self.environmental.all())
 
 
 class Biosample(Registry, CanValidate):
