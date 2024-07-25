@@ -184,8 +184,9 @@ def _create_targets_for_biomolecules(
             if isinstance(target, TreatmentTarget):
                 valid_targets.append(target)
             elif isinstance(target, (Gene, Protein, Pathway)):
+                target_name = target.symbol if isinstance(target, Gene) else target.name
                 treatment_target = TreatmentTarget.objects.create(
-                    name=target.name,
+                    name=target_name,
                     description=f"Automatically created for {target.__class__.__name__}",
                 )
                 if isinstance(target, Gene):
@@ -244,8 +245,13 @@ class GeneticTreatment(Registry, CanValidate):
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+        self._pending_targets = targets
 
-        _create_targets_for_biomolecules(self, targets)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if hasattr(self, "_pending_targets") and self._pending_targets:
+            _create_targets_for_biomolecules(self, self._pending_targets)
+            del self._pending_targets
 
     def __repr__(self) -> str:
         original_repr = super().__repr__()
@@ -294,8 +300,13 @@ class CompoundTreatment(Registry, CanValidate):
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+        self._pending_targets = targets
 
-        _create_targets_for_biomolecules(self, targets)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if hasattr(self, "_pending_targets") and self._pending_targets:
+            _create_targets_for_biomolecules(self, self._pending_targets)
+            del self._pending_targets
 
     def __repr__(self) -> str:
         targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
