@@ -2,7 +2,15 @@ from enum import Enum
 
 from django.db import models
 from django.db.models import PROTECT
-from lnschema_bionty.models import CellLine, CellType, Disease, Tissue
+from lnschema_bionty.models import (
+    CellLine,
+    CellType,
+    Disease,
+    Gene,
+    Pathway,
+    Protein,
+    Tissue,
+)
 from lnschema_core import ids
 from lnschema_core.models import (
     Artifact,
@@ -133,6 +141,9 @@ class TreatmentTarget(Registry, CanValidate):
         "lnschema_bionty.Pathway", related_name="treatment_targets"
     )
     """Pathways of the treatment target, link to :class:`bionty.Pathway` records."""
+    proteins = models.ManyToManyField(
+        "lnschema_bionty.Protein", related_name="treatment_targets"
+    )
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -146,6 +157,33 @@ class TreatmentTarget(Registry, CanValidate):
         related_name="created_treatment_targets",
     )
     """Creator of record, a :class:`~lamindb.User`."""
+
+
+def _create_targets_for_biomolecules(
+    cls: Registry, targets: TreatmentTarget | Gene | Protein | Pathway
+) -> None:
+    if targets is not None:
+        valid_targets = []
+        for target in targets:
+            if isinstance(target, TreatmentTarget):
+                valid_targets.append(target)
+            elif isinstance(target, (Gene, Protein, Pathway)):
+                treatment_target = TreatmentTarget.objects.create(
+                    name=target.name,
+                    description=f"Automatically created for {target.__class__.__name__}",
+                )
+                if isinstance(target, Gene):
+                    treatment_target.genes.add(target)
+                elif isinstance(target, Pathway):
+                    treatment_target.pathways.add(target)
+                elif isinstance(target, Protein):
+                    treatment_target.proteins.add(target)
+                treatment_target.save()
+                valid_targets.append(treatment_target)
+            else:
+                raise ValueError("Invalid target type")
+
+        cls.targets.set(valid_targets)
 
 
 class GeneticTreatment(Registry, CanValidate):
@@ -183,6 +221,16 @@ class GeneticTreatment(Registry, CanValidate):
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
+    def __init__(
+        self,
+        *args,
+        targets: TreatmentTarget | Gene | Protein | Pathway = None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        _create_targets_for_biomolecules(self, targets)
+
 
 class CompoundTreatment(Registry, CanValidate):
     """Compound perturbations such as drugs."""
@@ -214,6 +262,16 @@ class CompoundTreatment(Registry, CanValidate):
     created_by = models.ForeignKey(
         User, PROTECT, default=current_user_id, related_name="created_compounds"
     )
+
+    def __init__(
+        self,
+        *args,
+        targets: TreatmentTarget | Gene | Protein | Pathway = None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        _create_targets_for_biomolecules(self, targets)
 
 
 class EnvironmentalTreatment(Registry, CanValidate):
