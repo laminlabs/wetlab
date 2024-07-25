@@ -158,6 +158,19 @@ class TreatmentTarget(Registry, CanValidate):
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
+    def __repr__(self) -> str:
+        genes_repr = "\n".join(f"      {gene}" for gene in self.genes.all())
+        pathways_repr = "\n".join(f"      {pathway}" for pathway in self.pathways.all())
+        proteins_repr = "\n".join(f"      {protein}" for protein in self.proteins.all())
+
+        return (
+            f"TreatmentTarget(uid='{self.uid}', name='{self.name}', description='{self.description}', "
+            f"created_by_id={self.created_by_id}, updated_at='{self.updated_at}')\n"
+            f"  genes ({self.genes.count()}):\n{genes_repr}\n"
+            f"  pathways ({self.pathways.count()}): {pathways_repr}\n"
+            f"  proteins ({self.proteins.count()}): {proteins_repr}\n"
+        )
+
 
 def _create_targets_for_biomolecules(
     cls: Registry, targets: TreatmentTarget | Gene | Protein | Pathway
@@ -315,7 +328,7 @@ class EnvironmentalTreatment(Registry, CanValidate):
 
 
 class CombinationTreatment(Registry, CanValidate):
-    """Treatments."""
+    """Combination of several treatments."""
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -375,6 +388,23 @@ class CombinationTreatment(Registry, CanValidate):
             [environmentals]
             if isinstance(environmentals, EnvironmentalTreatment)
             else environmentals
+        )
+
+    def __repr__(self) -> str:
+        genetics_repr = "\n".join(f"      {genetic}" for genetic in self.genetics.all())
+        compounds_repr = "\n".join(
+            f"      {compound}" for compound in self.compounds.all()
+        )
+        environmentals_repr = "\n".join(
+            f"      {environmental}" for environmental in self.environmentals.all()
+        )
+
+        return (
+            f"CombinationTreatment(uid='{self.uid}', name='{self.name}', description='{self.description}', "
+            f"created_by_id={self.created_by_id}, updated_at='{self.updated_at}')\n"
+            f"  genetics ({self.genetics.count()}):\n{genetics_repr}\n"
+            f"  compounds ({self.compounds.count()}):\n{compounds_repr}\n"
+            f"  environmentals ({self.environmentals.count()}):\n{environmentals_repr}"
         )
 
     def save(self, *args, **kwargs):
