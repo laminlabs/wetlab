@@ -163,13 +163,16 @@ class TreatmentTarget(Registry, CanValidate):
         pathways_repr = "\n".join(f"      {pathway}" for pathway in self.pathways.all())
         proteins_repr = "\n".join(f"      {protein}" for protein in self.proteins.all())
 
-        return (
-            f"TreatmentTarget(uid='{self.uid}', name='{self.name}', description='{self.description}', "
-            f"created_by_id={self.created_by_id}, updated_at='{self.updated_at}')\n"
-            f"  genes ({self.genes.count()}):\n{genes_repr}\n"
-            f"  pathways ({self.pathways.count()}): {pathways_repr}\n"
-            f"  proteins ({self.proteins.count()}): {proteins_repr}\n"
-        )
+        result = [f"{super().__repr__()}"]
+
+        if self.genes.count() > 0:
+            result.append(f"  genes ({self.genes.count()}):\n{genes_repr}")
+        if self.pathways.count() > 0:
+            result.append(f"  pathways ({self.pathways.count()}):\n{pathways_repr}")
+        if self.proteins.count() > 0:
+            result.append(f"  proteins ({self.proteins.count()}):\n{proteins_repr}")
+
+        return "\n".join(result)
 
 
 def _create_targets_for_biomolecules(
@@ -244,6 +247,12 @@ class GeneticTreatment(Registry, CanValidate):
 
         _create_targets_for_biomolecules(self, targets)
 
+    def __repr__(self) -> str:
+        original_repr = super().__repr__()
+        targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
+
+        return f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
+
 
 class CompoundTreatment(Registry, CanValidate):
     """Compound perturbations such as drugs."""
@@ -287,6 +296,13 @@ class CompoundTreatment(Registry, CanValidate):
         super().__init__(*args, **kwargs)
 
         _create_targets_for_biomolecules(self, targets)
+
+    def __repr__(self) -> str:
+        targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
+
+        return (
+            f"{super().__repr__()}\n  targets ({self.targets.count()}):\n{targets_repr}"
+        )
 
 
 class EnvironmentalTreatment(Registry, CanValidate):
@@ -399,13 +415,17 @@ class CombinationTreatment(Registry, CanValidate):
             f"      {environmental}" for environmental in self.environmentals.all()
         )
 
-        return (
-            f"CombinationTreatment(uid='{self.uid}', name='{self.name}', description='{self.description}', "
-            f"created_by_id={self.created_by_id}, updated_at='{self.updated_at}')\n"
-            f"  genetics ({self.genetics.count()}):\n{genetics_repr}\n"
-            f"  compounds ({self.compounds.count()}):\n{compounds_repr}\n"
-            f"  environmentals ({self.environmentals.count()}):\n{environmentals_repr}"
-        )
+        result = [f"{super().__repr__()}"]
+        if self.genetics.count() > 0:
+            result.append(f"  genetics ({self.genetics.count()}):\n{genetics_repr}")
+        if self.compounds.count() > 0:
+            result.append(f"  compounds ({self.compounds.count()}):\n{compounds_repr}")
+        if self.environmentals.count() > 0:
+            result.append(
+                f"  environmentals ({self.environmentals.count()}):\n{environmentals_repr}"
+            )
+
+        return "\n".join(result)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
