@@ -202,7 +202,7 @@ class GeneticTreatment(Registry, CanValidate):
         db_index=True,
     )
     """System used for the genetic treatment."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    targets = models.ManyToManyField(TreatmentTarget, related_name="genetic_targets")
     """Targets of the treatment."""
     sequence = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
@@ -210,7 +210,7 @@ class GeneticTreatment(Registry, CanValidate):
     """On-target score of the treatment."""
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
     """Off-target score of the treatment."""
-    artifacts = models.ManyToManyField(Artifact, related_name="treatments")
+    artifacts = models.ManyToManyField(Artifact, related_name="genetic_treatments")
     """Artifacts linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
@@ -245,7 +245,7 @@ class CompoundTreatment(Registry, CanValidate):
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the compound."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
     """Targets of the combination treatment."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
     """Pubchem ID of the compound treatment."""
@@ -255,6 +255,8 @@ class CompoundTreatment(Registry, CanValidate):
     """Duration of the compound treatment."""
     duration_unit = models.CharField(max_length=12, null=True)
     """Unit of the duration."""
+    artifacts = models.ManyToManyField(Artifact, related_name="compound_treatments")
+    """Artifacts linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -287,7 +289,9 @@ class EnvironmentalTreatment(Registry, CanValidate):
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the environmental treatment."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="treatments")
+    targets = models.ManyToManyField(
+        TreatmentTarget, related_name="environmental_targets"
+    )
     """Targets of the combination treatment."""
     value = models.IntegerField(null=True)
     """The value of the environmental treatment such as a temperature"""
@@ -297,6 +301,10 @@ class EnvironmentalTreatment(Registry, CanValidate):
     """Duration of the environmental treatment in seconds."""
     duration_unit = models.CharField(max_length=12, null=True)
     """Unit of the duration."""
+    artifacts = models.ManyToManyField(
+        Artifact, related_name="environmental_treatments"
+    )
+    """Artifacts linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -333,14 +341,17 @@ class CombinationTreatment(Registry, CanValidate):
         EnvironmentalTreatment, related_name="environmental_treatments"
     )
     """:class:`wetlab.EnvironmentalTreatment` treatments."""
-    artifacts = models.ManyToManyField(Artifact, related_name="treatments")
+    artifacts = models.ManyToManyField(Artifact, related_name="combination_treatments")
     """Artifacts linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     """Time of last update to record."""
     created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_treatments"
+        User,
+        PROTECT,
+        default=current_user_id,
+        related_name="created_combination_treatments",
     )
 
     def __init__(
