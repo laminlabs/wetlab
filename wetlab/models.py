@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Iterable
 
 from django.db import models
 from django.db.models import PROTECT, QuerySet
@@ -7,9 +6,6 @@ from lnschema_bionty.models import (
     CellLine,
     CellType,
     Disease,
-    Gene,
-    Pathway,
-    Protein,
     Tissue,
 )
 from lnschema_core import ids
@@ -48,6 +44,13 @@ class ExperimentType(Registry, CanValidate):
     """Experiment types.
 
     Models the type of wetlab experiment and is associated with :class:`wetlab.Experiment`.
+
+    Examples:
+        >>> experiment_type = wl.ExperimentType(
+        ...    name="single-cell RNA sequencing",
+        ...    ontology_id="0008913"
+        ... )
+        >>> experiment_type.save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -76,6 +79,13 @@ class Experiment(Registry, CanValidate):
     """Experiments.
 
     Models a wetlab experiment of :class:`wetlab.ExperimentType`.
+
+    Example:
+        >>> experiment = wl.Experiment(
+        ...     name="IPF mice vs control mice",
+        ...     description="Analysis of gene expression levels in different cell types of IPF.",
+        ... )
+        >>> experiment.save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -110,6 +120,14 @@ class Well(Registry, CanValidate):
     """Wells.
 
     Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
+
+    Example:
+        >>> well = wl.Well(
+        ...    name="Well A1",
+        ...    row="A",
+        ...    column=1,
+        ... )
+        >>> well.save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -145,6 +163,14 @@ class TreatmentTarget(Registry, CanValidate):
     """Treatment targets.
 
     Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
+
+    Examples:
+        >>> gene_1 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000003")
+        >>> gene_1.save()
+        >>> gene_2 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000005")
+        >>> gene_2.save()
+        >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD")
+        >>> targets.genes.set([gene_1, gene_2])
     """
 
     id = models.AutoField(primary_key=True)
@@ -197,35 +223,6 @@ class TreatmentTarget(Registry, CanValidate):
         return "\n".join(result)
 
 
-def _create_targets_for_biomolecules(
-    cls: Registry, targets: Iterable[TreatmentTarget | Gene | Protein | Pathway]
-) -> None:
-    """Creates :class:`wetlab.TreatmentTarget` for passed Biomolecules and sets them for a Registry."""
-    if targets is not None:
-        valid_targets = []
-        for target in targets:
-            if isinstance(target, TreatmentTarget):
-                valid_targets.append(target)
-            elif isinstance(target, (Gene, Protein, Pathway)):
-                target_name = target.symbol if isinstance(target, Gene) else target.name
-                treatment_target = TreatmentTarget(
-                    name=target_name,
-                    description=f"Automatically created for {target.__class__.__name__}",
-                )
-                if isinstance(target, Gene):
-                    treatment_target.genes.add(target)
-                elif isinstance(target, Pathway):
-                    treatment_target.pathways.add(target)
-                elif isinstance(target, Protein):
-                    treatment_target.proteins.add(target)
-                treatment_target.save()
-                valid_targets.append(treatment_target)
-            else:
-                raise ValueError("Invalid target type")
-
-        cls.targets.set(valid_targets)
-
-
 class GeneticTreatment(Registry, CanValidate):
     """Genetic treatments.
 
@@ -237,9 +234,6 @@ class GeneticTreatment(Registry, CanValidate):
                 Must be one of 'CRISPR Cas9', 'CRISPRi', 'CRISPRa', 'shRNA', 'siRNA', 'transgene', 'transient transfection'.
         on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
         off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
-        targets: One or several :class:`wetlab.TreatmentTarget` records.
-                 Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
-                 records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
 
     Examples:
         >>> sicke_cell_treatment = wl.GeneticTreatment(
@@ -284,21 +278,6 @@ class GeneticTreatment(Registry, CanValidate):
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
-    def __init__(
-        self,
-        *args,
-        targets: Iterable[TreatmentTarget | Gene | Protein | Pathway] = None,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self._pending_targets = targets
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if hasattr(self, "_pending_targets") and self._pending_targets:
-            _create_targets_for_biomolecules(self, self._pending_targets)
-            del self._pending_targets
-
     def __repr__(self) -> str:
         original_repr = super().__repr__()
         targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
@@ -319,9 +298,6 @@ class CompoundTreatment(Registry, CanValidate):
         duration: Time duration of how long the treatment was applied.
         duration_unit: The unit for the duration.
             Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
-        targets: One or several :class:`wetlab.TreatmentTarget` records.
-                 Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
-                 records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
 
     Examples:
         >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
@@ -365,21 +341,6 @@ class CompoundTreatment(Registry, CanValidate):
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
-    def __init__(
-        self,
-        *args,
-        targets: Iterable[TreatmentTarget | Gene | Protein | Pathway] = None,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self._pending_targets = targets
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if hasattr(self, "_pending_targets") and self._pending_targets:
-            _create_targets_for_biomolecules(self, self._pending_targets)
-            del self._pending_targets
-
     def __repr__(self) -> str:
         targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
 
@@ -401,9 +362,6 @@ class EnvironmentalTreatment(Registry, CanValidate):
         duration: Time duration of how long the treatment was applied.
         duration_unit: The unit for the duration.
             Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
-        targets: One or several :class:`wetlab.TreatmentTarget` records.
-                 Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
-                 records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
     """
 
     id = models.AutoField(primary_key=True)
@@ -443,21 +401,6 @@ class EnvironmentalTreatment(Registry, CanValidate):
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
-    def __init__(
-        self,
-        *args,
-        targets: Iterable[TreatmentTarget | Gene | Protein | Pathway] = None,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self._pending_targets = targets
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if hasattr(self, "_pending_targets") and self._pending_targets:
-            _create_targets_for_biomolecules(self, self._pending_targets)
-            del self._pending_targets
-
     def __repr__(self) -> str:
         targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
 
@@ -476,9 +419,6 @@ class CombinationTreatment(Registry, CanValidate):
         name: A name of the CombinationTreatment that summarizes all applied Treatments.
         description: A description of the CombinationTreatment.
         ontology_id: An ontology ID of the CombinationTreatment.
-        genetics: One or several :class:`wetlab.GeneticTreatment` objects that define the CombinationTreatment.
-        compounds: One or several :class:`wetlab.CompoundTreatment` objects that define the CombinationTreatment.
-        environmentals: One or several :class:`wetlab.EnvironmentalTreatment` objects that define the CombinationTreatment.
 
     Examples:
         >>> sc_treatment = wl.GeneticTreatment(
@@ -502,11 +442,11 @@ class CombinationTreatment(Registry, CanValidate):
         >>> aspirin_treatment.save()
 
         >>> comb_treatment = wl.CombinationTreatment(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
-        ...    genetics=[sc_treatment, cftr_treatment],
-        ...    compounds=[aspirin_treatment],
         ...    description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
         ... )
         >>> comb_treatment.save()
+        >>> comb_treatment.genetics.set([sc_treatment, aspirin_treatment])
+        >>> comb_treatment.compounds.add(aspirin_treatment)
     """
 
     id = models.AutoField(primary_key=True)
@@ -547,29 +487,6 @@ class CombinationTreatment(Registry, CanValidate):
     )
     """Creator of record, a :class:`~lamindb.User`."""
 
-    def __init__(
-        self,
-        *args,
-        genetics: GeneticTreatment | Iterable[GeneticTreatment] | None = None,
-        compounds: CompoundTreatment | Iterable[CompoundTreatment] | None = None,
-        environmentals: EnvironmentalTreatment
-        | Iterable[EnvironmentalTreatment]
-        | None = None,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self._genetics = (
-            [genetics] if isinstance(genetics, GeneticTreatment) else genetics
-        )
-        self._compounds = (
-            [compounds] if isinstance(compounds, CompoundTreatment) else compounds
-        )
-        self._environmentals = (
-            [environmentals]
-            if isinstance(environmentals, EnvironmentalTreatment)
-            else environmentals
-        )
-
     def __repr__(self) -> str:
         genetics_repr = "\n".join(f"      {genetic}" for genetic in self.genetics.all())
         compounds_repr = "\n".join(
@@ -590,23 +507,6 @@ class CombinationTreatment(Registry, CanValidate):
             )
 
         return "\n".join(result)
-
-    def save(self, *args, **kwargs):
-        """Saves the :class:`wetlab.CombinationTreatment` record to the lamindb instance.
-
-        Further saves any to the constructor passed :class:`wetlab.GeneticTreatment`,
-        :class:`wetlab.CompoundTreatment`, and :class:`wetlab.EnvironmentalTreatment` records.
-        """
-        super().save(*args, **kwargs)
-        if self._genetics:
-            self.genetics.set(self._genetics)
-        if self._compounds:
-            self.compounds.set(self._compounds)
-        if self._environmentals:
-            self.environmentals.set(self._environmentals)
-        self._genetics = None
-        self._compounds = None
-        self._environmentals = None
 
     @property
     def members(self) -> QuerySet:
