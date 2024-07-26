@@ -24,8 +24,31 @@ from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
 
+class GeneticTreatmentSystem(ChoicesMixin, Enum):
+    CRISPR_Cas9 = "CRISPR Cas9"
+    CRISPRi = "CRISPRi"
+    CRISPRa = "CRISPRa"
+    shRNA = "shRNA"
+    siRNA = "siRNA"
+    transgene = "transgene"
+    transient_transfection = "transient transfection"
+
+
+class DurationUnit(ChoicesMixin, Enum):
+    SECOND = "second"
+    MINUTE = "minute"
+    HOUR = "hour"
+    DAY = "day"
+    WEEK = "week"
+    MONTH = "month"
+    YEAR = "year"
+
+
 class ExperimentType(Registry, CanValidate):
-    """Experiment types."""
+    """Experiment types.
+
+    Models the type of wetlab experiment and is associated with :class:`wetlab.Experiment`.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -49,28 +72,11 @@ class ExperimentType(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class GeneticTreatmentSystem(ChoicesMixin, Enum):
-    CRISPR_Cas9 = "CRISPR Cas9"
-    CRISPRi = "CRISPRi"
-    CRISPRa = "CRISPRa"
-    shRNA = "shRNA"
-    siRNA = "siRNA"
-    transgene = "transgene"
-    transient_transfection = "transient transfection"
-
-
-class DurationUnit(ChoicesMixin, Enum):
-    SECOND = "second"
-    MINUTE = "minute"
-    HOUR = "hour"
-    DAY = "day"
-    WEEK = "week"
-    MONTH = "month"
-    YEAR = "year"
-
-
 class Experiment(Registry, CanValidate):
-    """Experiments."""
+    """Experiments.
+
+    Models a wetlab experiment of :class:`wetlab.ExperimentType`.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -101,7 +107,10 @@ class Experiment(Registry, CanValidate):
 
 
 class Well(Registry, CanValidate):
-    """Wells."""
+    """Wells.
+
+    Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -133,7 +142,10 @@ class Well(Registry, CanValidate):
 
 
 class TreatmentTarget(Registry, CanValidate):
-    """Treatment targets."""
+    """Treatment targets.
+
+    Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -392,7 +404,6 @@ class EnvironmentalTreatment(Registry, CanValidate):
         targets: One or several :class:`wetlab.TreatmentTarget` records.
                  Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
                  records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
-
     """
 
     id = models.AutoField(primary_key=True)
