@@ -41,9 +41,7 @@ class DurationUnit(ChoicesMixin, Enum):
 
 
 class ExperimentType(Registry, CanValidate):
-    """Experiment types.
-
-    Models the type of wetlab experiment and is associated with :class:`wetlab.Experiment`.
+    """Models the type of wetlab experiment and is associated with :class:`wetlab.Experiment`.
 
     Examples:
         >>> experiment_type = wl.ExperimentType(
@@ -76,9 +74,7 @@ class ExperimentType(Registry, CanValidate):
 
 
 class Experiment(Registry, CanValidate):
-    """Experiments.
-
-    Models a wetlab experiment of :class:`wetlab.ExperimentType`.
+    """Models a wetlab experiment of :class:`wetlab.ExperimentType`..
 
     Example:
         >>> experiment = wl.Experiment(
