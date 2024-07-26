@@ -1,8 +1,8 @@
 from enum import Enum
 
+from bionty.models import CellLine, CellType, Disease, Tissue
 from django.db import models
 from django.db.models import PROTECT
-from bionty.models import CellLine, CellType, Disease, Tissue
 from lnschema_core import ids
 from lnschema_core.models import Artifact, CanValidate, Collection, Registry, User
 from lnschema_core.types import ChoicesMixin
