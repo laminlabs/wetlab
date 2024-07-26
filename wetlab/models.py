@@ -226,7 +226,7 @@ class GeneticTreatment(Registry, CanValidate):
         on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
         off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
         targets: One or several :class:`wetlab.TreatmentTarget` records.
-                 Can also be :class:`lnschema_bionty.Gene`, :class:`lnschema_bionty.Gene`, or :class:`lnschema_bionty.Gene`
+                 Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
                  records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
 
     Examples:
@@ -308,7 +308,7 @@ class CompoundTreatment(Registry, CanValidate):
         duration_unit: The unit for the duration.
             Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
         targets: One or several :class:`wetlab.TreatmentTarget` records.
-                 Can also be :class:`lnschema_bionty.Gene`, :class:`lnschema_bionty.Gene`, or :class:`lnschema_bionty.Gene`
+                 Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
                  records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
 
     Examples:
@@ -646,7 +646,10 @@ class Biosample(Registry, CanValidate):
 
 
 class Techsample(Registry, CanValidate):
-    """Technical samples."""
+    """Technical samples.
+
+    Models technical samples which represents a processed or derived sample in a lab, often created from raw biological materials and used for specific technical procedures or assays. It includes metadata for tracking and identifying the sample within and across databases.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
