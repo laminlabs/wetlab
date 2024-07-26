@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("lnschema_bionty", "0023_rename_publicsource_encode_uid"),
+        ("bionty", "0023_rename_publicsource_encode_uid"),
     ]
 
     operations = [
@@ -43,13 +43,13 @@ class Migration(migrations.Migration):
                 (
                     "cell_lines",
                     models.ManyToManyField(
-                        related_name="biosamples", to="lnschema_bionty.cellline"
+                        related_name="biosamples", to="bionty.cellline"
                     ),
                 ),
                 (
                     "cell_types",
                     models.ManyToManyField(
-                        related_name="biosamples", to="lnschema_bionty.celltype"
+                        related_name="biosamples", to="bionty.celltype"
                     ),
                 ),
                 (
@@ -61,13 +61,13 @@ class Migration(migrations.Migration):
                 (
                     "diseases",
                     models.ManyToManyField(
-                        related_name="biosamples", to="lnschema_bionty.disease"
+                        related_name="biosamples", to="bionty.disease"
                     ),
                 ),
                 (
                     "tissues",
                     models.ManyToManyField(
-                        related_name="biosamples", to="lnschema_bionty.tissue"
+                        related_name="biosamples", to="bionty.tissue"
                     ),
                 ),
             ],
@@ -230,7 +230,7 @@ class Migration(migrations.Migration):
                 (
                     "genes",
                     models.ManyToManyField(
-                        related_name="treatment_targets", to="lnschema_bionty.gene"
+                        related_name="treatment_targets", to="bionty.gene"
                     ),
                 ),
             ],
