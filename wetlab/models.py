@@ -178,6 +178,7 @@ class TreatmentTarget(Registry, CanValidate):
 def _create_targets_for_biomolecules(
     cls: Registry, targets: TreatmentTarget | Gene | Protein | Pathway
 ) -> None:
+    """Creates :class:`wetlab.TreatmentTarget` for passed Biomolecules and sets them for a Registry."""
     if targets is not None:
         valid_targets = []
         for target in targets:
@@ -185,7 +186,7 @@ def _create_targets_for_biomolecules(
                 valid_targets.append(target)
             elif isinstance(target, (Gene, Protein, Pathway)):
                 target_name = target.symbol if isinstance(target, Gene) else target.name
-                treatment_target = TreatmentTarget.objects.create(
+                treatment_target = TreatmentTarget(
                     name=target_name,
                     description=f"Automatically created for {target.__class__.__name__}",
                 )
@@ -292,6 +293,7 @@ class CompoundTreatment(Registry, CanValidate):
     created_by = models.ForeignKey(
         User, PROTECT, default=current_user_id, related_name="created_compounds"
     )
+    """Creator of record, a :class:`~lamindb.User`."""
 
     def __init__(
         self,
@@ -393,6 +395,7 @@ class CombinationTreatment(Registry, CanValidate):
         default=current_user_id,
         related_name="created_combination_treatments",
     )
+    """Creator of record, a :class:`~lamindb.User`."""
 
     def __init__(
         self,
@@ -439,6 +442,11 @@ class CombinationTreatment(Registry, CanValidate):
         return "\n".join(result)
 
     def save(self, *args, **kwargs):
+        """Saves the :class:`wetlab.CombinationTreatment` record to the lamindb instance.
+
+        Further saves any to :meth:`wetlab.CombinationTreatment.__init__` passed
+        :class:`wetlab.GeneticTreatment`, :class:`wetlab.CompoundTreatment`, and :class:`wetlab.EnvironmentalTreatment` records.
+        """
         super().save(*args, **kwargs)
         if self._genetics:
             self.genetics.set(self._genetics)
