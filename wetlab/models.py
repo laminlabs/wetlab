@@ -59,6 +59,16 @@ class GeneticTreatmentSystem(ChoicesMixin, Enum):
     transient_transfection = "transient transfection"
 
 
+class DurationUnit(ChoicesMixin, Enum):
+    SECOND = "second"
+    MINUTE = "minute"
+    HOUR = "hour"
+    DAY = "day"
+    WEEK = "week"
+    MONTH = "month"
+    YEAR = "year"
+
+
 class Experiment(Registry, CanValidate):
     """Experiments."""
 
@@ -176,7 +186,7 @@ class TreatmentTarget(Registry, CanValidate):
 
 
 def _create_targets_for_biomolecules(
-    cls: Registry, targets: TreatmentTarget | Gene | Protein | Pathway
+    cls: Registry, targets: Iterable[TreatmentTarget | Gene | Protein | Pathway]
 ) -> None:
     """Creates :class:`wetlab.TreatmentTarget` for passed Biomolecules and sets them for a Registry."""
     if targets is not None:
@@ -205,17 +215,29 @@ def _create_targets_for_biomolecules(
 
 
 class GeneticTreatment(Registry, CanValidate):
-    """Genetic perturbations such as CRISPR.
+    """Genetic treatments.
+
+    Models Genetic perturbations such as CRISPR.
+
+    Args:
+        name: The name of the genetic treatment.
+        system: The system used to apply the genetic treatment.
+                Must be one of 'CRISPR Cas9', 'CRISPRi', 'CRISPRa', 'shRNA', 'siRNA', 'transgene', 'transient transfection'.
+        on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
+        off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
+        targets: One or several :class:`wetlab.TreatmentTarget` records.
+                 Can also be :class:`lnschema_bionty.Gene`, :class:`lnschema_bionty.Gene`, or :class:`lnschema_bionty.Gene`
+                 records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
 
     Examples:
-        >>> genetic_treatment_record_1 = wl.GeneticTreatment(
+        >>> sicke_cell_treatment = wl.GeneticTreatment(
         ...     system="CRISPR Cas9",
         ...     name="Hemoglobin Sickle Cell Treatment",
         ...     sequence="AGCTGACCGTGA",
         ...     on_target_score=85,
         ...     off_target_score=15
         ... )
-        >>> genetic_treatment_record_1.save()
+        >>> sicke_cell_treatment.save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -231,14 +253,14 @@ class GeneticTreatment(Registry, CanValidate):
         db_index=True,
     )
     """System used for the genetic treatment."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="genetic_targets")
-    """Targets of the treatment."""
     sequence = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
     on_target_score = models.FloatField(default=None, null=True, db_index=True)
-    """On-target score of the treatment."""
+    """On-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence."""
     off_target_score = models.FloatField(default=None, null=True, db_index=True)
-    """Off-target score of the treatment."""
+    """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
+    targets = models.ManyToManyField(TreatmentTarget, related_name="genetic_targets")
+    """Targets of the treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="genetic_treatments")
     """Artifacts linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -253,7 +275,7 @@ class GeneticTreatment(Registry, CanValidate):
     def __init__(
         self,
         *args,
-        targets: TreatmentTarget | Gene | Protein | Pathway = None,
+        targets: Iterable[TreatmentTarget | Gene | Protein | Pathway] = None,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -273,7 +295,30 @@ class GeneticTreatment(Registry, CanValidate):
 
 
 class CompoundTreatment(Registry, CanValidate):
-    """Compound perturbations such as drugs."""
+    """Compound treatments.
+
+    Models compound treatments such as drugs.
+
+    Args:
+        name: The name of the compound treatment.
+        ontology_id: Ontology ID of the compound by the Drug ontology (DROD).
+        pubchem_id: Pubchem ID of the compound.
+        concentration: The concentration of the compound. Strictly positive.
+        duration: Time duration of how long the treatment was applied.
+        duration_unit: The unit for the duration.
+            Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
+        targets: One or several :class:`wetlab.TreatmentTarget` records.
+                 Can also be :class:`lnschema_bionty.Gene`, :class:`lnschema_bionty.Gene`, or :class:`lnschema_bionty.Gene`
+                 records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
+
+    Examples:
+        >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
+        ...    name="Aspirin 325 MG Enteric Coated Tablet",
+        ...    ontology_id="00076148",
+        ...    pubchem_id=2244
+        ... )
+        >>> aspirin_treatment.save()
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -284,17 +329,19 @@ class CompoundTreatment(Registry, CanValidate):
     ontology_id = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
-    """Ontology ID of the compound."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
-    """Targets of the combination treatment."""
+    """Ontology ID (DRON) of the compound."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
-    """Pubchem ID of the compound treatment."""
+    """Pubchem ID of the compound."""
     concentration = models.PositiveIntegerField(null=True)
-    """Concentration of the compound treatment."""
+    """Concentration of the compound."""
     duration = models.PositiveBigIntegerField(null=True)
     """Duration of the compound treatment."""
-    duration_unit = models.CharField(max_length=12, null=True)
+    duration_unit = models.CharField(
+        max_length=32, choices=DurationUnit.choices(), null=True
+    )
     """Unit of the duration."""
+    targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
+    """Targets of the treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="compound_treatments")
     """Artifacts linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -309,7 +356,7 @@ class CompoundTreatment(Registry, CanValidate):
     def __init__(
         self,
         *args,
-        targets: TreatmentTarget | Gene | Protein | Pathway = None,
+        targets: Iterable[TreatmentTarget | Gene | Protein | Pathway] = None,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -330,9 +377,22 @@ class CompoundTreatment(Registry, CanValidate):
 
 
 class EnvironmentalTreatment(Registry, CanValidate):
-    """Environmental perturbations.
+    """Environmental treatments.
 
     Models environmental perturbations such as heat, acid, or smoke treatments.
+
+    Args:
+        name: Name of the environmental treatment.
+        ontology_id: Ontology ID of the environmental treatment (EFO).
+        value: A value such as a temperature.
+        unit: A unit such as 'degrees celsius'.
+        duration: Time duration of how long the treatment was applied.
+        duration_unit: The unit for the duration.
+            Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
+        targets: One or several :class:`wetlab.TreatmentTarget` records.
+                 Can also be :class:`lnschema_bionty.Gene`, :class:`lnschema_bionty.Gene`, or :class:`lnschema_bionty.Gene`
+                 records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
+
     """
 
     id = models.AutoField(primary_key=True)
@@ -340,23 +400,25 @@ class EnvironmentalTreatment(Registry, CanValidate):
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
-    """Name of the Genetic treatment."""
+    """Name of the environmental treatment."""
     ontology_id = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
-    """Ontology ID of the environmental treatment."""
-    targets = models.ManyToManyField(
-        TreatmentTarget, related_name="environmental_targets"
-    )
-    """Targets of the combination treatment."""
+    """Ontology ID (EFO) of the environmental treatment."""
     value = models.IntegerField(null=True)
     """The value of the environmental treatment such as a temperature"""
     unit = models.CharField(max_length=32, null=True)
     """Unit of the value such as 'degrees celius'"""
     duration = models.PositiveBigIntegerField(null=True)
-    """Duration of the environmental treatment in seconds."""
-    duration_unit = models.CharField(max_length=12, null=True)
+    """Duration of the environmental treatment."""
+    duration_unit = models.CharField(
+        max_length=32, choices=DurationUnit.choices(), null=True
+    )
     """Unit of the duration."""
+    targets = models.ManyToManyField(
+        TreatmentTarget, related_name="environmental_targets"
+    )
+    """Targets of the environmental treatment."""
     artifacts = models.ManyToManyField(
         Artifact, related_name="environmental_treatments"
     )
@@ -369,6 +431,28 @@ class EnvironmentalTreatment(Registry, CanValidate):
         User, PROTECT, default=current_user_id, related_name="created_environmental"
     )
     """Creator of record, a :class:`~lamindb.User`."""
+
+    def __init__(
+        self,
+        *args,
+        targets: Iterable[TreatmentTarget | Gene | Protein | Pathway] = None,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self._pending_targets = targets
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if hasattr(self, "_pending_targets") and self._pending_targets:
+            _create_targets_for_biomolecules(self, self._pending_targets)
+            del self._pending_targets
+
+    def __repr__(self) -> str:
+        targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
+
+        return (
+            f"{super().__repr__()}\n  targets ({self.targets.count()}):\n{targets_repr}"
+        )
 
 
 class CombinationTreatment(Registry, CanValidate):
