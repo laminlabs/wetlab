@@ -358,7 +358,19 @@ class EnvironmentalTreatment(Registry, CanValidate):
 
 
 class CombinationTreatment(Registry, CanValidate):
-    """Combination of several treatments."""
+    """Combination of several Treatments.
+
+    CombinationTreatments model several Treatments jointly such as one or more :class:`wetlab.GeneticTreatment`,
+    :class:`wetlab.CompoundTreatment`, and :class:`wetlab.EnvironmentalTreatment` records.
+
+    Args:
+        name: A name of the CombinationTreatment that summarizes all applied Treatments.
+        description: A description of the CombinationTreatment.
+        ontology_id: An ontology ID of the CombinationTreatment.
+        genetics: One or several :class:`wetlab.GeneticTreatment` objects that define the CombinationTreatment.
+        compounds: One or several :class:`wetlab.CompoundTreatment` objects that define the CombinationTreatment.
+        environmentals: One or several :class:`wetlab.EnvironmentalTreatment` objects that define the CombinationTreatment.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
