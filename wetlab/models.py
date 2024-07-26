@@ -354,6 +354,7 @@ class EnvironmentalTreatment(Registry, CanValidate):
     created_by = models.ForeignKey(
         User, PROTECT, default=current_user_id, related_name="created_environmental"
     )
+    """Creator of record, a :class:`~lamindb.User`."""
 
 
 class CombinationTreatment(Registry, CanValidate):
@@ -444,8 +445,8 @@ class CombinationTreatment(Registry, CanValidate):
     def save(self, *args, **kwargs):
         """Saves the :class:`wetlab.CombinationTreatment` record to the lamindb instance.
 
-        Further saves any to :meth:`wetlab.CombinationTreatment.__init__` passed
-        :class:`wetlab.GeneticTreatment`, :class:`wetlab.CompoundTreatment`, and :class:`wetlab.EnvironmentalTreatment` records.
+        Further saves any to the constructor passed :class:`wetlab.GeneticTreatment`,
+        :class:`wetlab.CompoundTreatment`, and :class:`wetlab.EnvironmentalTreatment` records.
         """
         super().save(*args, **kwargs)
         if self._genetics:

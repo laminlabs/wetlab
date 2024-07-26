@@ -7,6 +7,9 @@ Most professional users create their custom schemas to map their operations or
 leverage schema synching from Benchling. If you need help with this, please
 `reach out <https://lamin.ai/contact>`__!
 
+Generally, the wetlab schema is designed to model experimental covariates
+and perturbations including their targets.
+
 Install the module::
 
    pip install wetlab
