@@ -205,7 +205,18 @@ def _create_targets_for_biomolecules(
 
 
 class GeneticTreatment(Registry, CanValidate):
-    """Genetic perturbations such as CRISPR."""
+    """Genetic perturbations such as CRISPR.
+
+    Examples:
+        >>> genetic_treatment_record_1 = wl.GeneticTreatment(
+        ...     system="CRISPR Cas9",
+        ...     name="Hemoglobin Sickle Cell Treatment",
+        ...     sequence="AGCTGACCGTGA",
+        ...     on_target_score=85,
+        ...     off_target_score=15
+        ... )
+        >>> genetic_treatment_record_1.save()
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -319,7 +330,10 @@ class CompoundTreatment(Registry, CanValidate):
 
 
 class EnvironmentalTreatment(Registry, CanValidate):
-    """Environmental perturbations such as acid."""
+    """Environmental perturbations.
+
+    Models environmental perturbations such as heat, acid, or smoke treatments.
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -370,6 +384,34 @@ class CombinationTreatment(Registry, CanValidate):
         genetics: One or several :class:`wetlab.GeneticTreatment` objects that define the CombinationTreatment.
         compounds: One or several :class:`wetlab.CompoundTreatment` objects that define the CombinationTreatment.
         environmentals: One or several :class:`wetlab.EnvironmentalTreatment` objects that define the CombinationTreatment.
+
+    Examples:
+        >>> sc_treatment = wl.GeneticTreatment(
+        ...     system="CRISPR Cas9",
+        ...     name="Hemoglobin Sickle Cell Treatment",
+        ...     sequence="AGCTGACCGTGA",
+        ... )
+        >>> sc_treatment.save()
+
+        >>> cftr_treatment = wl.GeneticTreatment(
+        ...     system="CRISPR Cas9",
+        ...     name="Cystic Fibrosis CFTR Correction",
+        ...     sequence="TTGGTGGTGAACT",
+        ... )
+        >>> cftr_treatment.save()
+
+        >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
+        ...    name="Aspirin",
+        ...    pubchem_id=2244
+        ... )
+        >>> aspirin_treatment.save()
+
+        >>> comb_treatment = wl.CombinationTreatment(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
+        ...    genetics=[sc_treatment, cftr_treatment],
+        ...    compounds=[aspirin_treatment],
+        ...    description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
+        ... )
+        >>> comb_treatment.save()
     """
 
     id = models.AutoField(primary_key=True)
