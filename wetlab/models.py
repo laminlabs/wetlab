@@ -390,7 +390,7 @@ class EnvironmentalTreatment(Registry, CanValidate):
         duration_unit: The unit for the duration.
             Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
         targets: One or several :class:`wetlab.TreatmentTarget` records.
-                 Can also be :class:`lnschema_bionty.Gene`, :class:`lnschema_bionty.Gene`, or :class:`lnschema_bionty.Gene`
+                 Can also be :class:`bionty.Gene`, :class:`bionty.Gene`, or :class:`bionty.Gene`
                  records which will be used to automatically create :class:`wetlab.TreatmentTarget` records.
 
     """
@@ -648,7 +648,8 @@ class Biosample(Registry, CanValidate):
 class Techsample(Registry, CanValidate):
     """Technical samples.
 
-    Models technical samples which represents a processed or derived sample in a lab, often created from raw biological materials and used for specific technical procedures or assays. It includes metadata for tracking and identifying the sample within and across databases.
+    Models technical samples which represent a processed or derived sample in a lab,
+    often created from raw biological materials and used for specific technical procedures or assays.
     """
 
     id = models.AutoField(primary_key=True)
