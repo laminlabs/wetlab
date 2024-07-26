@@ -280,9 +280,12 @@ class GeneticTreatment(Registry, CanValidate):
 
     def __repr__(self) -> str:
         original_repr = super().__repr__()
-        targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
-
-        return f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
+        if self.targets.count() > 0:
+            targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
+            return (
+                f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
+            )
+        return original_repr
 
 
 class CompoundTreatment(Registry, CanValidate):
@@ -342,11 +345,13 @@ class CompoundTreatment(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
     def __repr__(self) -> str:
-        targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
-
-        return (
-            f"{super().__repr__()}\n  targets ({self.targets.count()}):\n{targets_repr}"
-        )
+        original_repr = super().__repr__()
+        if self.targets.count() > 0:
+            targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
+            return (
+                f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
+            )
+        return original_repr
 
 
 class EnvironmentalTreatment(Registry, CanValidate):
@@ -362,6 +367,17 @@ class EnvironmentalTreatment(Registry, CanValidate):
         duration: Time duration of how long the treatment was applied.
         duration_unit: The unit for the duration.
             Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
+
+    Examples:
+        >>> acid_treatment = EnvironmentalTreatment(
+        ...     name='Acid Treatment',
+        ...     ontology_id='EFO:0004416',
+        ...     value=1.5,
+        ...     unit='pH',
+        ...     duration=30,
+        ...     duration_unit='minute'
+        ... )
+        >>> acid_treatment.save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -402,11 +418,13 @@ class EnvironmentalTreatment(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
     def __repr__(self) -> str:
-        targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
-
-        return (
-            f"{super().__repr__()}\n  targets ({self.targets.count()}):\n{targets_repr}"
-        )
+        original_repr = super().__repr__()
+        if self.targets.count() > 0:
+            targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
+            return (
+                f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
+            )
+        return original_repr
 
 
 class CombinationTreatment(Registry, CanValidate):
