@@ -2,7 +2,7 @@ from enum import Enum
 
 from django.db import models
 from django.db.models import PROTECT
-from lnschema_bionty.models import CellLine, CellType, Disease, Tissue
+from bionty.models import CellLine, CellType, Disease, Tissue
 from lnschema_core import ids
 from lnschema_core.models import Artifact, CanValidate, Collection, Registry, User
 from lnschema_core.types import ChoicesMixin
@@ -123,9 +123,7 @@ class TreatmentTarget(Registry, CanValidate):
     """Name of the treatment target."""
     description = models.TextField(null=True, default=None)
     """Description of the treatment target."""
-    genes = models.ManyToManyField(
-        "lnschema_bionty.Gene", related_name="treatment_targets"
-    )
+    genes = models.ManyToManyField("bionty.Gene", related_name="treatment_targets")
     """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
