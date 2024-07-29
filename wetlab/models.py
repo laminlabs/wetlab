@@ -166,11 +166,11 @@ class TreatmentTarget(Registry, CanValidate):
     genes = models.ManyToManyField("bionty.Gene", related_name="treatment_targets")
     """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
     pathways = models.ManyToManyField(
-        "lnschema_bionty.Pathway", related_name="treatment_targets"
+        "bionty.Pathway", related_name="treatment_targets"
     )
     """Pathways of the treatment target, link to :class:`bionty.Pathway` records."""
     proteins = models.ManyToManyField(
-        "lnschema_bionty.Protein", related_name="treatment_targets"
+        "bionty.Protein", related_name="treatment_targets"
     )
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
@@ -297,12 +297,14 @@ class CompoundTreatment(Registry, CanValidate):
     """Ontology ID (DRON) of the compound."""
     pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
     """Pubchem ID of the compound."""
-    concentration = models.PositiveIntegerField(null=True)
+    concentration = models.FloatField(null=True, default=None)
     """Concentration of the compound."""
-    duration = models.PositiveBigIntegerField(null=True)
+    concentration_unit = models.CharField(max_length=32, null=True, default=None)
+    """Unit of the concentration."""
+    duration = models.FloatField(null=True, default=None)
     """Duration of the compound treatment."""
     duration_unit = models.CharField(
-        max_length=32, choices=DurationUnit.choices(), null=True
+        max_length=32, choices=DurationUnit.choices(), null=True, default=None
     )
     """Unit of the duration."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
@@ -361,14 +363,14 @@ class EnvironmentalTreatment(Registry, CanValidate):
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID (EFO) of the environmental treatment."""
-    value = models.IntegerField(null=True)
+    value = models.FloatField(null=True, default=None)
     """The value of the environmental treatment such as a temperature."""
-    unit = models.CharField(max_length=32, null=True)
-    """Unit of the value such as 'degrees celius'"""
-    duration = models.PositiveBigIntegerField(null=True)
+    unit = models.CharField(max_length=32, null=True, default=None)
+    """Unit of the value such as 'degrees celsius'"""
+    duration = models.FloatField(null=True, default=None)
     """Duration of the environmental treatment."""
     duration_unit = models.CharField(
-        max_length=32, choices=DurationUnit.choices(), null=True
+        max_length=32, choices=DurationUnit.choices(), null=True, default=None
     )
     """Unit of the duration."""
     targets = models.ManyToManyField(
