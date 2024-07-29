@@ -9,7 +9,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_bionty", "0029_alter_cellline_previous_runs_and_more"),
+        ("bionty", "0029_alter_cellline_previous_runs_and_more"),
         ("lnschema_core", "0055_artifact_type_artifactparamvalue_and_more"),
         ("wetlab", "0019_alter_treatment_system"),
     ]
@@ -19,14 +19,14 @@ class Migration(migrations.Migration):
             model_name="treatmenttarget",
             name="pathways",
             field=models.ManyToManyField(
-                related_name="treatment_targets", to="lnschema_bionty.pathway"
+                related_name="treatment_targets", to="bionty.pathway"
             ),
         ),
         migrations.AddField(
             model_name="treatmenttarget",
             name="proteins",
             field=models.ManyToManyField(
-                related_name="treatment_targets", to="lnschema_bionty.protein"
+                related_name="treatment_targets", to="bionty.protein"
             ),
         ),
         migrations.CreateModel(
@@ -52,8 +52,8 @@ class Migration(migrations.Migration):
                         db_index=True, default=None, max_length=32, null=True
                     ),
                 ),
-                ("concentration", models.PositiveIntegerField(null=True)),
-                ("duration", models.PositiveBigIntegerField(null=True)),
+                ("concentration", models.FloatField(default=None, null=True)),
+                ("duration", models.FloatField(default=None, null=True)),
                 (
                     "duration_unit",
                     models.CharField(
@@ -66,6 +66,7 @@ class Migration(migrations.Migration):
                             ("month", "MONTH"),
                             ("year", "YEAR"),
                         ],
+                        default=None,
                         max_length=32,
                         null=True,
                     ),
@@ -116,9 +117,9 @@ class Migration(migrations.Migration):
                         db_index=True, default=None, max_length=32, null=True
                     ),
                 ),
-                ("value", models.IntegerField(null=True)),
-                ("unit", models.CharField(max_length=32, null=True)),
-                ("duration", models.PositiveBigIntegerField(null=True)),
+                ("value", models.FloatField(default=None, null=True)),
+                ("unit", models.CharField(default=None, max_length=32, null=True)),
+                ("duration", models.FloatField(default=None, null=True)),
                 (
                     "duration_unit",
                     models.CharField(
@@ -131,6 +132,7 @@ class Migration(migrations.Migration):
                             ("month", "MONTH"),
                             ("year", "YEAR"),
                         ],
+                        default=None,
                         max_length=32,
                         null=True,
                     ),
@@ -296,5 +298,10 @@ class Migration(migrations.Migration):
         ),
         migrations.DeleteModel(
             name="Treatment",
+        ),
+        migrations.AddField(
+            model_name="compoundtreatment",
+            name="concentration_unit",
+            field=models.CharField(default=None, max_length=32, null=True),
         ),
     ]
