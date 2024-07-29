@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+Improved support for perturbations | [56](https://github.com/laminlabs/wetlab/pull/56) | [Zethson](https://github.com/Zethson) | 2024-07-29 |
 ✨ Ruffify | [55](https://github.com/laminlabs/wetlab/pull/55) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
 🔥 Fix docstring | [54](https://github.com/laminlabs/wetlab/pull/54) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
 ✅ Add system check & fix tests | [52](https://github.com/laminlabs/wetlab/pull/52) | [falexwolf](https://github.com/falexwolf) | 2024-06-26 |
