@@ -3,8 +3,8 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
-:sparkles: Ruffify | [55](https://github.com/laminlabs/wetlab/pull/55) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
-:bug: Fix docstring | [54](https://github.com/laminlabs/wetlab/pull/54) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
+✨ Ruffify | [55](https://github.com/laminlabs/wetlab/pull/55) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
+🔥 Fix docstring | [54](https://github.com/laminlabs/wetlab/pull/54) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
 ✅ Add system check & fix tests | [52](https://github.com/laminlabs/wetlab/pull/52) | [falexwolf](https://github.com/falexwolf) | 2024-06-26 |
 🔥 Prune migrations | [51](https://github.com/laminlabs/wetlab/pull/51) | [falexwolf](https://github.com/falexwolf) | 2024-05-16 | 0.28.0
 🔥  Delete old migrations and create a new squashed initial migration | [49](https://github.com/laminlabs/wetlab/pull/49) | [falexwolf](https://github.com/falexwolf) | 2024-05-16 |

@@ -3,6 +3,9 @@ lamin-site-assets_test/
 tests/lamin-site-assets_test/
 testdb/
 test.ipynb
+test-wetlab
+test-wetlab-2
+docs/guide/modeling-perturbations
 
 # macOS
 .DS_Store
@@ -117,3 +120,6 @@ _docs_tmp*
 wetlab-storage/
 *.lndb
 bfx_run_001/
+
+# scanpy datasets
+data
