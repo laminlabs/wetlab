@@ -9,7 +9,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_bionty", "0029_alter_cellline_previous_runs_and_more"),
+        ("bionty", "0029_alter_cellline_previous_runs_and_more"),
         ("lnschema_core", "0055_artifact_type_artifactparamvalue_and_more"),
         ("wetlab", "0019_alter_treatment_system"),
     ]
@@ -19,14 +19,14 @@ class Migration(migrations.Migration):
             model_name="treatmenttarget",
             name="pathways",
             field=models.ManyToManyField(
-                related_name="treatment_targets", to="lnschema_bionty.pathway"
+                related_name="treatment_targets", to="bionty.pathway"
             ),
         ),
         migrations.AddField(
             model_name="treatmenttarget",
             name="proteins",
             field=models.ManyToManyField(
-                related_name="treatment_targets", to="lnschema_bionty.protein"
+                related_name="treatment_targets", to="bionty.protein"
             ),
         ),
         migrations.CreateModel(
