@@ -7,6 +7,9 @@ Most professional users create their custom schemas to map their operations or
 leverage schema synching from Benchling. If you need help with this, please
 `reach out <https://lamin.ai/contact>`__!
 
+Generally, the wetlab schema is designed to model experimental covariates
+and perturbations including their targets.
+
 Install the module::
 
    pip install wetlab
@@ -28,7 +31,10 @@ Registries:
    ExperimentType
    Biosample
    Techsample
-   Treatment
+   CombinationTreatment
+   GeneticTreatment
+   CompoundTreatment
+   EnvironmentalTreatment
    TreatmentTarget
    Well
 
@@ -51,10 +57,13 @@ if _check_instance_setup():
     del __getattr__  # delete so that imports work out
     from .models import (
         Biosample,
+        CombinationTreatment,
+        CompoundTreatment,
+        EnvironmentalTreatment,
         Experiment,
         ExperimentType,
+        GeneticTreatment,
         Techsample,
-        Treatment,
         TreatmentTarget,
         Well,
     )
