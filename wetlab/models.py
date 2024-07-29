@@ -111,9 +111,7 @@ class Experiment(Registry, CanValidate):
 
 
 class Well(Registry, CanValidate):
-    """Wells.
-
-    Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
+    """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example:
         >>> well = wl.Well(
@@ -153,9 +151,7 @@ class Well(Registry, CanValidate):
 
 
 class TreatmentTarget(Registry, CanValidate):
-    """Treatment targets.
-
-    Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
+    """Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
         >>> gene_1 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000003").save()
@@ -215,9 +211,7 @@ class TreatmentTarget(Registry, CanValidate):
 
 
 class GeneticTreatment(Registry, CanValidate):
-    """Genetic treatments.
-
-    Models Genetic perturbations such as CRISPR.
+    """Models Genetic perturbations such as CRISPR.
 
     Args:
         name: The name of the genetic treatment.
@@ -279,9 +273,7 @@ class GeneticTreatment(Registry, CanValidate):
 
 
 class CompoundTreatment(Registry, CanValidate):
-    """Compound treatments.
-
-    Models compound treatments such as drugs.
+    """Models compound treatments such as drugs.
 
     Args:
         name: The name of the compound treatment.
@@ -344,9 +336,7 @@ class CompoundTreatment(Registry, CanValidate):
 
 
 class EnvironmentalTreatment(Registry, CanValidate):
-    """Environmental treatments.
-
-    Models environmental perturbations such as heat, acid, or smoke treatments.
+    """Models environmental perturbations such as heat, acid, or smoke treatments.
 
     Args:
         name: Name of the environmental treatment.
@@ -520,7 +510,7 @@ class CombinationTreatment(Registry, CanValidate):
 
 
 class Biosample(Registry, CanValidate):
-    """Biological samples.
+    """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Examples:
         >>> biosample = wl.Biosample(
@@ -566,10 +556,7 @@ class Biosample(Registry, CanValidate):
 
 
 class Techsample(Registry, CanValidate):
-    """Technical samples.
-
-    Models technical samples which represent a processed or derived sample in a lab,
-    often created from raw biological materials and used for specific assays.
+    """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Examples:
         >>> techsample = wl.Techsample(
