@@ -47,8 +47,7 @@ class ExperimentType(Registry, CanValidate):
         >>> experiment_type = wl.ExperimentType(
         ...    name="single-cell RNA sequencing",
         ...    ontology_id="0008913"
-        ... )
-        >>> experiment_type.save()
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -80,8 +79,7 @@ class Experiment(Registry, CanValidate):
         >>> experiment = wl.Experiment(
         ...     name="IPF mice vs control mice",
         ...     description="Analysis of gene expression levels in different cell types of IPF.",
-        ... )
-        >>> experiment.save()
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -122,8 +120,7 @@ class Well(Registry, CanValidate):
         ...    name="Well A1",
         ...    row="A",
         ...    column=1,
-        ... )
-        >>> well.save()
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -161,10 +158,8 @@ class TreatmentTarget(Registry, CanValidate):
     Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
-        >>> gene_1 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000003")
-        >>> gene_1.save()
-        >>> gene_2 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000005")
-        >>> gene_2.save()
+        >>> gene_1 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000003").save()
+        >>> gene_2 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000005").save()
         >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD")
         >>> targets.genes.set([gene_1, gene_2])
     """
@@ -238,8 +233,7 @@ class GeneticTreatment(Registry, CanValidate):
         ...     sequence="AGCTGACCGTGA",
         ...     on_target_score=85,
         ...     off_target_score=15
-        ... )
-        >>> sicke_cell_treatment.save()
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -303,8 +297,7 @@ class CompoundTreatment(Registry, CanValidate):
         ...    name="Aspirin 325 MG Enteric Coated Tablet",
         ...    ontology_id="00076148",
         ...    pubchem_id=2244
-        ... )
-        >>> aspirin_treatment.save()
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -372,8 +365,7 @@ class EnvironmentalTreatment(Registry, CanValidate):
         ...     unit='pH',
         ...     duration=30,
         ...     duration_unit='minute'
-        ... )
-        >>> acid_treatment.save()
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
@@ -439,26 +431,22 @@ class CombinationTreatment(Registry, CanValidate):
         ...     system="CRISPR Cas9",
         ...     name="Hemoglobin Sickle Cell Treatment",
         ...     sequence="AGCTGACCGTGA",
-        ... )
-        >>> sc_treatment.save()
+        ... ).save()
 
         >>> cftr_treatment = wl.GeneticTreatment(
         ...     system="CRISPR Cas9",
         ...     name="Cystic Fibrosis CFTR Correction",
         ...     sequence="TTGGTGGTGAACT",
-        ... )
-        >>> cftr_treatment.save()
+        ... ).save()
 
         >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
         ...    name="Aspirin",
         ...    pubchem_id=2244
-        ... )
-        >>> aspirin_treatment.save()
+        ... ).save()
 
         >>> comb_treatment = wl.CombinationTreatment(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
         ...    description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
-        ... )
-        >>> comb_treatment.save()
+        ... ).save()
         >>> comb_treatment.genetics.set([sc_treatment, aspirin_treatment])
         >>> comb_treatment.compounds.add(aspirin_treatment)
     """
@@ -532,7 +520,14 @@ class CombinationTreatment(Registry, CanValidate):
 
 
 class Biosample(Registry, CanValidate):
-    """Biological samples."""
+    """Biological samples.
+
+    Examples:
+        >>> biosample = wl.Biosample(
+        ...     name="control",
+        ...     batch="ctrl_1"
+        ... ).save()
+    """
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -574,7 +569,13 @@ class Techsample(Registry, CanValidate):
     """Technical samples.
 
     Models technical samples which represent a processed or derived sample in a lab,
-    often created from raw biological materials and used for specific technical procedures or assays.
+    often created from raw biological materials and used for specific assays.
+
+    Examples:
+        >>> techsample = wl.Techsample(
+        ...     name="tech_1",
+        ...     batch="replicates_3"
+        ... ).save()
     """
 
     id = models.AutoField(primary_key=True)
