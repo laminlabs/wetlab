@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+🚚 Rename `lnschema_bionty` to `bionty` | [57](https://github.com/laminlabs/wetlab/pull/57) | [sunnyosun](https://github.com/sunnyosun) | 2024-07-29 |
 Improved support for perturbations | [56](https://github.com/laminlabs/wetlab/pull/56) | [Zethson](https://github.com/Zethson) | 2024-07-29 |
 ✨ Ruffify | [55](https://github.com/laminlabs/wetlab/pull/55) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
 🔥 Fix docstring | [54](https://github.com/laminlabs/wetlab/pull/54) | [Zethson](https://github.com/Zethson) | 2024-07-22 |
