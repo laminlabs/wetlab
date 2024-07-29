@@ -73,7 +73,7 @@ class ExperimentType(Registry, CanValidate):
 
 
 class Experiment(Registry, CanValidate):
-    """Models a wetlab experiment of :class:`wetlab.ExperimentType`..
+    """Models a wetlab experiment of :class:`wetlab.ExperimentType`.
 
     Example:
         >>> experiment = wl.Experiment(
@@ -160,7 +160,7 @@ class TreatmentTarget(Registry, CanValidate):
     Examples:
         >>> gene_1 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000003").save()
         >>> gene_2 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000005").save()
-        >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD")
+        >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD").save()
         >>> targets.genes.set([gene_1, gene_2])
     """
 
@@ -379,7 +379,7 @@ class EnvironmentalTreatment(Registry, CanValidate):
     )
     """Ontology ID (EFO) of the environmental treatment."""
     value = models.IntegerField(null=True)
-    """The value of the environmental treatment such as a temperature"""
+    """The value of the environmental treatment such as a temperature."""
     unit = models.CharField(max_length=32, null=True)
     """Unit of the value such as 'degrees celius'"""
     duration = models.PositiveBigIntegerField(null=True)
