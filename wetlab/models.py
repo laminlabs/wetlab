@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 from bionty.models import CellLine, CellType, Disease, Tissue
 from django.db import models
@@ -11,28 +12,19 @@ from lnschema_core.models import (
     Registry,
     User,
 )
-from lnschema_core.types import ChoicesMixin
 from lnschema_core.users import current_user_id
 
+GeneticTreatmentSystem = Literal[
+    "CRISPR Cas9",
+    "CRISPRi",
+    "CRISPRa",
+    "shRNA",
+    "siRNA",
+    "transgene",
+    "transient transfection",
+]
 
-class GeneticTreatmentSystem(ChoicesMixin, Enum):
-    CRISPR_Cas9 = "CRISPR Cas9"
-    CRISPRi = "CRISPRi"
-    CRISPRa = "CRISPRa"
-    shRNA = "shRNA"
-    siRNA = "siRNA"
-    transgene = "transgene"
-    transient_transfection = "transient transfection"
-
-
-class DurationUnit(ChoicesMixin, Enum):
-    SECOND = "second"
-    MINUTE = "minute"
-    HOUR = "hour"
-    DAY = "day"
-    WEEK = "week"
-    MONTH = "month"
-    YEAR = "year"
+DurationUnit = Literal["second", "minute", "hour", "day", "week", "month", "year"]
 
 
 class ExperimentType(Registry, CanValidate):
@@ -229,9 +221,8 @@ class GeneticTreatment(Registry, CanValidate):
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
-    system = models.CharField(
+    system: GeneticTreatmentSystem = models.CharField(
         max_length=32,
-        choices=GeneticTreatmentSystem.choices(),
         default=None,
         db_index=True,
     )
@@ -303,8 +294,8 @@ class CompoundTreatment(Registry, CanValidate):
     """Unit of the concentration."""
     duration = models.FloatField(null=True, default=None)
     """Duration of the compound treatment."""
-    duration_unit = models.CharField(
-        max_length=32, choices=DurationUnit.choices(), null=True, default=None
+    duration_unit: DurationUnit | None = models.CharField(
+        max_length=32, null=True, default=None
     )
     """Unit of the duration."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
@@ -369,8 +360,8 @@ class EnvironmentalTreatment(Registry, CanValidate):
     """Unit of the value such as 'degrees celsius'"""
     duration = models.FloatField(null=True, default=None)
     """Duration of the environmental treatment."""
-    duration_unit = models.CharField(
-        max_length=32, choices=DurationUnit.choices(), null=True, default=None
+    duration_unit: DurationUnit = models.CharField(
+        max_length=32, null=True, default=None
     )
     """Unit of the duration."""
     targets = models.ManyToManyField(
