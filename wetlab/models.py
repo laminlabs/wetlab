@@ -149,8 +149,8 @@ class TreatmentTarget(Registry, CanValidate):
     """Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
-        >>> gene_1 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000003").save()
-        >>> gene_2 = bt.Gene.from_public(ensembl_gene_id="ENSG00000000005").save()
+        >>> gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
+        >>> gene_2 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000005").save()
         >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD").save()
         >>> targets.genes.set([gene_1, gene_2])
     """
