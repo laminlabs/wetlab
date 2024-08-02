@@ -3,6 +3,7 @@
 <!-- prettier-ignore -->
 Name | PR | Developer | Date | Version
 --- | --- | --- | --- | ---
+💚 Fix ci | [61](https://github.com/laminlabs/wetlab/pull/61) | [sunnyosun](https://github.com/sunnyosun) | 2024-08-02 |
 ♻️ Eliminate choices | [60](https://github.com/laminlabs/wetlab/pull/60) | [falexwolf](https://github.com/falexwolf) | 2024-08-02 |
 🗑️ Deprecate from_public | [59](https://github.com/laminlabs/wetlab/pull/59) | [sunnyosun](https://github.com/sunnyosun) | 2024-08-01 |
 🚚 Rename `lnschema_bionty` to `bionty` | [57](https://github.com/laminlabs/wetlab/pull/57) | [sunnyosun](https://github.com/sunnyosun) | 2024-07-29 | 0.30.0
