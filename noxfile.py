@@ -13,10 +13,6 @@ def lint(session: nox.Session) -> None:
 def install(session: nox.Session) -> None:
     run(
         session,
-        f"uv pip install {SYSTEM} git+https://github.com/laminlabs/lamindb",
-    )
-    run(
-        session,
         f"uv pip install {SYSTEM} git+https://github.com/laminlabs/lamindb-setup",
     )
     run(
@@ -24,6 +20,10 @@ def install(session: nox.Session) -> None:
         f"uv pip install {SYSTEM} git+https://github.com/laminlabs/lnschema-core",
     )
     run(session, f"uv pip install {SYSTEM} git+https://github.com/laminlabs/bionty")
+    run(
+        session,
+        f"uv pip install {SYSTEM} git+https://github.com/laminlabs/lamindb",
+    )
     run(session, f"uv pip install {SYSTEM} .[dev]")
 
 
