@@ -40,7 +40,7 @@ Registries:
 
 """
 
-__version__ = "0.31.0"
+__version__ = "0.31.1"
 
 from lamindb_setup import _check_instance_setup
 
