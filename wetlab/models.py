@@ -140,7 +140,7 @@ class Well(Registry, CanValidate):
 
 
 class TreatmentTarget(Registry, CanValidate):
-    """Models targets of a :class:`wetlab.Treatment` such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
+    """Models treatment targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
         >>> gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
