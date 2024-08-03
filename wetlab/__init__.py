@@ -1,4 +1,4 @@
-"""Default `wetlab` schema.
+"""A `wetlab` schema.
 
 This default wetlab schema module mostly serves to exemplify `how you define
 costum registries on GitHub <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__.
@@ -10,7 +10,7 @@ leverage schema synching from Benchling. If you need help with this, please
 Generally, the wetlab schema is designed to model experimental covariates
 and perturbations including their targets.
 
-Install the module::
+Install the schema module::
 
    pip install wetlab
 
@@ -18,7 +18,7 @@ Create your instance mounting the module::
 
    lamin init --storage ./test-wetlab --schema bionty,wetlab
 
-Import the package::
+Import in Python::
 
    import wetlab as wl
 
@@ -31,7 +31,6 @@ Registries:
    ExperimentType
    Biosample
    Techsample
-   Treatment
    CombinationTreatment
    GeneticTreatment
    CompoundTreatment
