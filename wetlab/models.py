@@ -11,7 +11,7 @@ from lnschema_core.models import (
     Artifact,
     CanValidate,
     Collection,
-    Registry,
+    Record,
     User,
 )
 from lnschema_core.users import current_user_id
@@ -29,7 +29,7 @@ GeneticTreatmentSystem = Literal[
 DurationUnit = Literal["second", "minute", "hour", "day", "week", "month", "year"]
 
 
-class ExperimentType(Registry, CanValidate):
+class ExperimentType(Record, CanValidate):
     """Models the type of wetlab experiment and is associated with :class:`wetlab.Experiment`.
 
     Examples:
@@ -61,7 +61,7 @@ class ExperimentType(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Experiment(Registry, CanValidate):
+class Experiment(Record, CanValidate):
     """Models a wetlab experiment of :class:`wetlab.ExperimentType`.
 
     Example:
@@ -99,7 +99,7 @@ class Experiment(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Well(Registry, CanValidate):
+class Well(Record, CanValidate):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example:
@@ -139,7 +139,7 @@ class Well(Registry, CanValidate):
         unique_together = (("row", "column"),)
 
 
-class TreatmentTarget(Registry, CanValidate):
+class TreatmentTarget(Record, CanValidate):
     """Models treatment targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
@@ -197,7 +197,7 @@ class TreatmentTarget(Registry, CanValidate):
         return "\n".join(result)
 
 
-class GeneticTreatment(Registry, CanValidate):
+class GeneticTreatment(Record, CanValidate):
     """Models Genetic perturbations such as CRISPR.
 
     Args:
@@ -258,7 +258,7 @@ class GeneticTreatment(Registry, CanValidate):
         return original_repr
 
 
-class CompoundTreatment(Registry, CanValidate):
+class CompoundTreatment(Record, CanValidate):
     """Models compound treatments such as drugs.
 
     Args:
@@ -323,7 +323,7 @@ class CompoundTreatment(Registry, CanValidate):
         return original_repr
 
 
-class EnvironmentalTreatment(Registry, CanValidate):
+class EnvironmentalTreatment(Record, CanValidate):
     """Models environmental perturbations such as heat, acid, or smoke treatments.
 
     Args:
@@ -393,7 +393,7 @@ class EnvironmentalTreatment(Registry, CanValidate):
         return original_repr
 
 
-class CombinationTreatment(Registry, CanValidate):
+class CombinationTreatment(Record, CanValidate):
     """Combination of several Treatments.
 
     CombinationTreatments model several Treatments jointly such as one or more :class:`wetlab.GeneticTreatment`,
@@ -497,7 +497,7 @@ class CombinationTreatment(Registry, CanValidate):
         return self.genetic.all().union(self.compound.all(), self.environmental.all())
 
 
-class Biosample(Registry, CanValidate):
+class Biosample(Record, CanValidate):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Examples:
@@ -543,7 +543,7 @@ class Biosample(Registry, CanValidate):
     """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Techsample(Registry, CanValidate):
+class Techsample(Record, CanValidate):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Examples:
