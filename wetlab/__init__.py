@@ -31,6 +31,7 @@ Registries:
    ExperimentType
    Biosample
    Techsample
+   Treatment
    CombinationTreatment
    GeneticTreatment
    CompoundTreatment
