@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from enum import Enum
-from typing import Literal
+from typing import Literal, overload
 
-from bionty.models import CellLine, CellType, Disease, Tissue
+from bionty.models import BioRecord, CellLine, CellType, Disease, Source, Tissue
 from django.db import models
 from django.db.models import PROTECT, QuerySet
 from lnschema_core import ids
@@ -12,6 +11,8 @@ from lnschema_core.models import (
     CanValidate,
     Collection,
     Record,
+    TracksRun,
+    TracksUpdates,
     User,
 )
 from lnschema_core.users import current_user_id
@@ -27,6 +28,74 @@ GeneticTreatmentSystem = Literal[
 ]
 
 DurationUnit = Literal["second", "minute", "hour", "day", "week", "month", "year"]
+
+
+class Compound(BioRecord, TracksRun, TracksUpdates):
+    """Compound."""
+
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
+
+    _name_field: str = "name"
+    _ontology_id_field: str = "ontology_id"
+
+    id: int = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
+    uid: str = models.CharField(unique=True, max_length=8, default=ids.ontology)
+    """A universal id (hash of selected field)."""
+    name: str = models.CharField(max_length=256, db_index=True)
+    """Name of the compound."""
+    ontology_id: str | None = models.CharField(
+        max_length=32, db_index=True, null=True, default=None
+    )
+    """Ontology ID of the compound."""
+    abbr: str | None = models.CharField(
+        max_length=32, db_index=True, unique=True, null=True, default=None
+    )
+    """A unique abbreviation of compound."""
+    synonyms: str | None = models.TextField(null=True, default=None)
+    """Bar-separated (|) synonyms that correspond to this compound."""
+    description: str | None = models.TextField(null=True, default=None)
+    """Description of the compound."""
+    parents: Tissue = models.ManyToManyField(
+        "self", symmetrical=False, related_name="children"
+    )
+    """Parent compound records."""
+    source: Source = models.ForeignKey(
+        "Source", PROTECT, null=True, related_name="compounds"
+    )
+    """:class:`~bionty.Source` this compound associates with."""
+    artifacts: Artifact = models.ManyToManyField(
+        Artifact, through="ArtifactTissue", related_name="compounds"
+    )
+    """Artifacts linked to the ."""
+
+    @overload
+    def __init__(
+        self,
+        name: str,
+        ontology_id: str | None,
+        abbr: str | None,
+        synonyms: str | None,
+        description: str | None,
+        parents: list[Tissue],
+        source: Source | None,
+    ):
+        ...
+
+    @overload
+    def __init__(
+        self,
+        *db_args,
+    ):
+        ...
+
+    def __init__(
+        self,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
 
 
 class ExperimentType(Record, CanValidate):
