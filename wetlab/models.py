@@ -5,12 +5,14 @@ from typing import Literal, overload
 from bionty import ids as bionty_ids
 from bionty.models import BioRecord, CellLine, CellType, Disease, Source, Tissue
 from django.db import models
-from django.db.models import PROTECT, QuerySet
+from django.db.models import CASCADE, PROTECT, QuerySet
 from lnschema_core import ids
 from lnschema_core.models import (
     Artifact,
     CanValidate,
     Collection,
+    Feature,
+    LinkORM,
     Record,
     TracksRun,
     TracksUpdates,
@@ -63,13 +65,13 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
     )
     """Parent compound records."""
     source: Source = models.ForeignKey(
-        "Source", PROTECT, null=True, related_name="compounds"
+        Source, PROTECT, null=True, related_name="compounds"
     )
     """:class:`~bionty.Source` this compound associates with."""
     artifacts: Artifact = models.ManyToManyField(
-        Artifact, through="ArtifactTissue", related_name="compounds"
+        Artifact, through="ArtifactCompound", related_name="compounds"
     )
-    """Artifacts linked to the ."""
+    """Artifacts linked to the compound."""
 
     @overload
     def __init__(
@@ -97,6 +99,21 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+
+
+class ArtifactCompound(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_tissue"
+    )
+    compound: Tissue = models.ForeignKey(
+        Compound, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature, PROTECT, null=True, default=None, related_name="links_artifactcompound"
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
 
 
 class ExperimentType(Record, CanValidate):
