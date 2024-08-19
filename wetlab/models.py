@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Literal, overload
 
+from bionty import ids as bionty_ids
 from bionty.models import BioRecord, CellLine, CellType, Disease, Source, Tissue
 from django.db import models
 from django.db.models import PROTECT, QuerySet
@@ -41,7 +42,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: str = models.CharField(unique=True, max_length=8, default=ids.ontology)
+    uid: str = models.CharField(unique=True, max_length=8, default=bionty_ids.ontology)
     """A universal id (hash of selected field)."""
     name: str = models.CharField(max_length=256, db_index=True)
     """Name of the compound."""
