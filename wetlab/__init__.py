@@ -58,6 +58,7 @@ if _check_instance_setup():
     from .models import (
         Biosample,
         CombinationTreatment,
+        Compound,
         CompoundTreatment,
         EnvironmentalTreatment,
         Experiment,
