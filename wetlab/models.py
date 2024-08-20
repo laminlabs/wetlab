@@ -88,7 +88,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         abbr: str | None,
         synonyms: str | None,
         description: str | None,
-        parents: list[Tissue],
+        parents: list[Compound],
         source: Source | None,
     ):
         ...
@@ -111,9 +111,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 class ArtifactCompound(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = models.ForeignKey(
-        Artifact, CASCADE, related_name="links_tissue"
+        Artifact, CASCADE, related_name="links_compound"
     )
-    compound: Tissue = models.ForeignKey(
+    compound: Compound = models.ForeignKey(
         Compound, PROTECT, related_name="links_artifact"
     )
     feature: Feature = models.ForeignKey(
