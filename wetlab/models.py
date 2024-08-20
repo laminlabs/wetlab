@@ -34,7 +34,14 @@ DurationUnit = Literal["second", "minute", "hour", "day", "week", "month", "year
 
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
-    """Compound."""
+    """Models a (chemical) compound such as a drug.
+
+    Examples:
+        >>> compound = wl.Compound(
+        ...    name="Navitoclax",
+        ...    ontology_id="CHEMBL443684"
+        ... ).save()
+    """
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
@@ -60,7 +67,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
     """Bar-separated (|) synonyms that correspond to this compound."""
     description: str | None = models.TextField(null=True, default=None)
     """Description of the compound."""
-    parents: Tissue = models.ManyToManyField(
+    parents: Compound = models.ManyToManyField(
         "self", symmetrical=False, related_name="children"
     )
     """Parent compound records."""
@@ -350,8 +357,6 @@ class CompoundTreatment(Record, CanValidate):
 
     Args:
         name: The name of the compound treatment.
-        ontology_id: Ontology ID of the compound by the Drug ontology (DROD).
-        pubchem_id: Pubchem ID of the compound.
         concentration: The concentration of the compound. Strictly positive.
         duration: Time duration of how long the treatment was applied.
         duration_unit: The unit for the duration.
@@ -359,9 +364,7 @@ class CompoundTreatment(Record, CanValidate):
 
     Examples:
         >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
-        ...    name="Aspirin 325 MG Enteric Coated Tablet",
-        ...    ontology_id="00076148",
-        ...    pubchem_id=2244
+        ...    name="Antibiotic cocktail",
         ... ).save()
     """
 
@@ -371,12 +374,6 @@ class CompoundTreatment(Record, CanValidate):
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
-    ontology_id = models.CharField(
-        max_length=32, db_index=True, null=True, default=None
-    )
-    """Ontology ID (DRON) of the compound."""
-    pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
-    """Pubchem ID of the compound."""
     concentration = models.FloatField(null=True, default=None)
     """Concentration of the compound."""
     concentration_unit = models.CharField(max_length=32, null=True, default=None)
@@ -391,6 +388,8 @@ class CompoundTreatment(Record, CanValidate):
     """Targets of the treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="compound_treatments")
     """Artifacts linked to the treatment."""
+    compounds = models.ManyToManyField(Compound, related_name="compounds")
+    """Compounds linked to the treatment."""
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     """Time of creation of record."""
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
