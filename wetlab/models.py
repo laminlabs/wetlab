@@ -74,7 +74,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         "self", symmetrical=False, related_name="children"
     )
     """Parent compound records."""
-    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="compounds")
+    artifacts: Artifact = models.ManyToManyField(
+        Artifact, through="ArtifactCompound", related_name="compounds"
+    )
     """Artifacts linked to the compound."""
 
     @overload
@@ -143,7 +145,9 @@ class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
     """Description of the experiment."""
     date = models.DateField(default=None, null=True, db_index=True)
     """Date of the experiment."""
-    artifacts = models.ManyToManyField(Artifact, related_name="experiments")
+    artifacts = models.ManyToManyField(
+        Artifact, through="ArtifactExperiment", related_name="experiments"
+    )
     """Artifacts linked to the experiment."""
 
 
@@ -193,7 +197,9 @@ class Well(Record, CanValidate, TracksRun, TracksUpdates):
     """Horizontal position of the well in the microplate."""
     column = models.IntegerField()
     """Vertical position of the well in the microplate."""
-    artifacts = models.ManyToManyField(Artifact, related_name="wells")
+    artifacts = models.ManyToManyField(
+        Artifact, through="ArtifactWell", related_name="wells"
+    )
     """Artifacts linked to the well."""
 
 
@@ -242,7 +248,9 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     proteins = models.ManyToManyField(
         "bionty.Protein", related_name="treatment_targets"
     )
-    artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
+    artifacts = models.ManyToManyField(
+        Artifact, through="ArtifactTreatmentTarget", related_name="treatment_targets"
+    )
     """Artifacts linked to the treatment target."""
 
     def __repr__(self) -> str:
@@ -324,7 +332,9 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="genetic_targets")
     """Targets of the treatment."""
-    artifacts = models.ManyToManyField(Artifact, related_name="genetic_treatments")
+    artifacts = models.ManyToManyField(
+        Artifact, through="ArtifactGeneticTreatment", related_name="genetic_treatments"
+    )
     """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
@@ -361,8 +371,6 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
     Args:
         name: The name of the compound treatment.
-        concentration: The concentration of the compound. Strictly positive.
-        duration: Time duration of how long the treatment was applied.
 
     Examples:
         >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
@@ -383,7 +391,7 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Concentration of the compound."""
     concentration_unit = models.CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
-    # duration = models.DurationField(null=True, default=None)
+    duration = models.DurationField(null=True, default=None)
     """Duration of the compound treatment."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
     """Targets of the treatment."""
@@ -391,6 +399,7 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Compounds linked to the treatment."""
     artifacts = models.ManyToManyField(
         Artifact,
+        through="ArtifactCompoundTreatment",
         related_name="compound_treatments",
     )
     """Artifacts linked to the treatment."""
@@ -440,7 +449,6 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
         ...     ontology_id='EFO:0004416',
         ...     value=1.5,
         ...     unit='pH',
-        ...     duration=30,
         ... ).save()
     """
 
@@ -461,7 +469,7 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """The value of the environmental treatment such as a temperature."""
     unit = models.CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
-    # duration = models.DurationField(null=True, default=None)
+    duration = models.DurationField(null=True, default=None)
     """Duration of the environmental treatment."""
     targets = models.ManyToManyField(
         TreatmentTarget, related_name="environmental_targets"
@@ -469,6 +477,7 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Targets of the environmental treatment."""
     artifacts = models.ManyToManyField(
         Artifact,
+        through="ArtifactEnvironmentalTreatment",
         related_name="environmental_treatments",
     )
     """Artifacts linked to the treatment."""
@@ -567,6 +576,7 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """:class:`wetlab.EnvironmentalTreatment` treatments."""
     artifacts = models.ManyToManyField(
         Artifact,
+        through="ArtifactCombinationTreatment",
         related_name="combination_treatments",
     )
     """Artifacts linked to the treatment."""
