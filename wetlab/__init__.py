@@ -30,13 +30,12 @@ Registries:
    :toctree: .
 
    Experiment
-   ExperimentType
    Biosample
    Techsample
    CombinationTreatment
-   GeneticTreatment
    CompoundTreatment
    EnvironmentalTreatment
+   GeneticTreatment
    TreatmentTarget
    Well
 
@@ -64,7 +63,6 @@ if _check_instance_setup():
         CompoundTreatment,
         EnvironmentalTreatment,
         Experiment,
-        ExperimentType,
         GeneticTreatment,
         Techsample,
         TreatmentTarget,
