@@ -1,20 +1,29 @@
 from __future__ import annotations
 
-from enum import Enum
-from typing import Literal
+from typing import Literal, overload
 
-from bionty.models import CellLine, CellType, Disease, Tissue
+from bionty import ids as bionty_ids
+from bionty.models import (
+    BioRecord,
+    CellLine,
+    CellType,
+    Disease,
+    Organism,
+    Source,
+    Tissue,
+)
 from django.db import models
-from django.db.models import PROTECT, QuerySet
+from django.db.models import CASCADE, PROTECT, QuerySet
 from lnschema_core import ids
 from lnschema_core.models import (
     Artifact,
     CanValidate,
-    Collection,
+    Feature,
+    LinkORM,
     Record,
-    User,
+    TracksRun,
+    TracksUpdates,
 )
-from lnschema_core.users import current_user_id
 
 GeneticTreatmentSystem = Literal[
     "CRISPR Cas9",
@@ -26,42 +35,92 @@ GeneticTreatmentSystem = Literal[
     "transient transfection",
 ]
 
-DurationUnit = Literal["second", "minute", "hour", "day", "week", "month", "year"]
 
-
-class ExperimentType(Record, CanValidate):
-    """Models the type of wetlab experiment and is associated with :class:`wetlab.Experiment`.
+class Compound(BioRecord, TracksRun, TracksUpdates):
+    """Models a (chemical) compound such as a drug.
 
     Examples:
-        >>> experiment_type = wl.ExperimentType(
-        ...    name="single-cell RNA sequencing",
-        ...    ontology_id="0008913"
+        >>> compound = wl.Compound(
+        ...    name="Navitoclax",
+        ...    ontology_id="CHEMBL443684"
         ... ).save()
     """
 
-    id = models.AutoField(primary_key=True)
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
+
+    _name_field: str = "name"
+    _ontology_id_field: str = "ontology_id"
+
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=4, default=ids.base62_4)
-    """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
-    """Name of the experiment type."""
-    description = models.TextField(null=True, default=None)
-    """Description of the experiment."""
-    ontology_id = models.CharField(
+    uid: str = models.CharField(unique=True, max_length=8, default=bionty_ids.ontology)
+    """A universal id (hash of selected field)."""
+    name: str = models.CharField(max_length=256, db_index=True)
+    """Name of the compound."""
+    ontology_id: str | None = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
-    """Ontology ID (EFO) of the experiment type."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_experiment_types"
+    """Ontology ID of the compound."""
+    abbr: str | None = models.CharField(
+        max_length=32, db_index=True, unique=True, null=True, default=None
     )
-    """Creator of record, a :class:`~lamindb.User`."""
+    """A unique abbreviation of compound."""
+    synonyms: str | None = models.TextField(null=True, default=None)
+    """Bar-separated (|) synonyms that correspond to this compound."""
+    description: str | None = models.TextField(null=True, default=None)
+    """Description of the compound."""
+    parents: Compound = models.ManyToManyField(
+        "self", symmetrical=False, related_name="children"
+    )
+    """Parent compound records."""
+    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="compounds")
+    """Artifacts linked to the compound."""
+
+    @overload
+    def __init__(
+        self,
+        name: str,
+        ontology_id: str | None,
+        abbr: str | None,
+        synonyms: str | None,
+        description: str | None,
+        parents: list[Compound],
+        source: Source | None,
+    ):
+        ...
+
+    @overload
+    def __init__(
+        self,
+        *db_args,
+    ):
+        ...
+
+    def __init__(
+        self,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
 
 
-class Experiment(Record, CanValidate):
+class ArtifactCompound(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_compound"
+    )
+    compound: Compound = models.ForeignKey(
+        Compound, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature, PROTECT, null=True, default=None, related_name="links_artifactcompound"
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
     """Models a wetlab experiment of :class:`wetlab.ExperimentType`.
 
     Example:
@@ -70,6 +129,9 @@ class Experiment(Record, CanValidate):
         ...     description="Analysis of gene expression levels in different cell types of IPF.",
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -81,25 +143,30 @@ class Experiment(Record, CanValidate):
     """Description of the experiment."""
     date = models.DateField(default=None, null=True, db_index=True)
     """Date of the experiment."""
-    experiment_type = models.ForeignKey(
-        ExperimentType, PROTECT, null=True, related_name="experiments"
-    )
-    """Type of the experiment."""
     artifacts = models.ManyToManyField(Artifact, related_name="experiments")
     """Artifacts linked to the experiment."""
-    collections = models.ManyToManyField(Collection, related_name="experiments")
-    """Collections linked to the experiment."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_experiments"
+
+
+class ArtifactExperiment(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_experiment"
     )
-    """Creator of record, a :class:`~lamindb.User`."""
+    experiment: Experiment = models.ForeignKey(
+        Experiment, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactexperiment",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
 
 
-class Well(Record, CanValidate):
+class Well(Record, CanValidate, TracksRun, TracksUpdates):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example:
@@ -109,6 +176,10 @@ class Well(Record, CanValidate):
         ...    column=1,
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        unique_together = (("row", "column"),)
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -124,22 +195,24 @@ class Well(Record, CanValidate):
     """Vertical position of the well in the microplate."""
     artifacts = models.ManyToManyField(Artifact, related_name="wells")
     """Artifacts linked to the well."""
-    collections = models.ManyToManyField(Collection, related_name="wells")
-    """Collections linked to the well."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_wells"
+
+
+class ArtifactWell(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(Artifact, CASCADE, related_name="links_well")
+    well: Well = models.ForeignKey(Well, PROTECT, related_name="links_artifact")
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactwell",
     )
-    """Creator of record, a :class:`~lamindb.User`."""
-
-    class Meta:
-        unique_together = (("row", "column"),)
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
 
 
-class TreatmentTarget(Record, CanValidate):
+class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     """Models treatment targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
@@ -148,6 +221,9 @@ class TreatmentTarget(Record, CanValidate):
         >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD").save()
         >>> targets.genes.set([gene_1, gene_2])
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -168,17 +244,6 @@ class TreatmentTarget(Record, CanValidate):
     )
     artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_treatment_targets",
-    )
-    """Creator of record, a :class:`~lamindb.User`."""
 
     def __repr__(self) -> str:
         genes_repr = "\n".join(f"      {gene}" for gene in self.genes.all())
@@ -197,7 +262,26 @@ class TreatmentTarget(Record, CanValidate):
         return "\n".join(result)
 
 
-class GeneticTreatment(Record, CanValidate):
+class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_treatment_target"
+    )
+    treatmenttarget: TreatmentTarget = models.ForeignKey(
+        TreatmentTarget, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifacttreatmenttarget",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Models Genetic perturbations such as CRISPR.
 
     Args:
@@ -216,6 +300,9 @@ class GeneticTreatment(Record, CanValidate):
         ...     off_target_score=15
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -239,14 +326,6 @@ class GeneticTreatment(Record, CanValidate):
     """Targets of the treatment."""
     artifacts = models.ManyToManyField(Artifact, related_name="genetic_treatments")
     """Artifacts linked to the treatment."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_genetics"
-    )
-    """Creator of record, a :class:`~lamindb.User`."""
 
     def __repr__(self) -> str:
         original_repr = super().__repr__()
@@ -258,25 +337,41 @@ class GeneticTreatment(Record, CanValidate):
         return original_repr
 
 
-class CompoundTreatment(Record, CanValidate):
+class ArtifactGeneticTreatment(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_genetic_treatment"
+    )
+    genetictreatment: GeneticTreatment = models.ForeignKey(
+        GeneticTreatment, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactgenetictreatment",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Models compound treatments such as drugs.
 
     Args:
         name: The name of the compound treatment.
-        ontology_id: Ontology ID of the compound by the Drug ontology (DROD).
-        pubchem_id: Pubchem ID of the compound.
         concentration: The concentration of the compound. Strictly positive.
         duration: Time duration of how long the treatment was applied.
-        duration_unit: The unit for the duration.
-            Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
 
     Examples:
         >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
-        ...    name="Aspirin 325 MG Enteric Coated Tablet",
-        ...    ontology_id="00076148",
-        ...    pubchem_id=2244
+        ...    name="Antibiotic cocktail",
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -284,34 +379,21 @@ class CompoundTreatment(Record, CanValidate):
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
-    ontology_id = models.CharField(
-        max_length=32, db_index=True, null=True, default=None
-    )
-    """Ontology ID (DRON) of the compound."""
-    pubchem_id = models.CharField(max_length=32, db_index=True, null=True, default=None)
-    """Pubchem ID of the compound."""
     concentration = models.FloatField(null=True, default=None)
     """Concentration of the compound."""
     concentration_unit = models.CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
-    duration = models.FloatField(null=True, default=None)
+    # duration = models.DurationField(null=True, default=None)
     """Duration of the compound treatment."""
-    duration_unit: DurationUnit | None = models.CharField(
-        max_length=32, null=True, default=None
-    )
-    """Unit of the duration."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
     """Targets of the treatment."""
-    artifacts = models.ManyToManyField(Artifact, related_name="compound_treatments")
-    """Artifacts linked to the treatment."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_compounds"
+    compounds = models.ManyToManyField(Compound, related_name="compounds")
+    """Compounds linked to the treatment."""
+    artifacts = models.ManyToManyField(
+        Artifact,
+        related_name="compound_treatments",
     )
-    """Creator of record, a :class:`~lamindb.User`."""
+    """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
         original_repr = super().__repr__()
@@ -323,7 +405,26 @@ class CompoundTreatment(Record, CanValidate):
         return original_repr
 
 
-class EnvironmentalTreatment(Record, CanValidate):
+class ArtifactCompoundTreatment(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_compound_treatment"
+    )
+    compoundtreatment: CompoundTreatment = models.ForeignKey(
+        CompoundTreatment, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactcompoundtreatment",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Models environmental perturbations such as heat, acid, or smoke treatments.
 
     Args:
@@ -332,8 +433,6 @@ class EnvironmentalTreatment(Record, CanValidate):
         value: A value such as a temperature.
         unit: A unit such as 'degrees celsius'.
         duration: Time duration of how long the treatment was applied.
-        duration_unit: The unit for the duration.
-            Must be one of 'second', 'minute', 'hour', 'day', 'week', 'month', 'year'.
 
     Examples:
         >>> acid_treatment = EnvironmentalTreatment(
@@ -342,9 +441,11 @@ class EnvironmentalTreatment(Record, CanValidate):
         ...     value=1.5,
         ...     unit='pH',
         ...     duration=30,
-        ...     duration_unit='minute'
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -360,28 +461,17 @@ class EnvironmentalTreatment(Record, CanValidate):
     """The value of the environmental treatment such as a temperature."""
     unit = models.CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
-    duration = models.FloatField(null=True, default=None)
+    # duration = models.DurationField(null=True, default=None)
     """Duration of the environmental treatment."""
-    duration_unit: DurationUnit = models.CharField(
-        max_length=32, null=True, default=None
-    )
-    """Unit of the duration."""
     targets = models.ManyToManyField(
         TreatmentTarget, related_name="environmental_targets"
     )
     """Targets of the environmental treatment."""
     artifacts = models.ManyToManyField(
-        Artifact, related_name="environmental_treatments"
+        Artifact,
+        related_name="environmental_treatments",
     )
     """Artifacts linked to the treatment."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_environmental"
-    )
-    """Creator of record, a :class:`~lamindb.User`."""
 
     def __repr__(self) -> str:
         original_repr = super().__repr__()
@@ -393,7 +483,26 @@ class EnvironmentalTreatment(Record, CanValidate):
         return original_repr
 
 
-class CombinationTreatment(Record, CanValidate):
+class ArtifactEnvironmentalTreatment(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_environmental_treatment"
+    )
+    environmentaltreatment: EnvironmentalTreatment = models.ForeignKey(
+        EnvironmentalTreatment, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactenvironmentaltreatment",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Combination of several Treatments.
 
     CombinationTreatments model several Treatments jointly such as one or more :class:`wetlab.GeneticTreatment`,
@@ -429,6 +538,9 @@ class CombinationTreatment(Record, CanValidate):
         >>> comb_treatment.compounds.add(aspirin_treatment)
     """
 
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
+
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
@@ -453,19 +565,11 @@ class CombinationTreatment(Record, CanValidate):
         EnvironmentalTreatment, related_name="environmental_treatments"
     )
     """:class:`wetlab.EnvironmentalTreatment` treatments."""
-    artifacts = models.ManyToManyField(Artifact, related_name="combination_treatments")
-    """Artifacts linked to the treatment."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User,
-        PROTECT,
-        default=current_user_id,
-        related_name="created_combination_treatments",
+    artifacts = models.ManyToManyField(
+        Artifact,
+        related_name="combination_treatments",
     )
-    """Creator of record, a :class:`~lamindb.User`."""
+    """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
         genetics_repr = "\n".join(f"      {genetic}" for genetic in self.genetics.all())
@@ -497,7 +601,26 @@ class CombinationTreatment(Record, CanValidate):
         return self.genetic.all().union(self.compound.all(), self.environmental.all())
 
 
-class Biosample(Record, CanValidate):
+class ArtifactCombinationTreatment(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_combination_treatment"
+    )
+    combinationtreatment: CombinationTreatment = models.ForeignKey(
+        CombinationTreatment, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactcombinationtreatment",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Examples:
@@ -506,6 +629,9 @@ class Biosample(Record, CanValidate):
         ...     batch="ctrl_1"
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -517,9 +643,9 @@ class Biosample(Record, CanValidate):
     """Batch label of the biosample."""
     description = models.TextField(null=True, default=None)
     """Description of the biosample."""
-    # organism = models.ForeignKey(
-    #     Organism, PROTECT, null=True, related_name="biosamples"
-    # )
+    organism = models.ForeignKey(
+        Organism, PROTECT, null=True, related_name="biosamples"
+    )
     """Organism of the biosample."""
     tissues = models.ManyToManyField(Tissue, related_name="biosamples")
     """Tissues linked to the biosample."""
@@ -529,21 +655,30 @@ class Biosample(Record, CanValidate):
     """Cell types linked to the biosample."""
     diseases = models.ManyToManyField(Disease, related_name="biosamples")
     """Diseases linked to the biosample."""
-    # artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
+    artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
     """Artifacts linked to the biosample."""
-    collections = models.ManyToManyField(Collection, related_name="biosamples")
-    """Collections linked to the biosample."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    # created_by = models.ForeignKey(
-    #     User, PROTECT, default=current_user_id, related_name="created_biosamples"
-    # )
-    """Creator of record, a :class:`~lamindb.User`."""
 
 
-class Techsample(Record, CanValidate):
+class ArtifactBiosample(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_biosample"
+    )
+    biosample: Biosample = models.ForeignKey(
+        Biosample, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifactbiosample",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+
+
+class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Examples:
@@ -552,6 +687,9 @@ class Techsample(Record, CanValidate):
         ...     batch="replicates_3"
         ... ).save()
     """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
 
     id = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -565,11 +703,24 @@ class Techsample(Record, CanValidate):
     """Description of the techsample."""
     biosamples = models.ManyToManyField(Biosample, related_name="techsamples")
     """Linked biosamples."""
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    """Time of creation of record."""
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    """Time of last update to record."""
-    created_by = models.ForeignKey(
-        User, PROTECT, default=current_user_id, related_name="created_techsamples"
+    artifacts = models.ManyToManyField(Artifact, related_name="techsamples")
+    """Artifacts linked to the techsample."""
+
+
+class ArtifactTechsample(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = models.ForeignKey(
+        Artifact, CASCADE, related_name="links_techsample"
     )
-    """Creator of record, a :class:`~lamindb.User`."""
+    techsample: Techsample = models.ForeignKey(
+        Techsample, PROTECT, related_name="links_artifact"
+    )
+    feature: Feature = models.ForeignKey(
+        Feature,
+        PROTECT,
+        null=True,
+        default=None,
+        related_name="links_artifacttechsample",
+    )
+    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
