@@ -1,10 +1,5 @@
 """Registries for wetlab related entities.
 
-.. _wetlab-overview:
-
-Overview
-========
-
 Generally, the wetlab schema is designed to model experimental covariates and perturbations including their targets.
 
 This default wetlab schema module mostly serves to exemplify `how you define
@@ -13,24 +8,9 @@ costum registries on GitHub <https://github.com/laminlabs/wetlab/blob/main/wetla
 Most professional users create their custom schemas to map their operations or
 leverage schema synching from Benchling. If you need help with this, please `reach out <https://lamin.ai/contact>`__!
 
-.. _wetlab-installation:
-
-Installation
-============
-
 >>> pip install wetlab
 
-.. _wetlab-setup:
-
-Setup
-=====
-
 >>> lamin init --storage ./test-wetlab --schema bionty,wetlab
-
-.. _wetlab-quickstart:
-
-Quickstart
-==========
 
 Import wetlab:
 
@@ -43,11 +23,6 @@ Create records:
 ...    ontology_id="00076148",
 ...    pubchem_id=2244
 ... ).save()
-
-.. _wetlab-api:
-
-API
-===
 
 Registries:
 
