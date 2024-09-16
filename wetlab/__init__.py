@@ -1,5 +1,7 @@
 """Registries for wetlab related entities.
 
+.. _wetlab-overview:
+
 Overview
 ========
 
@@ -11,15 +13,21 @@ costum registries on GitHub <https://github.com/laminlabs/wetlab/blob/main/wetla
 Most professional users create their custom schemas to map their operations or
 leverage schema synching from Benchling. If you need help with this, please `reach out <https://lamin.ai/contact>`__!
 
+.. _wetlab-installation:
+
 Installation
 ============
 
 >>> pip install wetlab
 
+.. _wetlab-setup:
+
 Setup
 =====
 
 >>> lamin init --storage ./test-wetlab --schema bionty,wetlab
+
+.. _wetlab-quickstart:
 
 Quickstart
 ==========
@@ -35,6 +43,8 @@ Create records:
 ...    ontology_id="00076148",
 ...    pubchem_id=2244
 ... ).save()
+
+.. _wetlab-api:
 
 API
 ===
