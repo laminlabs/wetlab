@@ -397,12 +397,14 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Duration of the compound treatment."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
     """Targets of the treatment."""
-    artifacts = models.ManyToManyField(Artifact, related_name="compound_treatments")
-    """Artifacts linked to the treatment."""
-    compounds = models.ManyToManyField(
-        Compound, through="ArtifactCompoundTreatment", related_name="compounds"
-    )
+    compounds = models.ManyToManyField(Compound, related_name="compounds")
     """Compounds linked to the treatment."""
+    artifacts = models.ManyToManyField(
+        Artifact,
+        through="ArtifactCompoundTreatment",
+        related_name="compound_treatments",
+    )
+    """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
         original_repr = super().__repr__()
@@ -478,7 +480,7 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Targets of the environmental treatment."""
     artifacts = models.ManyToManyField(
         Artifact,
-        through="EnvironmentalTreatment",
+        through="ArtifactEnvironmentalTreatment",
         related_name="environmental_treatments",
     )
     """Artifacts linked to the treatment."""
@@ -576,7 +578,9 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """:class:`wetlab.EnvironmentalTreatment` treatments."""
     artifacts = models.ManyToManyField(
-        Artifact, through="CombinationTreatment", related_name="combination_treatments"
+        Artifact,
+        through="ArtifactCombinationTreatment",
+        related_name="combination_treatments",
     )
     """Artifacts linked to the treatment."""
 
