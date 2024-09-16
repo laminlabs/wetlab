@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.11"]
     timeout-minutes: 4
 
     steps:
@@ -42,7 +42,7 @@ jobs:
       - run: nox -s test
       - run: nox -s docs
       - uses: nwtgck/actions-netlify@v1.2
-        if: matrix.python-version == '3.10'
+        if: matrix.python-version == '3.11'
         with:
           publish-dir: "_build/html"
           production-deploy: ${{ github.event_name == 'push' }}
