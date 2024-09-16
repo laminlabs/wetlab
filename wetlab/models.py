@@ -74,9 +74,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         "self", symmetrical=False, related_name="children"
     )
     """Parent compound records."""
-    artifacts: Artifact = models.ManyToManyField(
-        Artifact, through="ArtifactCompound", related_name="compounds"
-    )
+    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="compounds")
     """Artifacts linked to the compound."""
 
     @overload
@@ -145,9 +143,7 @@ class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
     """Description of the experiment."""
     date = models.DateField(default=None, null=True, db_index=True)
     """Date of the experiment."""
-    artifacts = models.ManyToManyField(
-        Artifact, through="ArtifactExperiment", related_name="experiments"
-    )
+    artifacts = models.ManyToManyField(Artifact, related_name="experiments")
     """Artifacts linked to the experiment."""
 
 
@@ -197,9 +193,7 @@ class Well(Record, CanValidate, TracksRun, TracksUpdates):
     """Horizontal position of the well in the microplate."""
     column = models.IntegerField()
     """Vertical position of the well in the microplate."""
-    artifacts = models.ManyToManyField(
-        Artifact, through="ArtifactWell", related_name="wells"
-    )
+    artifacts = models.ManyToManyField(Artifact, related_name="wells")
     """Artifacts linked to the well."""
 
 
@@ -248,9 +242,7 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     proteins = models.ManyToManyField(
         "bionty.Protein", related_name="treatment_targets"
     )
-    artifacts = models.ManyToManyField(
-        Artifact, through="ArtifactTreatmentTarget", related_name="treatment_targets"
-    )
+    artifacts = models.ManyToManyField(Artifact, related_name="treatment_targets")
     """Artifacts linked to the treatment target."""
 
     def __repr__(self) -> str:
@@ -332,9 +324,7 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="genetic_targets")
     """Targets of the treatment."""
-    artifacts = models.ManyToManyField(
-        Artifact, through="ArtifactGeneticTreatment", related_name="genetic_treatments"
-    )
+    artifacts = models.ManyToManyField(Artifact, related_name="genetic_treatments")
     """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
@@ -401,7 +391,6 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Compounds linked to the treatment."""
     artifacts = models.ManyToManyField(
         Artifact,
-        through="ArtifactCompoundTreatment",
         related_name="compound_treatments",
     )
     """Artifacts linked to the treatment."""
@@ -480,7 +469,6 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Targets of the environmental treatment."""
     artifacts = models.ManyToManyField(
         Artifact,
-        through="ArtifactEnvironmentalTreatment",
         related_name="environmental_treatments",
     )
     """Artifacts linked to the treatment."""
@@ -579,7 +567,6 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """:class:`wetlab.EnvironmentalTreatment` treatments."""
     artifacts = models.ManyToManyField(
         Artifact,
-        through="ArtifactCombinationTreatment",
         related_name="combination_treatments",
     )
     """Artifacts linked to the treatment."""
@@ -668,9 +655,7 @@ class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
     """Cell types linked to the biosample."""
     diseases = models.ManyToManyField(Disease, related_name="biosamples")
     """Diseases linked to the biosample."""
-    artifacts = models.ManyToManyField(
-        Artifact, through="ArtifactBiosample", related_name="biosamples"
-    )
+    artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
     """Artifacts linked to the biosample."""
 
 
@@ -718,9 +703,7 @@ class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
     """Description of the techsample."""
     biosamples = models.ManyToManyField(Biosample, related_name="techsamples")
     """Linked biosamples."""
-    artifacts = models.ManyToManyField(
-        Artifact, through="ArtifactTechsample", related_name="techsamples"
-    )
+    artifacts = models.ManyToManyField(Artifact, related_name="techsamples")
     """Artifacts linked to the techsample."""
 
 
