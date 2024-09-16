@@ -383,7 +383,7 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Concentration of the compound."""
     concentration_unit = models.CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
-    duration = models.DurationField(null=True, default=None)
+    # duration = models.DurationField(null=True, default=None)
     """Duration of the compound treatment."""
     targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
     """Targets of the treatment."""
@@ -461,7 +461,7 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """The value of the environmental treatment such as a temperature."""
     unit = models.CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
-    duration = models.DurationField(null=True, default=None)
+    # duration = models.DurationField(null=True, default=None)
     """Duration of the environmental treatment."""
     targets = models.ManyToManyField(
         TreatmentTarget, related_name="environmental_targets"
