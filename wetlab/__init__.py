@@ -3,7 +3,7 @@
 Generally, the wetlab schema is designed to model experimental covariates and perturbations including their targets.
 
 This default wetlab schema module mostly serves to exemplify `how you define
-costum registries on GitHub <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__.
+custom registries on GitHub <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__.
 
 Most professional users create their custom schemas to map their operations or
 leverage schema synching from Benchling. If you need help with this, please `reach out <https://lamin.ai/contact>`__!
@@ -18,10 +18,8 @@ Import wetlab:
 
 Create records:
 
->>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
-...    name="Aspirin 325 MG Enteric Coated Tablet",
-...    ontology_id="00076148",
-...    pubchem_id=2244
+>>> compound_treatment = wl.CompoundTreatment(
+...    name="Aspirin treatment day 1",
 ... ).save()
 
 Registries:
@@ -41,7 +39,7 @@ Registries:
 
 """
 
-__version__ = "0.31.1"
+__version__ = "0.32.0"
 
 from lamindb_setup import _check_instance_setup
 
