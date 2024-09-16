@@ -1,26 +1,28 @@
-"""A `wetlab` schema.
+"""Registries for wetlab related entities.
+
+Generally, the wetlab schema is designed to model experimental covariates and perturbations including their targets.
 
 This default wetlab schema module mostly serves to exemplify `how you define
 costum registries on GitHub <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__.
 
 Most professional users create their custom schemas to map their operations or
-leverage schema synching from Benchling. If you need help with this, please
-`reach out <https://lamin.ai/contact>`__!
+leverage schema synching from Benchling. If you need help with this, please `reach out <https://lamin.ai/contact>`__!
 
-Generally, the wetlab schema is designed to model experimental covariates
-and perturbations including their targets.
+>>> pip install wetlab
 
-Install the schema module::
+>>> lamin init --storage ./test-wetlab --schema bionty,wetlab
 
-   pip install wetlab
+Import wetlab:
 
-Create your instance mounting the module::
+>>> import wetlab as wl
 
-   lamin init --storage ./test-wetlab --schema bionty,wetlab
+Create records:
 
-Import in Python::
-
-   import wetlab as wl
+>>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
+...    name="Aspirin 325 MG Enteric Coated Tablet",
+...    ontology_id="00076148",
+...    pubchem_id=2244
+... ).save()
 
 Registries:
 
