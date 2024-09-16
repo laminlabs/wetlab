@@ -8,9 +8,9 @@ from bionty.models import (
     CellLine,
     CellType,
     Disease,
+    Organism,
     Source,
     Tissue,
-    Organism,
 )
 from django.db import models
 from django.db.models import CASCADE, PROTECT, QuerySet
@@ -89,13 +89,15 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         description: str | None,
         parents: list[Compound],
         source: Source | None,
-    ): ...
+    ):
+        ...
 
     @overload
     def __init__(
         self,
         *db_args,
-    ): ...
+    ):
+        ...
 
     def __init__(
         self,

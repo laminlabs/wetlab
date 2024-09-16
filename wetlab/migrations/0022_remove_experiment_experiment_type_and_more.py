@@ -8,7 +8,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("bionty", "0039_alter_cellline_source_alter_cellmarker_source_and_more"),
         ("lnschema_core", "0066_alter_artifact__feature_values_and_more"),
