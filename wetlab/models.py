@@ -123,7 +123,7 @@ class ArtifactCompound(Record, LinkORM, TracksRun):
 
 
 class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
-    """Models a wetlab experiment of :class:`wetlab.ExperimentType`.
+    """Models a wetlab experiment.
 
     Example:
         >>> experiment = wl.Experiment(
