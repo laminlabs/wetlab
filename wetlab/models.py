@@ -62,6 +62,10 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the compound."""
+    chembl_id: str | None = models.CharField(
+        max_length=32, db_index=True, null=True, default=None
+    )
+    """Chembl ontology ID of the compound"""
     abbr: str | None = models.CharField(
         max_length=32, db_index=True, unique=True, null=True, default=None
     )
