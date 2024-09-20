@@ -390,7 +390,7 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     name = models.CharField(max_length=255, default=None, db_index=True)
-    """Name of the Genetic treatment."""
+    """Name of the compound treatment."""
     concentration = models.FloatField(null=True, default=None)
     """Concentration of the compound."""
     concentration_unit = models.CharField(max_length=32, null=True, default=None)
