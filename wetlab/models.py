@@ -12,7 +12,7 @@ from bionty.models import (
     Source,
     Tissue,
 )
-from django.db import models
+from django.db import DatabaseError, models
 from django.db.models import CASCADE, PROTECT, QuerySet
 from lnschema_core import ids
 from lnschema_core.models import (
@@ -34,6 +34,18 @@ GeneticTreatmentSystem = Literal[
     "transgene",
     "transient transfection",
 ]
+
+
+def _get_related_repr(instance, related_name: str) -> str:
+    try:
+        related_manager = getattr(instance, related_name)
+        if instance.pk is not None and related_manager.exists():
+            related_count = related_manager.count()
+            related_repr = "\n".join(f"      {item}" for item in related_manager.all())
+            return f"  {related_name} ({related_count}):\n{related_repr}"
+    except (AttributeError, DatabaseError):
+        return ""
+    return ""
 
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
@@ -258,20 +270,13 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     """Artifacts linked to the treatment target."""
 
     def __repr__(self) -> str:
-        genes_repr = "\n".join(f"      {gene}" for gene in self.genes.all())
-        pathways_repr = "\n".join(f"      {pathway}" for pathway in self.pathways.all())
-        proteins_repr = "\n".join(f"      {protein}" for protein in self.proteins.all())
-
         result = [f"{super().__repr__()}"]
 
-        if self.genes.count() > 0:
-            result.append(f"  genes ({self.genes.count()}):\n{genes_repr}")
-        if self.pathways.count() > 0:
-            result.append(f"  pathways ({self.pathways.count()}):\n{pathways_repr}")
-        if self.proteins.count() > 0:
-            result.append(f"  proteins ({self.proteins.count()}):\n{proteins_repr}")
+        result.append(_get_related_repr(self, "genes"))
+        result.append(_get_related_repr(self, "pathways"))
+        result.append(_get_related_repr(self, "proteins"))
 
-        return "\n".join(result)
+        return "\n".join(filter(None, result))
 
 
 class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
@@ -342,13 +347,11 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
-        original_repr = super().__repr__()
-        if self.targets.count() > 0:
-            targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
-            return (
-                f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
-            )
-        return original_repr
+        result = [f"{super().__repr__()}"]
+
+        result.append(_get_related_repr(self, "targets"))
+
+        return "\n".join(filter(None, result))
 
 
 class ArtifactGeneticTreatment(Record, LinkORM, TracksRun):
@@ -409,13 +412,11 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
-        original_repr = super().__repr__()
-        if self.targets.count() > 0:
-            targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
-            return (
-                f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
-            )
-        return original_repr
+        result = [f"{super().__repr__()}"]
+
+        result.append(_get_related_repr(self, "targets"))
+
+        return "\n".join(filter(None, result))
 
 
 class ArtifactCompoundTreatment(Record, LinkORM, TracksRun):
@@ -487,13 +488,11 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
-        original_repr = super().__repr__()
-        if self.targets.count() > 0:
-            targets_repr = "\n".join(f"      {target}" for target in self.targets.all())
-            return (
-                f"{original_repr}\n  targets ({self.targets.count()}):\n{targets_repr}"
-            )
-        return original_repr
+        result = [f"{super().__repr__()}"]
+
+        result.append(_get_related_repr(self, "targets"))
+
+        return "\n".join(filter(None, result))
 
 
 class ArtifactEnvironmentalTreatment(Record, LinkORM, TracksRun):
@@ -586,25 +585,13 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Artifacts linked to the treatment."""
 
     def __repr__(self) -> str:
-        genetics_repr = "\n".join(f"      {genetic}" for genetic in self.genetics.all())
-        compounds_repr = "\n".join(
-            f"      {compound}" for compound in self.compounds.all()
-        )
-        environmentals_repr = "\n".join(
-            f"      {environmental}" for environmental in self.environmentals.all()
-        )
-
         result = [f"{super().__repr__()}"]
-        if self.genetics.count() > 0:
-            result.append(f"  genetics ({self.genetics.count()}):\n{genetics_repr}")
-        if self.compounds.count() > 0:
-            result.append(f"  compounds ({self.compounds.count()}):\n{compounds_repr}")
-        if self.environmentals.count() > 0:
-            result.append(
-                f"  environmentals ({self.environmentals.count()}):\n{environmentals_repr}"
-            )
 
-        return "\n".join(result)
+        result.append(_get_related_repr(self, "genetics"))
+        result.append(_get_related_repr(self, "compounds"))
+        result.append(_get_related_repr(self, "environmentals"))
+
+        return "\n".join(filter(None, result))
 
     @property
     def members(self) -> QuerySet:
