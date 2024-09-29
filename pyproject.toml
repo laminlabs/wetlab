@@ -9,6 +9,7 @@ readme = "README.md"
 dynamic = ["version", "description"]
 dependencies = [
     "lamindb[bionty]",
+    "lamindb_setup>=0.77.6",
 ]
 
 [project.urls]
