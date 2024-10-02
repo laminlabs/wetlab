@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, overload
+from typing import TYPE_CHECKING, Literal, overload
 
 from bionty import ids as bionty_ids
 from bionty.models import (
@@ -8,12 +8,15 @@ from bionty.models import (
     CellLine,
     CellType,
     Disease,
+    Gene,
     Organism,
+    Pathway,
+    Protein,
     Source,
     Tissue,
 )
 from django.db import DatabaseError, models
-from django.db.models import CASCADE, PROTECT, QuerySet
+from django.db.models import CASCADE, PROTECT, DateField, QuerySet
 from lnschema_core import ids
 from lnschema_core.models import (
     Artifact,
@@ -24,6 +27,9 @@ from lnschema_core.models import (
     TracksRun,
     TracksUpdates,
 )
+
+if TYPE_CHECKING:
+    from datetime import timedelta
 
 GeneticTreatmentSystem = Literal[
     "CRISPR Cas9",
@@ -151,17 +157,17 @@ class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=8, default=ids.base62_8)
+    uid: str = models.CharField(unique=True, max_length=8, default=ids.base62_8)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
+    name: str | None = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment."""
-    description = models.TextField(null=True, default=None)
+    description: str | None = models.TextField(null=True, default=None)
     """Description of the experiment."""
-    date = models.DateField(default=None, null=True, db_index=True)
+    date: DateField | None = models.DateField(default=None, null=True, db_index=True)
     """Date of the experiment."""
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact, through="ArtifactExperiment", related_name="experiments"
     )
     """Artifacts linked to the experiment."""
@@ -201,19 +207,19 @@ class Well(Record, CanValidate, TracksRun, TracksUpdates):
         unique_together = (("row", "column"),)
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=4, default=ids.base62_4)
+    uid: int = models.CharField(unique=True, max_length=4, default=ids.base62_4)
     """Universal id, valid across DB instances."""
-    name = models.CharField(
+    name: str | None = models.CharField(
         max_length=32, default=None, null=True, unique=True, db_index=True
     )
     """Name of the well."""
-    row = models.CharField(max_length=4, default=None)
+    row: str = models.CharField(max_length=4, default=None)
     """Horizontal position of the well in the microplate."""
-    column = models.IntegerField()
+    column: int = models.IntegerField()
     """Vertical position of the well in the microplate."""
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact, through="ArtifactWell", related_name="wells"
     )
     """Artifacts linked to the well."""
@@ -247,24 +253,26 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=8, default=ids.base62_8)
+    uid: int = models.CharField(unique=True, max_length=8, default=ids.base62_8)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=60, default=None, db_index=True)
+    name: str = models.CharField(max_length=60, default=None, db_index=True)
     """Name of the treatment target."""
-    description = models.TextField(null=True, default=None)
+    description: str | None = models.TextField(null=True, default=None)
     """Description of the treatment target."""
-    genes = models.ManyToManyField("bionty.Gene", related_name="treatment_targets")
+    genes: Gene = models.ManyToManyField(
+        "bionty.Gene", related_name="treatment_targets"
+    )
     """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
-    pathways = models.ManyToManyField(
+    pathways: Pathway = models.ManyToManyField(
         "bionty.Pathway", related_name="treatment_targets"
     )
     """Pathways of the treatment target, link to :class:`bionty.Pathway` records."""
-    proteins = models.ManyToManyField(
+    proteins: Protein = models.ManyToManyField(
         "bionty.Protein", related_name="treatment_targets"
     )
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact, through="ArtifactTreatmentTarget", related_name="treatment_targets"
     )
     """Artifacts linked to the treatment target."""
@@ -321,11 +329,11 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
+    name: str = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
     system: GeneticTreatmentSystem = models.CharField(
         max_length=32,
@@ -333,15 +341,21 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
         db_index=True,
     )
     """System used for the genetic treatment."""
-    sequence = models.TextField(null=True, default=None, db_index=True)
+    sequence: str | None = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
-    on_target_score = models.FloatField(default=None, null=True, db_index=True)
+    on_target_score: float | None = models.FloatField(
+        default=None, null=True, db_index=True
+    )
     """On-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence."""
-    off_target_score = models.FloatField(default=None, null=True, db_index=True)
+    off_target_score: float | None = models.FloatField(
+        default=None, null=True, db_index=True
+    )
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="genetic_targets")
+    targets: TreatmentTarget = models.ManyToManyField(
+        TreatmentTarget, related_name="genetic_targets"
+    )
     """Targets of the treatment."""
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact, through="ArtifactGeneticTreatment", related_name="genetic_treatments"
     )
     """Artifacts linked to the treatment."""
@@ -388,23 +402,25 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
+    name: str = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the compound treatment."""
-    concentration = models.FloatField(null=True, default=None)
+    concentration: float = models.FloatField(null=True, default=None)
     """Concentration of the compound."""
-    concentration_unit = models.CharField(max_length=32, null=True, default=None)
+    concentration_unit: str = models.CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
-    duration = models.DurationField(null=True, default=None)
+    duration: timedelta | None = models.DurationField(null=True, default=None)
     """Duration of the compound treatment."""
-    targets = models.ManyToManyField(TreatmentTarget, related_name="compound_targets")
+    targets: TreatmentTarget = models.ManyToManyField(
+        TreatmentTarget, related_name="compound_targets"
+    )
     """Targets of the treatment."""
-    compounds = models.ManyToManyField(Compound, related_name="compounds")
+    compounds: Compound = models.ManyToManyField(Compound, related_name="compounds")
     """Compounds linked to the treatment."""
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact,
         through="ArtifactCompoundTreatment",
         related_name="compound_treatments",
@@ -460,27 +476,27 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
+    name: str = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the environmental treatment."""
     ontology_id = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID (EFO) of the environmental treatment."""
-    value = models.FloatField(null=True, default=None)
+    value: float | None = models.FloatField(null=True, default=None)
     """The value of the environmental treatment such as a temperature."""
-    unit = models.CharField(max_length=32, null=True, default=None)
+    unit: str | None = models.CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
-    duration = models.DurationField(null=True, default=None)
+    duration: timedelta | None = models.DurationField(null=True, default=None)
     """Duration of the environmental treatment."""
-    targets = models.ManyToManyField(
+    targets: TreatmentTarget = models.ManyToManyField(
         TreatmentTarget, related_name="environmental_targets"
     )
     """Targets of the environmental treatment."""
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact,
         through="ArtifactEnvironmentalTreatment",
         related_name="environmental_treatments",
@@ -553,31 +569,31 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
+    name: str | None = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
-    description = models.TextField(null=True, default=None)
+    description: str | None = models.TextField(null=True, default=None)
     """Description of the combination treatment."""
-    ontology_id = models.CharField(
+    ontology_id: str | None = models.CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the treatment."""
-    genetics = models.ManyToManyField(
+    genetics: GeneticTreatment = models.ManyToManyField(
         GeneticTreatment, related_name="genetic_treatments"
     )
     """:class:`wetlab.GeneticTreatment` treatments."""
-    compounds = models.ManyToManyField(
+    compounds: CompoundTreatment = models.ManyToManyField(
         CompoundTreatment, related_name="compound_treatments"
     )
     """:class:`wetlab.CompoundTreatment` treatments."""
-    environmentals = models.ManyToManyField(
+    environmentals: EnvironmentalTreatment = models.ManyToManyField(
         EnvironmentalTreatment, related_name="environmental_treatments"
     )
     """:class:`wetlab.EnvironmentalTreatment` treatments."""
-    artifacts = models.ManyToManyField(
+    artifacts: Artifact = models.ManyToManyField(
         Artifact,
         through="ArtifactCombinationTreatment",
         related_name="combination_treatments",
@@ -634,29 +650,33 @@ class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True, null=True)
+    name: str | None = models.CharField(
+        max_length=255, default=None, db_index=True, null=True
+    )
     """Name of the biosample."""
-    batch = models.CharField(max_length=60, default=None, null=True, db_index=True)
+    batch: str | None = models.CharField(
+        max_length=60, default=None, null=True, db_index=True
+    )
     """Batch label of the biosample."""
-    description = models.TextField(null=True, default=None)
+    description: str | None = models.TextField(null=True, default=None)
     """Description of the biosample."""
-    organism = models.ForeignKey(
+    organism: Organism | None = models.ForeignKey(
         Organism, PROTECT, null=True, related_name="biosamples"
     )
     """Organism of the biosample."""
-    tissues = models.ManyToManyField(Tissue, related_name="biosamples")
+    tissues: Tissue = models.ManyToManyField(Tissue, related_name="biosamples")
     """Tissues linked to the biosample."""
-    cell_lines = models.ManyToManyField(CellLine, related_name="biosamples")
+    cell_lines: CellLine = models.ManyToManyField(CellLine, related_name="biosamples")
     """Cell lines linked to the biosample."""
-    cell_types = models.ManyToManyField(CellType, related_name="biosamples")
+    cell_types: CellType = models.ManyToManyField(CellType, related_name="biosamples")
     """Cell types linked to the biosample."""
-    diseases = models.ManyToManyField(Disease, related_name="biosamples")
+    diseases: Disease = models.ManyToManyField(Disease, related_name="biosamples")
     """Diseases linked to the biosample."""
-    artifacts = models.ManyToManyField(Artifact, related_name="biosamples")
+    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="biosamples")
     """Artifacts linked to the biosample."""
 
 
@@ -692,19 +712,21 @@ class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
-    id = models.AutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name = models.CharField(max_length=255, default=None, db_index=True)
+    name: str | None = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
-    batch = models.CharField(max_length=60, default=None, db_index=True)
+    batch: str | None = models.CharField(max_length=60, default=None, db_index=True)
     """Batch label of the techsample."""
-    description = models.TextField(null=True, default=None)
+    description: str | None = models.TextField(null=True, default=None)
     """Description of the techsample."""
-    biosamples = models.ManyToManyField(Biosample, related_name="techsamples")
+    biosamples: Biosample = models.ManyToManyField(
+        Biosample, related_name="techsamples"
+    )
     """Linked biosamples."""
-    artifacts = models.ManyToManyField(Artifact, related_name="techsamples")
+    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="techsamples")
     """Artifacts linked to the techsample."""
 
 
