@@ -1,7 +1,6 @@
-"""Registries for wetlab entities.
+"""Basic wetlab entities [`source <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__].
 
-See the `source code
-<https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__.
+Install the module and mount it in a new instance:
 
 >>> pip install wetlab
 >>> lamin init --storage ./test-wetlab --schema bionty,wetlab
