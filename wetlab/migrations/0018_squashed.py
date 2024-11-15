@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="ExperimentType",
@@ -123,7 +123,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Experiment",
@@ -174,7 +174,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Techsample",
@@ -210,7 +210,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="TreatmentTarget",
@@ -251,7 +251,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Treatment",
@@ -344,7 +344,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Well",
@@ -395,6 +395,6 @@ class Migration(migrations.Migration):
             options={
                 "unique_together": {("row", "column")},
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
     ]

@@ -31,7 +31,7 @@ from lnschema_core.fields import (
 )
 from lnschema_core.models import (
     Artifact,
-    CanValidate,
+    CanCurate,
     Feature,
     LinkORM,
     Record,
@@ -119,15 +119,13 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         description: str | None,
         parents: list[Compound],
         source: Source | None,
-    ):
-        ...
+    ): ...
 
     @overload
     def __init__(
         self,
         *db_args,
-    ):
-        ...
+    ): ...
 
     def __init__(
         self,
@@ -148,7 +146,7 @@ class ArtifactCompound(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
+class Experiment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a wetlab experiment.
 
     Example:
@@ -196,7 +194,7 @@ class ArtifactExperiment(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Well(Record, CanValidate, TracksRun, TracksUpdates):
+class Well(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example:
@@ -244,7 +242,7 @@ class ArtifactWell(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
+class TreatmentTarget(Record, CanCurate, TracksRun, TracksUpdates):
     """Models treatment targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
@@ -310,7 +308,7 @@ class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models Genetic perturbations such as CRISPR.
 
     Args:
@@ -391,7 +389,7 @@ class ArtifactGeneticTreatment(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class CompoundTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models compound treatments such as drugs.
 
     Args:
@@ -458,7 +456,7 @@ class ArtifactCompoundTreatment(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class EnvironmentalTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models environmental perturbations such as heat, acid, or smoke treatments.
 
     Args:
@@ -532,7 +530,7 @@ class ArtifactEnvironmentalTreatment(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class CombinationTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Combination of several Treatments.
 
     CombinationTreatments model several Treatments jointly such as one or more :class:`wetlab.GeneticTreatment`,
@@ -639,7 +637,7 @@ class ArtifactCombinationTreatment(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
+class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Examples:
@@ -693,7 +691,7 @@ class ArtifactBiosample(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
+class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Examples:
