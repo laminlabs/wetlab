@@ -16,11 +16,14 @@ from bionty.models import (
     Tissue,
 )
 from django.db import DatabaseError, models
-from django.db.models import CASCADE, PROTECT, DateField, QuerySet
+from django.db.models import CASCADE, PROTECT, QuerySet
 from lnschema_core import ids
 from lnschema_core.fields import (
     BooleanField,
     CharField,
+    DateField,
+    DurationField,
+    FloatField,
     ForeignKey,
     IntegerField,
     TextField,
@@ -168,7 +171,7 @@ class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
     """Name of the experiment."""
     description: str | None = TextField(null=True, default=None)
     """Description of the experiment."""
-    date: DateField | None = models.DateField(
+    date: DateField | None = DateField(
         default=None, null=True, db_index=True, blank=True
     )
     """Date of the experiment."""
@@ -346,11 +349,11 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """System used for the genetic treatment."""
     sequence: str | None = TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
-    on_target_score: float | None = models.FloatField(
+    on_target_score: float | None = FloatField(
         default=None, null=True, db_index=True, blank=True
     )
     """On-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence."""
-    off_target_score: float | None = models.FloatField(
+    off_target_score: float | None = FloatField(
         default=None, null=True, db_index=True, blank=True
     )
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
@@ -411,11 +414,11 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the compound treatment."""
-    concentration: float = models.FloatField(null=True, default=None, blank=True)
+    concentration: float = FloatField(null=True, default=None, blank=True)
     """Concentration of the compound."""
     concentration_unit: str = CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
-    duration: timedelta | None = models.DurationField(null=True, default=None)
+    duration: timedelta | None = DurationField(null=True, default=None)
     """Duration of the compound treatment."""
     targets: TreatmentTarget = models.ManyToManyField(
         TreatmentTarget, related_name="compound_targets"
@@ -487,13 +490,11 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Name of the environmental treatment."""
     ontology_id = CharField(max_length=32, db_index=True, null=True, default=None)
     """Ontology ID (EFO) of the environmental treatment."""
-    value: float | None = models.FloatField(null=True, default=None, blank=True)
+    value: float | None = FloatField(null=True, default=None, blank=True)
     """The value of the environmental treatment such as a temperature."""
     unit: str | None = CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
-    duration: timedelta | None = models.DurationField(
-        null=True, default=None, blank=True
-    )
+    duration: timedelta | None = DurationField(null=True, default=None, blank=True)
     """Duration of the environmental treatment."""
     targets: TreatmentTarget = models.ManyToManyField(
         TreatmentTarget, related_name="environmental_targets"
