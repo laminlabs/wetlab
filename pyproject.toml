@@ -37,7 +37,7 @@ omit = [
 [tool.ruff]
 src = ["src"]
 line-length = 88
-select = [
+lint.select = [
     "F",  # Errors detected by Pyflakes
     "E",  # Error detected by Pycodestyle
     "W",  # Warning detected by Pycodestyle
@@ -53,7 +53,7 @@ select = [
     "NPY",  # Numpy specific rules
     "PTH"  # Use pathlib
 ]
-ignore = [
+lint.ignore = [
     # Do not catch blind exception: `Exception`
     "BLE001",
     # Errors from function calls in argument defaults. These are fine when the result is immutable.
