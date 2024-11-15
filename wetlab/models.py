@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, overload
+from datetime import timedelta  # noqa
+from typing import Literal, overload
 
 from bionty import ids as bionty_ids
 from bionty.models import (
@@ -37,9 +38,6 @@ from lnschema_core.models import (
     TracksRun,
     TracksUpdates,
 )
-
-if TYPE_CHECKING:
-    from datetime import timedelta
 
 GeneticTreatmentSystem = Literal[
     "CRISPR Cas9",
@@ -283,14 +281,14 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment target."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "genes"))
-        result.append(_get_related_repr(self, "pathways"))
-        result.append(_get_related_repr(self, "proteins"))
+    #     result.append(_get_related_repr(self, "genes"))
+    #     result.append(_get_related_repr(self, "pathways"))
+    #     result.append(_get_related_repr(self, "proteins"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
@@ -366,12 +364,12 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "targets"))
+    #     result.append(_get_related_repr(self, "targets"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactGeneticTreatment(Record, LinkORM, TracksRun):
@@ -433,12 +431,12 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "targets"))
+    #     result.append(_get_related_repr(self, "targets"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactCompoundTreatment(Record, LinkORM, TracksRun):
@@ -507,12 +505,12 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "targets"))
+    #     result.append(_get_related_repr(self, "targets"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactEnvironmentalTreatment(Record, LinkORM, TracksRun):
@@ -604,14 +602,14 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "genetics"))
-        result.append(_get_related_repr(self, "compounds"))
-        result.append(_get_related_repr(self, "environmentals"))
+    #     result.append(_get_related_repr(self, "genetics"))
+    #     result.append(_get_related_repr(self, "compounds"))
+    #     result.append(_get_related_repr(self, "environmentals"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
     @property
     def members(self) -> QuerySet:
