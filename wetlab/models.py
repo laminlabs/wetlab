@@ -37,7 +37,6 @@ from lnschema_core.models import (
     Record,
     TracksRun,
     TracksUpdates,
-    ValidateFields,
 )
 
 GeneticTreatmentSystem = Literal[
@@ -311,7 +310,7 @@ class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates, ValidateFields):
+class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Models Genetic perturbations such as CRISPR.
 
     Args:
