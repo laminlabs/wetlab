@@ -37,6 +37,7 @@ from lnschema_core.models import (
     Record,
     TracksRun,
     TracksUpdates,
+    ValidateFields,
 )
 
 GeneticTreatmentSystem = Literal[
@@ -50,16 +51,16 @@ GeneticTreatmentSystem = Literal[
 ]
 
 
-def _get_related_repr(instance, related_name: str) -> str:
-    try:
-        related_manager = getattr(instance, related_name)
-        if instance.pk is not None and related_manager.exists():
-            related_count = related_manager.count()
-            related_repr = "\n".join(f"      {item}" for item in related_manager.all())
-            return f"  {related_name} ({related_count}):\n{related_repr}"
-    except (AttributeError, DatabaseError):
-        return ""
-    return ""
+# def _get_related_repr(instance, related_name: str) -> str:
+#     try:
+#         related_manager = getattr(instance, related_name)
+#         if instance.pk is not None and related_manager.exists():
+#             related_count = related_manager.count()
+#             related_repr = "\n".join(f"      {item}" for item in related_manager.all())
+#             return f"  {related_name} ({related_count}):\n{related_repr}"
+#     except (AttributeError, DatabaseError):
+#         return ""
+#     return ""
 
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
@@ -310,7 +311,7 @@ class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates, ValidateFields):
     """Models Genetic perturbations such as CRISPR.
 
     Args:
