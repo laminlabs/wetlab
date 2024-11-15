@@ -98,7 +98,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="EnvironmentalTreatment",
@@ -166,7 +166,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="GeneticTreatment",
@@ -232,7 +232,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.CreateModel(
             name="CombinationTreatment",
@@ -294,7 +294,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanValidate),
+            bases=(models.Model, lnschema_core.models.CanCurate),
         ),
         migrations.DeleteModel(
             name="Treatment",
