@@ -14,15 +14,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    replaces = [
-        ("wetlab", "0001_initial_squashed_0012"),
-        ("wetlab", "0013_import_legacy_data"),
-        ("wetlab", "0014_rename_species_biosample_organism"),
-        ("wetlab", "0015_rename_files_biosample_artifacts_and_more"),
-        ("wetlab", "0016_rename_datasets_biosample_collections_and_more"),
-        ("wetlab", "0017_remove_biosample_artifacts"),
-        ("wetlab", "0018_well_created_at_well_created_by_well_updated_at"),
-    ]
+    initial = True
 
     dependencies = [
         ("bionty", "0028_squashed"),
