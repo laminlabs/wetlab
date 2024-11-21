@@ -40,13 +40,13 @@ from lnschema_core.models import (
 )
 
 GeneticTreatmentSystem = Literal[
-    "CRISPR Cas9",
+    "CRISPR-Cas9",
     "CRISPRi",
     "CRISPRa",
     "shRNA",
     "siRNA",
     "transgene",
-    "transient transfection",
+    "transient-transfection",
 ]
 
 
