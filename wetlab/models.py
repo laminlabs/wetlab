@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import TYPE_CHECKING, overload
 
 from bionty import ids as bionty_ids
@@ -16,11 +17,21 @@ from bionty.models import (
     Tissue,
 )
 from django.db import DatabaseError, models
-from django.db.models import CASCADE, PROTECT, DateField, QuerySet
+from django.db.models import CASCADE, PROTECT, QuerySet
 from lnschema_core import ids
+from lnschema_core.fields import (
+    BooleanField,
+    CharField,
+    DateField,
+    DurationField,
+    FloatField,
+    ForeignKey,
+    IntegerField,
+    TextField,
+)
 from lnschema_core.models import (
     Artifact,
-    CanValidate,
+    CanCurate,
     Feature,
     LinkORM,
     Record,
@@ -34,16 +45,16 @@ if TYPE_CHECKING:
     from . import types as tp
 
 
-def _get_related_repr(instance, related_name: str) -> str:
-    try:
-        related_manager = getattr(instance, related_name)
-        if instance.pk is not None and related_manager.exists():
-            related_count = related_manager.count()
-            related_repr = "\n".join(f"      {item}" for item in related_manager.all())
-            return f"  {related_name} ({related_count}):\n{related_repr}"
-    except (AttributeError, DatabaseError):
-        return ""
-    return ""
+# def _get_related_repr(instance, related_name: str) -> str:
+#     try:
+#         related_manager = getattr(instance, related_name)
+#         if instance.pk is not None and related_manager.exists():
+#             related_count = related_manager.count()
+#             related_repr = "\n".join(f"      {item}" for item in related_manager.all())
+#             return f"  {related_name} ({related_count}):\n{related_repr}"
+#     except (AttributeError, DatabaseError):
+#         return ""
+#     return ""
 
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
@@ -64,25 +75,25 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: str = models.CharField(unique=True, max_length=8, default=bionty_ids.ontology)
+    uid: str = CharField(unique=True, max_length=8, default=bionty_ids.ontology)
     """A universal id (hash of selected field)."""
-    name: str = models.CharField(max_length=256, db_index=True)
+    name: str = CharField(max_length=256, db_index=True)
     """Name of the compound."""
-    ontology_id: str | None = models.CharField(
+    ontology_id: str | None = CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the compound."""
-    chembl_id: str | None = models.CharField(
+    chembl_id: str | None = CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Chembl ontology ID of the compound"""
-    abbr: str | None = models.CharField(
+    abbr: str | None = CharField(
         max_length=32, db_index=True, unique=True, null=True, default=None
     )
     """A unique abbreviation of compound."""
-    synonyms: str | None = models.TextField(null=True, default=None)
+    synonyms: str | None = TextField(null=True, default=None)
     """Bar-separated (|) synonyms that correspond to this compound."""
-    description: str | None = models.TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None)
     """Description of the compound."""
     parents: Compound = models.ManyToManyField(
         "self", symmetrical=False, related_name="children"
@@ -103,15 +114,13 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         description: str | None,
         parents: list[Compound],
         source: Source | None,
-    ):
-        ...
+    ): ...
 
     @overload
     def __init__(
         self,
         *db_args,
-    ):
-        ...
+    ): ...
 
     def __init__(
         self,
@@ -123,20 +132,16 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactCompound(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
-        Artifact, CASCADE, related_name="links_compound"
-    )
-    compound: Compound = models.ForeignKey(
-        Compound, PROTECT, related_name="links_artifact"
-    )
-    feature: Feature = models.ForeignKey(
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
+    compound: Compound = ForeignKey(Compound, PROTECT, related_name="links_artifact")
+    feature: Feature = ForeignKey(
         Feature, PROTECT, null=True, default=None, related_name="links_artifactcompound"
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
+class Experiment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a wetlab experiment.
 
     Example:
@@ -151,13 +156,15 @@ class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: str = models.CharField(unique=True, max_length=8, default=ids.base62_8)
+    uid: str = CharField(unique=True, max_length=8, default=ids.base62_8)
     """Universal id, valid across DB instances."""
-    name: str | None = models.CharField(max_length=255, default=None, db_index=True)
+    name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment."""
-    description: str | None = models.TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None)
     """Description of the experiment."""
-    date: DateField | None = models.DateField(default=None, null=True, db_index=True)
+    date: DateField | None = DateField(
+        default=None, null=True, db_index=True, blank=True
+    )
     """Date of the experiment."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact, through="ArtifactExperiment", related_name="experiments"
@@ -167,24 +174,22 @@ class Experiment(Record, CanValidate, TracksRun, TracksUpdates):
 
 class ArtifactExperiment(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
-        Artifact, CASCADE, related_name="links_experiment"
-    )
-    experiment: Experiment = models.ForeignKey(
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_experiment")
+    experiment: Experiment = ForeignKey(
         Experiment, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactexperiment",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Well(Record, CanValidate, TracksRun, TracksUpdates):
+class Well(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example:
@@ -201,15 +206,15 @@ class Well(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=4, default=ids.base62_4)
+    uid: int = CharField(unique=True, max_length=4, default=ids.base62_4)
     """Universal id, valid across DB instances."""
-    name: str | None = models.CharField(
+    name: str | None = CharField(
         max_length=32, default=None, null=True, unique=True, db_index=True
     )
     """Name of the well."""
-    row: str = models.CharField(max_length=4, default=None)
+    row: str = CharField(max_length=4, default=None)
     """Horizontal position of the well in the microplate."""
-    column: int = models.IntegerField()
+    column: int = IntegerField()
     """Vertical position of the well in the microplate."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact, through="ArtifactWell", related_name="wells"
@@ -219,20 +224,20 @@ class Well(Record, CanValidate, TracksRun, TracksUpdates):
 
 class ArtifactWell(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(Artifact, CASCADE, related_name="links_well")
-    well: Well = models.ForeignKey(Well, PROTECT, related_name="links_artifact")
-    feature: Feature = models.ForeignKey(
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_well")
+    well: Well = ForeignKey(Well, PROTECT, related_name="links_artifact")
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactwell",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
+class TreatmentTarget(Record, CanCurate, TracksRun, TracksUpdates):
     """Models treatment targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
@@ -247,11 +252,11 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=8, default=ids.base62_8)
+    uid: int = CharField(unique=True, max_length=8, default=ids.base62_8)
     """Universal id, valid across DB instances."""
-    name: str = models.CharField(max_length=60, default=None, db_index=True)
+    name: str = CharField(max_length=60, default=None, db_index=True)
     """Name of the treatment target."""
-    description: str | None = models.TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None)
     """Description of the treatment target."""
     genes: Gene = models.ManyToManyField(
         "bionty.Gene", related_name="treatment_targets"
@@ -269,36 +274,36 @@ class TreatmentTarget(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment target."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "genes"))
-        result.append(_get_related_repr(self, "pathways"))
-        result.append(_get_related_repr(self, "proteins"))
+    #     result.append(_get_related_repr(self, "genes"))
+    #     result.append(_get_related_repr(self, "pathways"))
+    #     result.append(_get_related_repr(self, "proteins"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
+    artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_treatment_target"
     )
-    treatmenttarget: TreatmentTarget = models.ForeignKey(
+    treatmenttarget: TreatmentTarget = ForeignKey(
         TreatmentTarget, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifacttreatmenttarget",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models Genetic perturbations such as CRISPR.
 
     Args:
@@ -323,9 +328,9 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name: str = models.CharField(max_length=255, default=None, db_index=True)
+    name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
     system: tp.GeneticTreatmentSystem = models.CharField(
         max_length=32,
@@ -335,12 +340,12 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """:class:`~wetlab.GeneticTreatmentSystem` used for the genetic treatment."""
     sequence: str | None = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
-    on_target_score: float | None = models.FloatField(
-        default=None, null=True, db_index=True
+    on_target_score: float | None = FloatField(
+        default=None, null=True, db_index=True, blank=True
     )
     """On-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence."""
-    off_target_score: float | None = models.FloatField(
-        default=None, null=True, db_index=True
+    off_target_score: float | None = FloatField(
+        default=None, null=True, db_index=True, blank=True
     )
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
     targets: TreatmentTarget = models.ManyToManyField(
@@ -352,34 +357,34 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "targets"))
+    #     result.append(_get_related_repr(self, "targets"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactGeneticTreatment(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
+    artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_genetic_treatment"
     )
-    genetictreatment: GeneticTreatment = models.ForeignKey(
+    genetictreatment: GeneticTreatment = ForeignKey(
         GeneticTreatment, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactgenetictreatment",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class CompoundTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models compound treatments such as drugs.
 
     Args:
@@ -396,15 +401,15 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name: str = models.CharField(max_length=255, default=None, db_index=True)
+    name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the compound treatment."""
-    concentration: float = models.FloatField(null=True, default=None)
+    concentration: float = FloatField(null=True, default=None, blank=True)
     """Concentration of the compound."""
-    concentration_unit: str = models.CharField(max_length=32, null=True, default=None)
+    concentration_unit: str = CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
-    duration: timedelta | None = models.DurationField(null=True, default=None)
+    duration: timedelta | None = DurationField(null=True, default=None)
     """Duration of the compound treatment."""
     targets: TreatmentTarget = models.ManyToManyField(
         TreatmentTarget, related_name="compound_targets"
@@ -419,34 +424,34 @@ class CompoundTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "targets"))
+    #     result.append(_get_related_repr(self, "targets"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactCompoundTreatment(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
+    artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_compound_treatment"
     )
-    compoundtreatment: CompoundTreatment = models.ForeignKey(
+    compoundtreatment: CompoundTreatment = ForeignKey(
         CompoundTreatment, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactcompoundtreatment",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class EnvironmentalTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models environmental perturbations such as heat, acid, or smoke treatments.
 
     Args:
@@ -470,19 +475,17 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name: str = models.CharField(max_length=255, default=None, db_index=True)
+    name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the environmental treatment."""
-    ontology_id = models.CharField(
-        max_length=32, db_index=True, null=True, default=None
-    )
+    ontology_id = CharField(max_length=32, db_index=True, null=True, default=None)
     """Ontology ID (EFO) of the environmental treatment."""
-    value: float | None = models.FloatField(null=True, default=None)
+    value: float | None = FloatField(null=True, default=None, blank=True)
     """The value of the environmental treatment such as a temperature."""
-    unit: str | None = models.CharField(max_length=32, null=True, default=None)
+    unit: str | None = CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
-    duration: timedelta | None = models.DurationField(null=True, default=None)
+    duration: timedelta | None = DurationField(null=True, default=None, blank=True)
     """Duration of the environmental treatment."""
     targets: TreatmentTarget = models.ManyToManyField(
         TreatmentTarget, related_name="environmental_targets"
@@ -495,34 +498,34 @@ class EnvironmentalTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "targets"))
+    #     result.append(_get_related_repr(self, "targets"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
 
 class ArtifactEnvironmentalTreatment(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
+    artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_environmental_treatment"
     )
-    environmentaltreatment: EnvironmentalTreatment = models.ForeignKey(
+    environmentaltreatment: EnvironmentalTreatment = ForeignKey(
         EnvironmentalTreatment, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactenvironmentaltreatment",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
+class CombinationTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Combination of several Treatments.
 
     CombinationTreatments model several Treatments jointly such as one or more :class:`wetlab.GeneticTreatment`,
@@ -563,13 +566,13 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name: str | None = models.CharField(max_length=255, default=None, db_index=True)
+    name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name of the treatment."""
-    description: str | None = models.TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None)
     """Description of the combination treatment."""
-    ontology_id: str | None = models.CharField(
+    ontology_id: str | None = CharField(
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the treatment."""
@@ -592,14 +595,14 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     )
     """Artifacts linked to the treatment."""
 
-    def __repr__(self) -> str:
-        result = [f"{super().__repr__()}"]
+    # def __repr__(self) -> str:
+    #     result = [f"{super().__repr__()}"]
 
-        result.append(_get_related_repr(self, "genetics"))
-        result.append(_get_related_repr(self, "compounds"))
-        result.append(_get_related_repr(self, "environmentals"))
+    #     result.append(_get_related_repr(self, "genetics"))
+    #     result.append(_get_related_repr(self, "compounds"))
+    #     result.append(_get_related_repr(self, "environmentals"))
 
-        return "\n".join(filter(None, result))
+    #     return "\n".join(filter(None, result))
 
     @property
     def members(self) -> QuerySet:
@@ -612,24 +615,24 @@ class CombinationTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
 class ArtifactCombinationTreatment(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
+    artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_combination_treatment"
     )
-    combinationtreatment: CombinationTreatment = models.ForeignKey(
+    combinationtreatment: CombinationTreatment = ForeignKey(
         CombinationTreatment, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactcombinationtreatment",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
+class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Examples:
@@ -644,19 +647,15 @@ class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name: str | None = models.CharField(
-        max_length=255, default=None, db_index=True, null=True
-    )
+    name: str | None = CharField(max_length=255, default=None, db_index=True, null=True)
     """Name of the biosample."""
-    batch: str | None = models.CharField(
-        max_length=60, default=None, null=True, db_index=True
-    )
+    batch: str | None = CharField(max_length=60, default=None, null=True, db_index=True)
     """Batch label of the biosample."""
-    description: str | None = models.TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None)
     """Description of the biosample."""
-    organism: Organism | None = models.ForeignKey(
+    organism: Organism | None = ForeignKey(
         Organism, PROTECT, null=True, related_name="biosamples"
     )
     """Organism of the biosample."""
@@ -674,24 +673,20 @@ class Biosample(Record, CanValidate, TracksRun, TracksUpdates):
 
 class ArtifactBiosample(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
-        Artifact, CASCADE, related_name="links_biosample"
-    )
-    biosample: Biosample = models.ForeignKey(
-        Biosample, PROTECT, related_name="links_artifact"
-    )
-    feature: Feature = models.ForeignKey(
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biosample")
+    biosample: Biosample = ForeignKey(Biosample, PROTECT, related_name="links_artifact")
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifactbiosample",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
+class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Examples:
@@ -706,13 +701,13 @@ class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = models.CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
-    name: str | None = models.CharField(max_length=255, default=None, db_index=True)
+    name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
-    batch: str | None = models.CharField(max_length=60, default=None, db_index=True)
+    batch: str | None = CharField(max_length=60, default=None, db_index=True)
     """Batch label of the techsample."""
-    description: str | None = models.TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None)
     """Description of the techsample."""
     biosamples: Biosample = models.ManyToManyField(
         Biosample, related_name="techsamples"
@@ -724,18 +719,16 @@ class Techsample(Record, CanValidate, TracksRun, TracksUpdates):
 
 class ArtifactTechsample(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
-    artifact: Artifact = models.ForeignKey(
-        Artifact, CASCADE, related_name="links_techsample"
-    )
-    techsample: Techsample = models.ForeignKey(
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_techsample")
+    techsample: Techsample = ForeignKey(
         Techsample, PROTECT, related_name="links_artifact"
     )
-    feature: Feature = models.ForeignKey(
+    feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
         related_name="links_artifacttechsample",
     )
-    label_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = models.BooleanField(null=True, default=None)
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
