@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, overload
+from typing import TYPE_CHECKING, overload
 
 from bionty import ids as bionty_ids
 from bionty.models import (
@@ -31,15 +31,7 @@ from lnschema_core.models import (
 if TYPE_CHECKING:
     from datetime import timedelta
 
-GeneticTreatmentSystem = Literal[
-    "CRISPR Cas9",
-    "CRISPRi",
-    "CRISPRa",
-    "shRNA",
-    "siRNA",
-    "transgene",
-    "transient transfection",
-]
+    from . import types as tp
 
 
 def _get_related_repr(instance, related_name: str) -> str:
@@ -311,7 +303,7 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
 
     Args:
         name: The name of the genetic treatment.
-        system: The system used to apply the genetic treatment.
+        system: The :class:`~wetlab.GeneticTreatmentSystem` used to apply the genetic treatment.
                 Must be one of 'CRISPR Cas9', 'CRISPRi', 'CRISPRa', 'shRNA', 'siRNA', 'transgene', 'transient transfection'.
         on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
         off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
@@ -335,12 +327,12 @@ class GeneticTreatment(Record, CanValidate, TracksRun, TracksUpdates):
     """Universal id, valid across DB instances."""
     name: str = models.CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
-    system: GeneticTreatmentSystem = models.CharField(
+    system: tp.GeneticTreatmentSystem = models.CharField(
         max_length=32,
         default=None,
         db_index=True,
     )
-    """System used for the genetic treatment."""
+    """:class:`~wetlab.GeneticTreatmentSystem` used for the genetic treatment."""
     sequence: str | None = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the treatment."""
     on_target_score: float | None = models.FloatField(

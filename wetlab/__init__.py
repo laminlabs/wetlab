@@ -59,3 +59,4 @@ if _check_instance_setup():
         TreatmentTarget,
         Well,
     )
+    from .types import GeneticTreatmentSystem
