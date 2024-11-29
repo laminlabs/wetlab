@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import timedelta  # noqa
 from typing import TYPE_CHECKING, overload
 
 from bionty import ids as bionty_ids
@@ -16,7 +16,7 @@ from bionty.models import (
     Source,
     Tissue,
 )
-from django.db import DatabaseError, models
+from django.db import models
 from django.db.models import CASCADE, PROTECT, QuerySet
 from lnschema_core import ids
 from lnschema_core.fields import (
@@ -39,11 +39,7 @@ from lnschema_core.models import (
     TracksUpdates,
 )
 
-if TYPE_CHECKING:
-    from datetime import timedelta
-
-    from . import types as tp
-
+from . import types as tp  # noqa
 
 # def _get_related_repr(instance, related_name: str) -> str:
 #     try:
