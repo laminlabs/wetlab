@@ -583,7 +583,7 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     compounds: CompoundPerturbation = models.ManyToManyField(
         CompoundPerturbation, related_name="compound_perturbations"
     )
-    """:class:`wetlab.Compoundperturbation` perturbations."""
+    """:class:`wetlab.CompoundPerturbation` perturbations."""
     environmentals: EnvironmentalPerturbation = models.ManyToManyField(
         EnvironmentalPerturbation, related_name="environmental_perturbations"
     )
