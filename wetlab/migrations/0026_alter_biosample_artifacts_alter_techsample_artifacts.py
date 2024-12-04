@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             model_name="techsample",
             name="artifacts",
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name="techsample",
             name="artifacts",
             field=models.ManyToManyField(
