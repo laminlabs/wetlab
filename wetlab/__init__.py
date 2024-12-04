@@ -11,7 +11,7 @@ Import the package:
 
 Create records:
 
->>> compound_treatment = wl.CompoundTreatment(
+>>> compound_perturbation = wl.CompoundPerturbation(
 ...    name="Aspirin treatment day 1",
 ... ).save()
 
@@ -23,12 +23,13 @@ Registries:
    Experiment
    Biosample
    Techsample
+   Well
+   Donor
    CombinationPerturbation
    CompoundPerturbation
    EnvironmentalPerturbation
    GeneticPerturbation
    PerturbationTarget
-   Well
    GeneticPerturbationSystem
 
 """
@@ -53,6 +54,7 @@ if _check_instance_setup():
         CombinationPerturbation,
         Compound,
         CompoundPerturbation,
+        Donor,
         EnvironmentalPerturbation,
         Experiment,
         GeneticPerturbation,

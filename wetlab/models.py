@@ -9,9 +9,11 @@ from bionty.models import (
     CellLine,
     CellType,
     Disease,
+    Ethnicity,
     Gene,
     Organism,
     Pathway,
+    Phenotype,
     Protein,
     Source,
     Tissue,
@@ -733,6 +735,66 @@ class ArtifactTechsample(Record, LinkORM, TracksRun):
         null=True,
         default=None,
         related_name="links_artifacttechsample",
+    )
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
+
+
+class Donor(Record, CanCurate, TracksRun, TracksUpdates):
+    """Models a donor that provides biospecimens for research.
+
+    Examples:
+        >>> donor = wl.Donor(
+        ...     name="donor_001",
+        ...     age=45,
+        ...     sex="M"
+        ... ).save()
+        >>> donor.diseases.add(disease)
+    """
+
+    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
+
+    id: int = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
+    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    """Universal id, valid across DB instances."""
+    name: str | None = CharField(max_length=255, default=None, db_index=True)
+    """Name/identifier of the donor."""
+    batch: str | None = CharField(max_length=60, default=None, db_index=True)
+    """Batch label for the donor."""
+    description: str | None = TextField(null=True, default=None)
+    """Description of the donor."""
+    age: int | None = IntegerField(null=True, db_index=True, default=None)
+    """Age of the donor in years."""
+    bmi: float | None = FloatField(null=True, default=None)
+    """Body mass index (BMI) of the donor."""
+    ethnicity: Ethnicity = ForeignKey(
+        Ethnicity, PROTECT, null=True, related_name="donors"
+    )
+    """Race or ethnicity of the donor."""
+    sex: Phenotype = ForeignKey(Phenotype, PROTECT, null=True, related_name="donors")
+    """Biological sex of the donor."""
+    organism: Organism | None = ForeignKey(
+        Organism, PROTECT, null=True, related_name="donors"
+    )
+    """Organism of the donor."""
+    diseases: Disease = models.ManyToManyField(Disease, related_name="donors")
+    """Diseases associated with the donor."""
+    artifacts: Artifact = models.ManyToManyField(
+        Artifact, through="ArtifactDonor", related_name="donors"
+    )
+    """Artifacts linked to the donor."""
+
+
+class ArtifactDonor(Record, LinkORM, TracksRun):
+    """Link table between Artifacts and Donors."""
+
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_donor")
+    donor: Donor = ForeignKey(Donor, PROTECT, related_name="links_artifact")
+    feature: Feature = ForeignKey(
+        Feature, PROTECT, null=True, default=None, related_name="links_artifactdonor"
     )
     label_ref_is_name: bool | None = BooleanField(null=True, default=None)
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
