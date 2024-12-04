@@ -663,7 +663,9 @@ class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
     """Cell types linked to the biosample."""
     diseases: Disease = models.ManyToManyField(Disease, related_name="biosamples")
     """Diseases linked to the biosample."""
-    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="biosamples")
+    artifacts: Artifact = models.ManyToManyField(
+        Artifact, through="ArtifactBiosample", related_name="biosamples"
+    )
     """Artifacts linked to the biosample."""
 
 
@@ -709,7 +711,9 @@ class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
         Biosample, related_name="techsamples"
     )
     """Linked biosamples."""
-    artifacts: Artifact = models.ManyToManyField(Artifact, related_name="techsamples")
+    artifacts: Artifact = models.ManyToManyField(
+        Artifact, through="ArtifactTechsample", related_name="techsamples"
+    )
     """Artifacts linked to the techsample."""
 
 
