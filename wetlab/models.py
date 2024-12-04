@@ -579,7 +579,7 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     genetics: GeneticPerturbation = models.ManyToManyField(
         GeneticPerturbation, related_name="genetic_perturbations"
     )
-    """:class:`wetlab.Geneticperturbation` perturbations."""
+    """:class:`wetlab.GeneticPerturbation` perturbations."""
     compounds: CompoundPerturbation = models.ManyToManyField(
         CompoundPerturbation, related_name="compound_perturbations"
     )
