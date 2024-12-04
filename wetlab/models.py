@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import timedelta  # noqa
-from typing import TYPE_CHECKING, overload
+from typing import overload
 
 from bionty import ids as bionty_ids
 from bionty.models import (
@@ -39,7 +39,7 @@ from lnschema_core.models import (
     TracksUpdates,
 )
 
-from . import types as tp  # noqa
+from .types import GeneticTreatmentSystem  # noqa
 
 # def _get_related_repr(instance, related_name: str) -> str:
 #     try:
@@ -328,7 +328,7 @@ class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic treatment."""
-    system: tp.GeneticTreatmentSystem = models.CharField(
+    system: GeneticTreatmentSystem = models.CharField(
         max_length=32,
         default=None,
         db_index=True,

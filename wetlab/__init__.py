@@ -29,6 +29,7 @@ Registries:
    GeneticTreatment
    TreatmentTarget
    Well
+   GeneticTreatmentSystem
 
 """
 
