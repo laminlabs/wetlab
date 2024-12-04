@@ -559,7 +559,7 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         >>> comb_perturbation = wl.CombinationPerturbation(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
         ...    description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
         ... ).save()
-        >>> comb_perturbation.genetics.set([sc_perturbation, aspirin_perturbation])
+        >>> comb_perturbation.genetics.set([sc_perturbation, cftr_perturbation])
         >>> comb_perturbation.compounds.add(aspirin_perturbation)
     """
 
