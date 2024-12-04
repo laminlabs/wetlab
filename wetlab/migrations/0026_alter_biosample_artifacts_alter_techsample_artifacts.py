@@ -10,7 +10,25 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.RunSQL(
+            f"""
+            INSERT INTO wetlab_artifactbiosample (artifact_id, biosample_id, feature_id, created_by_id, created_at)
+            SELECT artifact_id, biosample_id, NULL, {1}, CURRENT_TIMESTAMP
+            FROM wetlab_biosample_artifacts;
+            """
+        ),
+        migrations.RunSQL(
+            f"""
+            INSERT INTO wetlab_artifacttechsample (artifact_id, techsample_id, feature_id, created_by_id, created_at)
+            SELECT artifact_id, techsample_id, NULL, {1}, CURRENT_TIMESTAMP
+            FROM wetlab_techsample_artifacts;
+            """
+        ),
+        migrations.RemoveField(
+            model_name="biosample",
+            name="artifacts",
+        ),
+        migrations.AddField(
             model_name="biosample",
             name="artifacts",
             field=models.ManyToManyField(
@@ -18,6 +36,10 @@ class Migration(migrations.Migration):
                 through="wetlab.ArtifactBiosample",
                 to="lnschema_core.artifact",
             ),
+        ),
+        migrations.RemoveField(
+            model_name="techsample",
+            name="artifacts",
         ),
         migrations.AlterField(
             model_name="techsample",
