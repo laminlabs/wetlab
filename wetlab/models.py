@@ -39,7 +39,7 @@ from lnschema_core.models import (
     TracksUpdates,
 )
 
-from .types import GeneticTreatmentSystem  # noqa
+from .types import GeneticPerturbationSystem  # noqa
 
 # def _get_related_repr(instance, related_name: str) -> str:
 #     try:
@@ -233,13 +233,13 @@ class ArtifactWell(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class TreatmentTarget(Record, CanCurate, TracksRun, TracksUpdates):
-    """Models treatment targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
+class PerturbationTarget(Record, CanCurate, TracksRun, TracksUpdates):
+    """Models perturbation targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Examples:
         >>> gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
         >>> gene_2 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000005").save()
-        >>> targets = wl.TreatmentTarget(name="TSPAN6_TNMD").save()
+        >>> targets = wl.PerturbationTarget(name="TSPAN6_TNMD").save()
         >>> targets.genes.set([gene_1, gene_2])
     """
 
@@ -251,24 +251,26 @@ class TreatmentTarget(Record, CanCurate, TracksRun, TracksUpdates):
     uid: int = CharField(unique=True, max_length=8, default=ids.base62_8)
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=60, default=None, db_index=True)
-    """Name of the treatment target."""
+    """Name of the perturbation target."""
     description: str | None = TextField(null=True, default=None)
-    """Description of the treatment target."""
+    """Description of the perturbation target."""
     genes: Gene = models.ManyToManyField(
-        "bionty.Gene", related_name="treatment_targets"
+        "bionty.Gene", related_name="perturbation_targets"
     )
-    """Genes of the treatment target, link to :class:`~bionty.Gene` records."""
+    """Genes of the perturbation target, link to :class:`~bionty.Gene` records."""
     pathways: Pathway = models.ManyToManyField(
-        "bionty.Pathway", related_name="treatment_targets"
+        "bionty.Pathway", related_name="perturbation_targets"
     )
-    """Pathways of the treatment target, link to :class:`bionty.Pathway` records."""
+    """Pathways of the perturbation target, link to :class:`bionty.Pathway` records."""
     proteins: Protein = models.ManyToManyField(
-        "bionty.Protein", related_name="treatment_targets"
+        "bionty.Protein", related_name="perturbation_targets"
     )
     artifacts: Artifact = models.ManyToManyField(
-        Artifact, through="ArtifactTreatmentTarget", related_name="treatment_targets"
+        Artifact,
+        through="ArtifactperturbationTarget",
+        related_name="perturbation_targets",
     )
-    """Artifacts linked to the treatment target."""
+    """Artifacts linked to the perturbation target."""
 
     # def __repr__(self) -> str:
     #     result = [f"{super().__repr__()}"]
@@ -280,39 +282,39 @@ class TreatmentTarget(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactTreatmentTarget(Record, LinkORM, TracksRun):
+class ArtifactPerturbationTarget(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
-        Artifact, CASCADE, related_name="links_treatment_target"
+        Artifact, CASCADE, related_name="links_perturbation_target"
     )
-    treatmenttarget: TreatmentTarget = ForeignKey(
-        TreatmentTarget, PROTECT, related_name="links_artifact"
+    perturbationtarget: PerturbationTarget = ForeignKey(
+        PerturbationTarget, PROTECT, related_name="links_artifact"
     )
     feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
-        related_name="links_artifacttreatmenttarget",
+        related_name="links_artifactperturbationtarget",
     )
     label_ref_is_name: bool | None = BooleanField(null=True, default=None)
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
-    """Models Genetic perturbations such as CRISPR.
+class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+    """Models genetic perturbations such as CRISPR.
 
     Args:
-        name: The name of the genetic treatment.
-        system: The :class:`~wetlab.GeneticTreatmentSystem` used to apply the genetic treatment.
+        name: The name of the genetic perturbation.
+        system: The :class:`~wetlab.GeneticPerturbationSystem` used to apply the genetic perturbation.
                 Must be one of 'CRISPR Cas9', 'CRISPRi', 'CRISPRa', 'shRNA', 'siRNA', 'transgene', 'transient transfection'.
         on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
         off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
 
     Examples:
-        >>> sicke_cell_treatment = wl.GeneticTreatment(
+        >>> sicke_cell_perturbation = wl.GeneticPerturbation(
         ...     system="CRISPR Cas9",
-        ...     name="Hemoglobin Sickle Cell Treatment",
+        ...     name="Hemoglobin Sickle Cell Perturbation",
         ...     sequence="AGCTGACCGTGA",
         ...     on_target_score=85,
         ...     off_target_score=15
@@ -327,15 +329,15 @@ class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
-    """Name of the Genetic treatment."""
-    system: GeneticTreatmentSystem = models.CharField(
+    """Name of the Genetic perturbation."""
+    system: GeneticPerturbationSystem = models.CharField(
         max_length=32,
         default=None,
         db_index=True,
     )
-    """:class:`~wetlab.GeneticTreatmentSystem` used for the genetic treatment."""
+    """:class:`~wetlab.GeneticPerturbationSystem` used for the genetic perturbation."""
     sequence: str | None = models.TextField(null=True, default=None, db_index=True)
-    """Sequence of the treatment."""
+    """Sequence of the perturbation."""
     on_target_score: float | None = FloatField(
         default=None, null=True, db_index=True, blank=True
     )
@@ -344,14 +346,16 @@ class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
         default=None, null=True, db_index=True, blank=True
     )
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
-    targets: TreatmentTarget = models.ManyToManyField(
-        TreatmentTarget, related_name="genetic_targets"
+    targets: PerturbationTarget = models.ManyToManyField(
+        PerturbationTarget, related_name="genetic_targets"
     )
-    """Targets of the treatment."""
+    """Targets of the perturbation."""
     artifacts: Artifact = models.ManyToManyField(
-        Artifact, through="ArtifactGeneticTreatment", related_name="genetic_treatments"
+        Artifact,
+        through="ArtifactGeneticPerturbation",
+        related_name="genetic_perturbations",
     )
-    """Artifacts linked to the treatment."""
+    """Artifacts linked to the perturbation."""
 
     # def __repr__(self) -> str:
     #     result = [f"{super().__repr__()}"]
@@ -361,33 +365,33 @@ class GeneticTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactGeneticTreatment(Record, LinkORM, TracksRun):
+class ArtifactGeneticPerturbation(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
-        Artifact, CASCADE, related_name="links_genetic_treatment"
+        Artifact, CASCADE, related_name="links_genetic_perturbation"
     )
-    genetictreatment: GeneticTreatment = ForeignKey(
-        GeneticTreatment, PROTECT, related_name="links_artifact"
+    geneticperturbation: GeneticPerturbation = ForeignKey(
+        GeneticPerturbation, PROTECT, related_name="links_artifact"
     )
     feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
-        related_name="links_artifactgenetictreatment",
+        related_name="links_artifactgeneticperturbation",
     )
     label_ref_is_name: bool | None = BooleanField(null=True, default=None)
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CompoundTreatment(Record, CanCurate, TracksRun, TracksUpdates):
-    """Models compound treatments such as drugs.
+class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+    """Models compound perturbations such as drugs.
 
     Args:
-        name: The name of the compound treatment.
+        name: The name of the compound perturbation.
 
     Examples:
-        >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
+        >>> aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
         ...    name="Antibiotic cocktail",
         ... ).save()
     """
@@ -400,25 +404,25 @@ class CompoundTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
-    """Name of the compound treatment."""
+    """Name of the compound perturbation."""
     concentration: float = FloatField(null=True, default=None, blank=True)
     """Concentration of the compound."""
     concentration_unit: str = CharField(max_length=32, null=True, default=None)
     """Unit of the concentration."""
     duration: timedelta | None = DurationField(null=True, default=None)
-    """Duration of the compound treatment."""
-    targets: TreatmentTarget = models.ManyToManyField(
-        TreatmentTarget, related_name="compound_targets"
+    """Duration of the compound perturbation."""
+    targets: PerturbationTarget = models.ManyToManyField(
+        PerturbationTarget, related_name="compound_targets"
     )
-    """Targets of the treatment."""
+    """Targets of the perturbation."""
     compounds: Compound = models.ManyToManyField(Compound, related_name="compounds")
-    """Compounds linked to the treatment."""
+    """Compounds linked to the perturbation."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
-        through="ArtifactCompoundTreatment",
-        related_name="compound_treatments",
+        through="ArtifactCompoundPerturbation",
+        related_name="compound_perturbations",
     )
-    """Artifacts linked to the treatment."""
+    """Artifacts linked to the perturbation."""
 
     # def __repr__(self) -> str:
     #     result = [f"{super().__repr__()}"]
@@ -428,38 +432,38 @@ class CompoundTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactCompoundTreatment(Record, LinkORM, TracksRun):
+class ArtifactCompoundPerturbation(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
-        Artifact, CASCADE, related_name="links_compound_treatment"
+        Artifact, CASCADE, related_name="links_compound_perturbation"
     )
-    compoundtreatment: CompoundTreatment = ForeignKey(
-        CompoundTreatment, PROTECT, related_name="links_artifact"
+    compoundperturbation: CompoundPerturbation = ForeignKey(
+        CompoundPerturbation, PROTECT, related_name="links_artifact"
     )
     feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
-        related_name="links_artifactcompoundtreatment",
+        related_name="links_artifactcompoundperturbation",
     )
     label_ref_is_name: bool | None = BooleanField(null=True, default=None)
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class EnvironmentalTreatment(Record, CanCurate, TracksRun, TracksUpdates):
-    """Models environmental perturbations such as heat, acid, or smoke treatments.
+class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+    """Models environmental perturbations such as heat, acid, or smoke perturbations.
 
     Args:
-        name: Name of the environmental treatment.
-        ontology_id: Ontology ID of the environmental treatment (EFO).
+        name: Name of the environmental perturbation.
+        ontology_id: Ontology ID of the environmental perturbation (EFO).
         value: A value such as a temperature.
         unit: A unit such as 'degrees celsius'.
-        duration: Time duration of how long the treatment was applied.
+        duration: Time duration of how long the perturbation was applied.
 
     Examples:
-        >>> acid_treatment = EnvironmentalTreatment(
-        ...     name='Acid Treatment',
+        >>> acid_perturbation = EnvironmentalPerturbation(
+        ...     name='Acid perturbation',
         ...     ontology_id='EFO:0004416',
         ...     value=1.5,
         ...     unit='pH',
@@ -474,25 +478,25 @@ class EnvironmentalTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
-    """Name of the environmental treatment."""
+    """Name of the environmental perturbation."""
     ontology_id = CharField(max_length=32, db_index=True, null=True, default=None)
-    """Ontology ID (EFO) of the environmental treatment."""
+    """Ontology ID (EFO) of the environmental perturbation."""
     value: float | None = FloatField(null=True, default=None, blank=True)
-    """The value of the environmental treatment such as a temperature."""
+    """The value of the environmental perturbation such as a temperature."""
     unit: str | None = CharField(max_length=32, null=True, default=None)
     """Unit of the value such as 'degrees celsius'"""
     duration: timedelta | None = DurationField(null=True, default=None, blank=True)
-    """Duration of the environmental treatment."""
-    targets: TreatmentTarget = models.ManyToManyField(
-        TreatmentTarget, related_name="environmental_targets"
+    """Duration of the environmental perturbation."""
+    targets: PerturbationTarget = models.ManyToManyField(
+        PerturbationTarget, related_name="environmental_targets"
     )
-    """Targets of the environmental treatment."""
+    """Targets of the environmental perturbation."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
-        through="ArtifactEnvironmentalTreatment",
-        related_name="environmental_treatments",
+        through="ArtifactEnvironmentalperturbation",
+        related_name="environmental_perturbations",
     )
-    """Artifacts linked to the treatment."""
+    """Artifacts linked to the perturbation."""
 
     # def __repr__(self) -> str:
     #     result = [f"{super().__repr__()}"]
@@ -502,59 +506,59 @@ class EnvironmentalTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactEnvironmentalTreatment(Record, LinkORM, TracksRun):
+class ArtifactEnvironmentalPerturbation(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
-        Artifact, CASCADE, related_name="links_environmental_treatment"
+        Artifact, CASCADE, related_name="links_environmental_perturbation"
     )
-    environmentaltreatment: EnvironmentalTreatment = ForeignKey(
-        EnvironmentalTreatment, PROTECT, related_name="links_artifact"
+    environmentalperturbation: EnvironmentalPerturbation = ForeignKey(
+        EnvironmentalPerturbation, PROTECT, related_name="links_artifact"
     )
     feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
-        related_name="links_artifactenvironmentaltreatment",
+        related_name="links_artifactenvironmentalperturbation",
     )
     label_ref_is_name: bool | None = BooleanField(null=True, default=None)
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CombinationTreatment(Record, CanCurate, TracksRun, TracksUpdates):
-    """Combination of several Treatments.
+class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+    """Combination of several perturbations.
 
-    CombinationTreatments model several Treatments jointly such as one or more :class:`wetlab.GeneticTreatment`,
-    :class:`wetlab.CompoundTreatment`, and :class:`wetlab.EnvironmentalTreatment` records.
+    CombinationPerturbations model several perturbations jointly such as one or more :class:`wetlab.GeneticPerturbation`,
+    :class:`wetlab.CompoundPerturbation`, and :class:`wetlab.EnvironmentalPerturbation` records.
 
     Args:
-        name: A name of the CombinationTreatment that summarizes all applied Treatments.
-        description: A description of the CombinationTreatment.
-        ontology_id: An ontology ID of the CombinationTreatment.
+        name: A name of the CombinationPerturbation that summarizes all applied perturbations.
+        description: A description of the CombinationPerturbation.
+        ontology_id: An ontology ID of the CombinationPerturbation.
 
     Examples:
-        >>> sc_treatment = wl.GeneticTreatment(
+        >>> sc_perturbation = wl.GeneticPerturbation(
         ...     system="CRISPR Cas9",
-        ...     name="Hemoglobin Sickle Cell Treatment",
+        ...     name="Hemoglobin Sickle Cell perturbation",
         ...     sequence="AGCTGACCGTGA",
         ... ).save()
 
-        >>> cftr_treatment = wl.GeneticTreatment(
+        >>> cftr_perturbation = wl.GeneticPerturbation(
         ...     system="CRISPR Cas9",
         ...     name="Cystic Fibrosis CFTR Correction",
         ...     sequence="TTGGTGGTGAACT",
         ... ).save()
 
-        >>> aspirin_treatment = compound_treatment = wl.CompoundTreatment(
+        >>> aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
         ...    name="Aspirin",
         ...    pubchem_id=2244
         ... ).save()
 
-        >>> comb_treatment = wl.CombinationTreatment(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
+        >>> comb_perturbation = wl.CombinationPerturbation(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
         ...    description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
         ... ).save()
-        >>> comb_treatment.genetics.set([sc_treatment, aspirin_treatment])
-        >>> comb_treatment.compounds.add(aspirin_treatment)
+        >>> comb_perturbation.genetics.set([sc_perturbation, aspirin_perturbation])
+        >>> comb_perturbation.compounds.add(aspirin_perturbation)
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -565,31 +569,31 @@ class CombinationTreatment(Record, CanCurate, TracksRun, TracksUpdates):
     uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True)
-    """Name of the treatment."""
+    """Name of the perturbation."""
     description: str | None = TextField(null=True, default=None)
-    """Description of the combination treatment."""
+    """Description of the combination perturbation."""
     ontology_id: str | None = CharField(
         max_length=32, db_index=True, null=True, default=None
     )
-    """Ontology ID of the treatment."""
-    genetics: GeneticTreatment = models.ManyToManyField(
-        GeneticTreatment, related_name="genetic_treatments"
+    """Ontology ID of the perturbation."""
+    genetics: GeneticPerturbation = models.ManyToManyField(
+        GeneticPerturbation, related_name="genetic_perturbations"
     )
-    """:class:`wetlab.GeneticTreatment` treatments."""
-    compounds: CompoundTreatment = models.ManyToManyField(
-        CompoundTreatment, related_name="compound_treatments"
+    """:class:`wetlab.Geneticperturbation` perturbations."""
+    compounds: CompoundPerturbation = models.ManyToManyField(
+        CompoundPerturbation, related_name="compound_perturbations"
     )
-    """:class:`wetlab.CompoundTreatment` treatments."""
-    environmentals: EnvironmentalTreatment = models.ManyToManyField(
-        EnvironmentalTreatment, related_name="environmental_treatments"
+    """:class:`wetlab.Compoundperturbation` perturbations."""
+    environmentals: EnvironmentalPerturbation = models.ManyToManyField(
+        EnvironmentalPerturbation, related_name="environmental_perturbations"
     )
-    """:class:`wetlab.EnvironmentalTreatment` treatments."""
+    """:class:`wetlab.Environmentalperturbation` perturbations."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
-        through="ArtifactCombinationTreatment",
-        related_name="combination_treatments",
+        through="ArtifactCombinationperturbation",
+        related_name="combination_perturbations",
     )
-    """Artifacts linked to the treatment."""
+    """Artifacts linked to the perturbation."""
 
     # def __repr__(self) -> str:
     #     result = [f"{super().__repr__()}"]
@@ -602,27 +606,27 @@ class CombinationTreatment(Record, CanCurate, TracksRun, TracksUpdates):
 
     @property
     def members(self) -> QuerySet:
-        """Retrieve all related GeneticTreatment, CompoundTreatment, and EnvironmentalTreatment instances."""
+        """Retrieve all related GeneticPerturbation, CompoundPerturbation, and EnvironmentalPerturbation instances."""
         if self._state.adding:
             return self.__class__.objects.none()
 
         return self.genetic.all().union(self.compound.all(), self.environmental.all())
 
 
-class ArtifactCombinationTreatment(Record, LinkORM, TracksRun):
+class ArtifactCombinationPerturbation(Record, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
-        Artifact, CASCADE, related_name="links_combination_treatment"
+        Artifact, CASCADE, related_name="links_combination_perturbation"
     )
-    combinationtreatment: CombinationTreatment = ForeignKey(
-        CombinationTreatment, PROTECT, related_name="links_artifact"
+    combinationperturbation: CombinationPerturbation = ForeignKey(
+        CombinationPerturbation, PROTECT, related_name="links_artifact"
     )
     feature: Feature = ForeignKey(
         Feature,
         PROTECT,
         null=True,
         default=None,
-        related_name="links_artifactcombinationtreatment",
+        related_name="links_artifactcombinationperturbation",
     )
     label_ref_is_name: bool | None = BooleanField(null=True, default=None)
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)

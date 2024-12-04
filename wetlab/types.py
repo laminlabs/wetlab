@@ -1,6 +1,6 @@
 from typing import Literal
 
-GeneticTreatmentSystem = Literal[
+GeneticPerturbationSystem = Literal[
     "CRISPR-Cas9",
     "CRISPRi",
     "CRISPRa",

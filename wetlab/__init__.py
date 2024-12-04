@@ -23,13 +23,13 @@ Registries:
    Experiment
    Biosample
    Techsample
-   CombinationTreatment
-   CompoundTreatment
-   EnvironmentalTreatment
-   GeneticTreatment
-   TreatmentTarget
+   CombinationPerturbation
+   CompoundPerturbation
+   EnvironmentalPerturbation
+   GeneticPerturbation
+   PerturbationTarget
    Well
-   GeneticTreatmentSystem
+   GeneticPerturbationSystem
 
 """
 
@@ -50,14 +50,22 @@ if _check_instance_setup():
     del __getattr__  # delete so that imports work out
     from .models import (
         Biosample,
-        CombinationTreatment,
+        CombinationPerturbation,
         Compound,
-        CompoundTreatment,
-        EnvironmentalTreatment,
+        CompoundPerturbation,
+        EnvironmentalPerturbation,
         Experiment,
-        GeneticTreatment,
+        GeneticPerturbation,
+        PerturbationTarget,
         Techsample,
-        TreatmentTarget,
         Well,
     )
-    from .types import GeneticTreatmentSystem
+    from .types import GeneticPerturbationSystem
+
+    # backwards compatibility
+    CombinationTreatment = CombinationPerturbation
+    CompoundTreatment = CompoundPerturbation
+    EnvironmentalTreatment = EnvironmentalPerturbation
+    GeneticTreatment = GeneticPerturbation
+    GeneticTreatmentSystem = GeneticPerturbationSystem
+    TreatmentTarget = PerturbationTarget

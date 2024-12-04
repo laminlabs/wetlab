@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.12"]
     timeout-minutes: 8
 
     steps:
@@ -30,8 +30,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
-          cache-dependency-path: "pyproject.toml"
       - uses: actions/cache@v3
         with:
           path: ~/.cache/pre-commit
@@ -42,7 +40,7 @@ jobs:
       - run: nox -s test
       - run: nox -s docs
       - uses: nwtgck/actions-netlify@v1.2
-        if: matrix.python-version == '3.11'
+        if: matrix.python-version == '3.12'
         with:
           publish-dir: "_build/html"
           production-deploy: ${{ github.event_name == 'push' }}
