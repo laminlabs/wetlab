@@ -115,6 +115,7 @@ docs/wetlab.*
 lamin_sphinx
 docs/conf.py
 _docs_tmp*
+run-tests
 
 # db
 wetlab-storage/

@@ -11,7 +11,7 @@ Import the package:
 
 Create records:
 
->>> compound_treatment = wl.CompoundTreatment(
+>>> compound_perturbation = wl.CompoundPerturbation(
 ...    name="Aspirin treatment day 1",
 ... ).save()
 
@@ -23,12 +23,14 @@ Registries:
    Experiment
    Biosample
    Techsample
-   CombinationTreatment
-   CompoundTreatment
-   EnvironmentalTreatment
-   GeneticTreatment
-   TreatmentTarget
    Well
+   Donor
+   CombinationPerturbation
+   CompoundPerturbation
+   EnvironmentalPerturbation
+   GeneticPerturbation
+   PerturbationTarget
+   GeneticPerturbationSystem
 
 """
 
@@ -49,13 +51,23 @@ if _check_instance_setup():
     del __getattr__  # delete so that imports work out
     from .models import (
         Biosample,
-        CombinationTreatment,
+        CombinationPerturbation,
         Compound,
-        CompoundTreatment,
-        EnvironmentalTreatment,
+        CompoundPerturbation,
+        Donor,
+        EnvironmentalPerturbation,
         Experiment,
-        GeneticTreatment,
+        GeneticPerturbation,
+        PerturbationTarget,
         Techsample,
-        TreatmentTarget,
         Well,
     )
+    from .types import GeneticPerturbationSystem
+
+    # backwards compatibility
+    CombinationTreatment = CombinationPerturbation
+    CompoundTreatment = CompoundPerturbation
+    EnvironmentalTreatment = EnvironmentalPerturbation
+    GeneticTreatment = GeneticPerturbation
+    GeneticTreatmentSystem = GeneticPerturbationSystem
+    TreatmentTarget = PerturbationTarget
