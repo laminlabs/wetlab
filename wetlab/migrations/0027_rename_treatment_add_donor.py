@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("bionty", "0041_squashed"),
         ("lnschema_core", "0069_squashed"),
-        ("wetlab", "0027_alter_genetictreatment_sequence_and_more"),
+        ("wetlab", "0026_alter_biosample_artifacts_alter_techsample_artifacts"),
     ]
 
     operations = [
@@ -308,5 +308,15 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 "bionty.Protein", related_name="perturbation_targets"
             ),
+        ),
+        migrations.AlterField(
+            model_name="genetictreatment",
+            name="sequence",
+            field=models.TextField(db_index=True, default=None, null=True),
+        ),
+        migrations.AlterField(
+            model_name="genetictreatment",
+            name="system",
+            field=models.CharField(db_index=True, default=None, max_length=32),
         ),
     ]
