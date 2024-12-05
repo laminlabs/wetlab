@@ -310,12 +310,12 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="genetictreatment",
+            model_name="geneticperturbation",
             name="sequence",
             field=models.TextField(db_index=True, default=None, null=True),
         ),
         migrations.AlterField(
-            model_name="genetictreatment",
+            model_name="geneticperturbation",
             name="system",
             field=models.CharField(db_index=True, default=None, max_length=32),
         ),
