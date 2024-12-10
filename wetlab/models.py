@@ -267,6 +267,7 @@ class PerturbationTarget(Record, CanCurate, TracksRun, TracksUpdates):
     proteins: Protein = models.ManyToManyField(
         "bionty.Protein", related_name="perturbation_targets"
     )
+    """Proteins of the perturbation target, link to :class:`bionty.Protein` records."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
         through="ArtifactperturbationTarget",
