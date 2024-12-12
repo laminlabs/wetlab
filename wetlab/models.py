@@ -339,6 +339,8 @@ class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         db_index=True,
     )
     """:class:`~wetlab.GeneticPerturbationSystem` used for the genetic perturbation."""
+    description: str | None = TextField(null=True, default=None)
+    """Description of the genetic perturbation."""
     sequence: str | None = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the perturbation."""
     on_target_score: float | None = FloatField(
@@ -408,6 +410,8 @@ class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the compound perturbation."""
+    description: str | None = TextField(null=True, default=None)
+    """Description of the compound perturbation."""
     concentration: float = FloatField(null=True, default=None, blank=True)
     """Concentration of the compound."""
     concentration_unit: str = CharField(max_length=32, null=True, default=None)
@@ -418,7 +422,7 @@ class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         PerturbationTarget, related_name="compound_targets"
     )
     """Targets of the perturbation."""
-    compounds: Compound = models.ManyToManyField(Compound, related_name="compounds")
+    compound: Compound | None = ForeignKey("Compound", PROTECT, null=True, default=None)
     """Compounds linked to the perturbation."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
@@ -484,6 +488,8 @@ class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     """Name of the environmental perturbation."""
     ontology_id = CharField(max_length=32, db_index=True, null=True, default=None)
     """Ontology ID (EFO) of the environmental perturbation."""
+    description: str | None = TextField(null=True, default=None)
+    """Description of the environmental perturbation."""
     value: float | None = FloatField(null=True, default=None, blank=True)
     """The value of the environmental perturbation such as a temperature."""
     unit: str | None = CharField(max_length=32, null=True, default=None)
@@ -579,16 +585,16 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         max_length=32, db_index=True, null=True, default=None
     )
     """Ontology ID of the perturbation."""
-    genetics: GeneticPerturbation = models.ManyToManyField(
-        GeneticPerturbation, related_name="genetic_perturbations"
+    genetic_perturbations: GeneticPerturbation = models.ManyToManyField(
+        GeneticPerturbation, related_name="combination_perturbations"
     )
     """:class:`wetlab.GeneticPerturbation` perturbations."""
-    compounds: CompoundPerturbation = models.ManyToManyField(
-        CompoundPerturbation, related_name="compound_perturbations"
+    compound_perturbations: CompoundPerturbation = models.ManyToManyField(
+        CompoundPerturbation, related_name="combination_perturbations"
     )
     """:class:`wetlab.CompoundPerturbation` perturbations."""
-    environmentals: EnvironmentalPerturbation = models.ManyToManyField(
-        EnvironmentalPerturbation, related_name="environmental_perturbations"
+    environmental_perturbations: EnvironmentalPerturbation = models.ManyToManyField(
+        EnvironmentalPerturbation, related_name="combination_perturbations"
     )
     """:class:`wetlab.EnvironmentalPerturbation` perturbations."""
     artifacts: Artifact = models.ManyToManyField(
