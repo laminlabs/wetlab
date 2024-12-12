@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name="compoundperturbation",
             old_name="compounds",
-            new_name="compound_perturbations",
+            new_name="compound",
         ),
         migrations.AlterField(
             model_name="compoundperturbation",
