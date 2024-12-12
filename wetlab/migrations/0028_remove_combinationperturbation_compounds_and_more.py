@@ -11,12 +11,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
+        migrations.RemoveField(
             model_name="compoundperturbation",
-            old_name="compounds",
-            new_name="compound",
+            name="compounds",
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name="compoundperturbation",
             name="compound",
             field=lnschema_core.fields.ForeignKey(
