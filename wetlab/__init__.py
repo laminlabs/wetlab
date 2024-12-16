@@ -15,7 +15,7 @@ Create records:
 ...    name="Sample 1",
 ... ).save()
 
-Registries:
+Basic registries:
 
 .. autosummary::
    :toctree: .
@@ -23,12 +23,26 @@ Registries:
    Experiment
    Biosample
    Techsample
-   Well
    Donor
-   CombinationPerturbation
+
+Perturbation registries:
+
+.. autosummary::
+   :toctree: .
+
+   GeneticPerturbation
+   Biologic
+   Compound
    CompoundPerturbation
    EnvironmentalPerturbation
-   GeneticPerturbation
+   CombinationPerturbation
+
+Auxiliary registries:
+
+.. autosummary::
+   :toctree: .
+
+   Well
    PerturbationTarget
 
 Types:
@@ -57,6 +71,7 @@ if _check_instance_setup():
 
     del __getattr__  # delete so that imports work out
     from .models import (
+        Biologic,
         Biosample,
         CombinationPerturbation,
         Compound,
