@@ -55,6 +55,84 @@ from .types import GeneticPerturbationSystem  # noqa
 #     return ""
 
 
+class Biologic(CanCurate, TracksRun, TracksUpdates):
+    """Proteins, peptides, antibodies, enzymes, growth factors, viral infections.
+
+    - Proteins
+    - Peptides
+    - Antibodies
+    - Enzymes
+    - Growth factors
+    - Viral infections (they're biological agents causing direct perturbation, different from viral vector which belongs to genetic perturbagen)
+
+    Examples:
+        >>> biologic = wl.Biologic(
+        ...    name="IFNG",
+        ... ).save()
+    """
+
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+        abstract = False
+
+    _name_field: str = "name"
+
+    id: int = models.AutoField(primary_key=True)
+    """Internal id, valid only in one DB instance."""
+    uid: str = CharField(unique=True, max_length=12, default=ids.base62_12)
+    """A universal id (hash of selected field)."""
+    name: str = CharField(max_length=256, db_index=True)
+    """Name of the compound."""
+    abbr: str | None = CharField(
+        max_length=32, db_index=True, unique=True, null=True, default=None
+    )
+    """A unique abbreviation."""
+    synonyms: str | None = TextField(null=True, default=None)
+    """Bar-separated (|) synonyms that correspond to this compound."""
+    description: str | None = TextField(null=True, default=None)
+    """Description of the compound."""
+    proteins: Protein = models.ManyToManyField(
+        "bionty.Protein", related_name="biologics"
+    )
+    """Proteins associated with this biologic."""
+    artifacts: Artifact = models.ManyToManyField(
+        Artifact, through="ArtifactBiologic", related_name="biologics"
+    )
+    """Artifacts linked to the compound."""
+
+    @overload
+    def __init__(
+        self,
+        name: str,
+        abbr: str | None,
+        synonyms: str | None,
+        description: str | None,
+    ): ...
+
+    @overload
+    def __init__(
+        self,
+        *db_args,
+    ): ...
+
+    def __init__(
+        self,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+
+class ArtifactBiologic(Record, LinkORM, TracksRun):
+    id: int = models.BigAutoField(primary_key=True)
+    artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biologic")
+    biologic: Biologic = ForeignKey(Biologic, PROTECT, related_name="links_artifact")
+    feature: Feature = ForeignKey(
+        Feature, PROTECT, null=True, default=None, related_name="links_artifactbiologic"
+    )
+    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
+    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
+
+
 class Compound(BioRecord, TracksRun, TracksUpdates):
     """Models a (chemical) compound such as a drug.
 
