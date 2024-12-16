@@ -389,7 +389,7 @@ class ArtifactGeneticPerturbation(Record, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biologic(CanCurate, TracksRun, TracksUpdates):
+class Biologic(Record, CanCurate, TracksRun, TracksUpdates):
     """Proteins, peptides, antibodies, enzymes, growth factors, etc.
 
     Examples:
