@@ -11,8 +11,8 @@ Import the package:
 
 Create records:
 
->>> compound_perturbation = wl.CompoundPerturbation(
-...    name="Aspirin treatment day 1",
+>>> biosample = wl.Biosample(
+...    name="Sample 1",
 ... ).save()
 
 Registries:
@@ -30,7 +30,14 @@ Registries:
    EnvironmentalPerturbation
    GeneticPerturbation
    PerturbationTarget
+
+Types:
+
+.. autosummary::
+   :toctree: .
+
    GeneticPerturbationSystem
+   BiologicType
 
 """
 
@@ -62,7 +69,7 @@ if _check_instance_setup():
         Techsample,
         Well,
     )
-    from .types import GeneticPerturbationSystem
+    from .types import BiologicType, GeneticPerturbationSystem
 
     # backwards compatibility
     CombinationTreatment = CombinationPerturbation

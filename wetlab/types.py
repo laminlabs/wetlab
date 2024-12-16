@@ -9,3 +9,15 @@ GeneticPerturbationSystem = Literal[
     "transgene",
     "transient-transfection",
 ]
+
+BiologicType = Literal[
+    "protein",
+    "peptide",
+    "antibody",
+    "enzyme",
+    "growth-factor",
+    "cytokine",
+    "hormone",
+    "vaccine",
+    "oligonucleotide",
+]
