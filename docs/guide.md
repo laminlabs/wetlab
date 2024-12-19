@@ -4,5 +4,6 @@
 :maxdepth: 1
 
 guide/get-started
-guide/modeling_perturbations
+guide/pert-registries
+guide/pert-curator
 ```

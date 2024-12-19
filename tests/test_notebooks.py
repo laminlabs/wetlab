@@ -11,4 +11,4 @@ def test_notebooks():
         # these are the notebook testpaths
         if not str(check_folder).endswith("guide"):
             continue
-        test.execute_notebooks(check_folder, write=True)
+        test.execute_notebooks(check_folder, write=True, print_outputs=True)
