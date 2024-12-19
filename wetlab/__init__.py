@@ -55,7 +55,6 @@ Types:
 
 """
 
-print("hello I'm wetlab")
 __version__ = "0.39.1"
 
 from lamindb_setup import _check_instance_setup
@@ -70,12 +69,14 @@ def __getattr__(name):
 
 
 if _check_instance_setup():
-    print("wetlab is set up")
-    import lamindb
+    import lamindb as _lamindb
 
     del __getattr__  # delete so that imports work out
-
-    from ._pert_curator import PertCurator
+    try:
+        from ._pert_curator import PertCurator
+    except ImportError:
+        # this is a hack until this no longer depends on it
+        PertCurator = "Please install cellxgene_lamin"  # type: ignore
     from .models import (
         Biologic,
         Biosample,
@@ -90,11 +91,3 @@ if _check_instance_setup():
         Techsample,
         Well,
     )
-
-    # backwards compatibility
-    CombinationTreatment = CombinationPerturbation
-    CompoundTreatment = CompoundPerturbation
-    EnvironmentalTreatment = EnvironmentalPerturbation
-    GeneticTreatment = GeneticPerturbation
-    GeneticTreatmentSystem = GeneticPerturbationSystem
-    TreatmentTarget = PerturbationTarget
