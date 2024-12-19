@@ -59,6 +59,8 @@ __version__ = "0.39.1"
 
 from lamindb_setup import _check_instance_setup
 
+from .types import BiologicType, GeneticPerturbationSystem
+
 
 def __getattr__(name):
     if name != "models":
@@ -86,7 +88,6 @@ if _check_instance_setup():
         Techsample,
         Well,
     )
-    from .types import BiologicType, GeneticPerturbationSystem
 
     # backwards compatibility
     CombinationTreatment = CombinationPerturbation
