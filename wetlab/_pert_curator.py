@@ -2,9 +2,20 @@ import re
 from typing import Literal, Optional, Tuple
 
 import anndata as ad
+import bionty as bt
+import lamindb as ln
 import pandas as pd
+from cellxgene_lamin import CellxGeneFields, Curate
 from lamin_utils import colors, logger
 from lnschema_core.types import FieldAttr
+
+from .models import (
+    Biologic,
+    Compound,
+    EnvironmentalPerturbation,
+    GeneticPerturbation,
+    PerturbationTarget,
+)
 
 
 class ValidationError(SystemExit):
@@ -151,222 +162,203 @@ class TimeHandler:
         return errors
 
 
-try:
-    import bionty as bt
-    import lamindb as ln
-    from cellxgene_lamin import CellxGeneFields, Curate
+class PertCurator(Curate):
+    """Curator flow for Perturbation data."""
 
-    from .models import (
-        Biologic,
-        Compound,
-        EnvironmentalPerturbation,
-        GeneticPerturbation,
-        PerturbationTarget,
-    )
+    PERT_COLUMNS = {"compound", "genetic", "biologic", "physical"}
 
-    class PertCurator(Curate):
-        """Curator flow for Perturbation data."""
+    def __init__(
+        self,
+        adata: ad.AnnData,
+        var_index: FieldAttr = bt.Gene.ensembl_gene_id,
+        organism: Literal["human", "mouse"] = "human",
+        pert_dose: bool = True,
+        pert_time: bool = True,
+        *,
+        verbosity: str = "hint",
+        cxg_schema_version: Literal["5.0.0", "5.1.0"] = "5.1.0",
+        using_key: str | None = None,
+    ):
+        """Initialize the curator with configuration and validation settings."""
+        self._setup_sources(using_key)
+        self._setup_compound_source()
 
-        PERT_COLUMNS = {"compound", "genetic", "biologic", "physical"}
+        self._pert_time = pert_time
+        self._pert_dose = pert_dose
 
-        def __init__(
-            self,
-            adata: ad.AnnData,
-            var_index: FieldAttr = bt.Gene.ensembl_gene_id,
-            organism: Literal["human", "mouse"] = "human",
-            pert_dose: bool = True,
-            pert_time: bool = True,
-            *,
-            verbosity: str = "hint",
-            cxg_schema_version: Literal["5.0.0", "5.1.0"] = "5.1.0",
-            using_key: str | None = None,
-        ):
-            """Initialize the curator with configuration and validation settings."""
-            self._setup_sources(using_key)
-            self._setup_compound_source()
+        self._validate_initial_data(adata)
+        self._setup_configuration(adata)
 
-            self._pert_time = pert_time
-            self._pert_dose = pert_dose
+        super().__init__(
+            adata=adata,
+            var_index=var_index,
+            categoricals=self.PT_CATEGORICALS,
+            using_key=using_key,
+            defaults=self.PT_DEFAULT_VALUES,
+            verbosity=verbosity,
+            organism=organism,
+            extra_sources=self.PT_SOURCES,
+            schema_version=cxg_schema_version,
+        )
 
-            self._validate_initial_data(adata)
-            self._setup_configuration(adata)
+    def _setup_configuration(self, adata: ad.AnnData):
+        """Set up default configuration values."""
+        self.PT_DEFAULT_VALUES = CellxGeneFields.OBS_FIELD_DEFAULTS | {
+            "cell_line": "unknown",
+            "pert_target": "unknown",
+        }
 
-            super().__init__(
-                adata=adata,
-                var_index=var_index,
-                categoricals=self.PT_CATEGORICALS,
-                using_key=using_key,
-                defaults=self.PT_DEFAULT_VALUES,
-                verbosity=verbosity,
-                organism=organism,
-                extra_sources=self.PT_SOURCES,
-                schema_version=cxg_schema_version,
+        self.PT_CATEGORICALS = CellxGeneFields.OBS_FIELDS | {
+            k: v
+            for k, v in {
+                "cell_line": bt.CellLine.name,
+                "pert_target": PerturbationTarget.name,
+                "pert_genetic": GeneticPerturbation.name,
+                "pert_compound": Compound.name,
+                "pert_biologic": Biologic.name,
+                "pert_physical": EnvironmentalPerturbation.name,
+            }.items()
+            if k in adata.obs.columns
+        }
+
+    def _setup_sources(self, using_key: str):
+        """Set up data sources."""
+        self.PT_SOURCES = {
+            "cell_line": bt.Source.using(using_key).filter(name="depmap").first(),
+            "pert_compound": bt.Source.using(using_key)
+            .filter(entity="wetlab.Compound", name="chebi")
+            .first(),
+        }
+
+    def _validate_initial_data(self, adata: ad.AnnData):
+        """Validate the initial data structure."""
+        self._validate_required_columns(adata)
+        self._validate_perturbation_types(adata)
+
+    def _validate_required_columns(self, adata: ad.AnnData):
+        """Validate required columns are present."""
+        if "pert_target" not in adata.obs.columns:
+            if (
+                "pert_name" not in adata.obs.columns
+                or "pert_type" not in adata.obs.columns
+            ):
+                raise ValidationError(
+                    "either 'pert_target' or both 'pert_name' and 'pert_type' must be present"
+                )
+        else:
+            if "pert_name" not in adata.obs.columns:
+                logger.warning(
+                    "no 'pert' column found in adata.obs, will only curate 'pert_target'"
+                )
+            elif "pert_type" not in adata.obs.columns:
+                raise ValidationError("both 'pert' and 'pert_type' must be present")
+
+    def _validate_perturbation_types(self, adata: ad.AnnData):
+        """Validate perturbation types."""
+        if "pert_type" in adata.obs.columns:
+            data_pert_types = set(adata.obs["pert_type"].unique())
+            invalid_pert_types = data_pert_types - self.PERT_COLUMNS
+            if invalid_pert_types:
+                raise ValidationError(
+                    f"invalid pert_type found: {invalid_pert_types}!\n"
+                    f"    → allowed values: {self.PERT_COLUMNS}"
+                )
+            self._process_perturbation_types(adata, data_pert_types)
+
+    def _process_perturbation_types(self, adata: ad.AnnData, pert_types: set):
+        """Process and map perturbation types."""
+        for pert_type in pert_types:
+            col_name = "pert_" + pert_type
+            adata.obs[col_name] = adata.obs["pert_name"].where(
+                adata.obs["pert_type"] == pert_type, None
+            )
+            logger.important(f"mapped 'pert_name' to '{col_name}'")
+
+    def _setup_compound_source(self):
+        """Set up the compound source with muted logging."""
+        with logger.mute():
+            chebi_source = bt.Source.filter(
+                entity="wetlab.Compound", name="chebi"
+            ).first()
+            if not chebi_source:
+                Compound.add_source(
+                    bt.Source.filter(entity="Drug", name="chebi").first()
+                )
+
+    def validate(self) -> bool:
+        """Validate the AnnData object."""
+        validated = super().validate()
+
+        if self._pert_dose:
+            validated &= self._validate_dose_column()
+        if self._pert_time:
+            validated &= self._validate_time_column()
+
+        self._validated = validated
+        return validated
+
+    def _validate_dose_column(self) -> bool:
+        """Validate the dose column."""
+        if not ln.Feature.filter(name="pert_dose").exists():
+            ln.Feature(name="pert_dose", dtype="str").save()
+
+        dose_errors = DoseHandler.validate_values(self._adata.obs["pert_dose"])
+        if dose_errors:
+            self._log_validation_errors("pert_dose", dose_errors)
+            return False
+        return True
+
+    def _validate_time_column(self) -> bool:
+        """Validate the time column."""
+        if not ln.Feature.filter(name="pert_time").exists():
+            ln.Feature(name="pert_time", dtype="str").save()
+
+        time_errors = TimeHandler.validate_values(self._adata.obs["pert_time"])
+        if time_errors:
+            self._log_validation_errors("pert_time", time_errors)
+            return False
+        return True
+
+    def _log_validation_errors(self, column: str, errors: list):
+        """Log validation errors with formatting."""
+        errors_print = "\n    ".join(errors)
+        logger.warning(
+            f"invalid {column} values found!\n    {errors_print}\n"
+            f"    → run {colors.cyan('standardize_dose_time()')}"
+        )
+
+    def standardize_dose_time(self) -> pd.DataFrame:
+        """Standardize dose and time values."""
+        standardized_df = self._adata.obs.copy()
+
+        if "pert_dose" in self._adata.obs.columns:
+            standardized_df = self._standardize_column(
+                standardized_df, "pert_dose", is_dose=True
             )
 
-        def _setup_configuration(self, adata: ad.AnnData):
-            """Set up default configuration values."""
-            self.PT_DEFAULT_VALUES = CellxGeneFields.OBS_FIELD_DEFAULTS | {
-                "cell_line": "unknown",
-                "pert_target": "unknown",
-            }
-
-            self.PT_CATEGORICALS = CellxGeneFields.OBS_FIELDS | {
-                k: v
-                for k, v in {
-                    "cell_line": bt.CellLine.name,
-                    "pert_target": PerturbationTarget.name,
-                    "pert_genetic": GeneticPerturbation.name,
-                    "pert_compound": Compound.name,
-                    "pert_biologic": Biologic.name,
-                    "pert_physical": EnvironmentalPerturbation.name,
-                }.items()
-                if k in adata.obs.columns
-            }
-
-        def _setup_sources(self, using_key: str):
-            """Set up data sources."""
-            self.PT_SOURCES = {
-                "cell_line": bt.Source.using(using_key).filter(name="depmap").first(),
-                "pert_compound": bt.Source.using(using_key)
-                .filter(entity="wetlab.Compound", name="chebi")
-                .first(),
-            }
-
-        def _validate_initial_data(self, adata: ad.AnnData):
-            """Validate the initial data structure."""
-            self._validate_required_columns(adata)
-            self._validate_perturbation_types(adata)
-
-        def _validate_required_columns(self, adata: ad.AnnData):
-            """Validate required columns are present."""
-            if "pert_target" not in adata.obs.columns:
-                if (
-                    "pert_name" not in adata.obs.columns
-                    or "pert_type" not in adata.obs.columns
-                ):
-                    raise ValidationError(
-                        "either 'pert_target' or both 'pert_name' and 'pert_type' must be present"
-                    )
-            else:
-                if "pert_name" not in adata.obs.columns:
-                    logger.warning(
-                        "no 'pert' column found in adata.obs, will only curate 'pert_target'"
-                    )
-                elif "pert_type" not in adata.obs.columns:
-                    raise ValidationError("both 'pert' and 'pert_type' must be present")
-
-        def _validate_perturbation_types(self, adata: ad.AnnData):
-            """Validate perturbation types."""
-            if "pert_type" in adata.obs.columns:
-                data_pert_types = set(adata.obs["pert_type"].unique())
-                invalid_pert_types = data_pert_types - self.PERT_COLUMNS
-                if invalid_pert_types:
-                    raise ValidationError(
-                        f"invalid pert_type found: {invalid_pert_types}!\n"
-                        f"    → allowed values: {self.PERT_COLUMNS}"
-                    )
-                self._process_perturbation_types(adata, data_pert_types)
-
-        def _process_perturbation_types(self, adata: ad.AnnData, pert_types: set):
-            """Process and map perturbation types."""
-            for pert_type in pert_types:
-                col_name = "pert_" + pert_type
-                adata.obs[col_name] = adata.obs["pert_name"].where(
-                    adata.obs["pert_type"] == pert_type, None
-                )
-                logger.important(f"mapped 'pert_name' to '{col_name}'")
-
-        def _setup_compound_source(self):
-            """Set up the compound source with muted logging."""
-            with logger.mute():
-                chebi_source = bt.Source.filter(
-                    entity="wetlab.Compound", name="chebi"
-                ).first()
-                if not chebi_source:
-                    Compound.add_source(
-                        bt.Source.filter(entity="Drug", name="chebi").first()
-                    )
-
-        def validate(self) -> bool:
-            """Validate the AnnData object."""
-            validated = super().validate()
-
-            if self._pert_dose:
-                validated &= self._validate_dose_column()
-            if self._pert_time:
-                validated &= self._validate_time_column()
-
-            self._validated = validated
-            return validated
-
-        def _validate_dose_column(self) -> bool:
-            """Validate the dose column."""
-            if not ln.Feature.filter(name="pert_dose").exists():
-                ln.Feature(name="pert_dose", dtype="str").save()
-
-            dose_errors = DoseHandler.validate_values(self._adata.obs["pert_dose"])
-            if dose_errors:
-                self._log_validation_errors("pert_dose", dose_errors)
-                return False
-            return True
-
-        def _validate_time_column(self) -> bool:
-            """Validate the time column."""
-            if not ln.Feature.filter(name="pert_time").exists():
-                ln.Feature(name="pert_time", dtype="str").save()
-
-            time_errors = TimeHandler.validate_values(self._adata.obs["pert_time"])
-            if time_errors:
-                self._log_validation_errors("pert_time", time_errors)
-                return False
-            return True
-
-        def _log_validation_errors(self, column: str, errors: list):
-            """Log validation errors with formatting."""
-            errors_print = "\n    ".join(errors)
-            logger.warning(
-                f"invalid {column} values found!\n    {errors_print}\n"
-                f"    → run {colors.cyan('standardize_dose_time()')}"
+        if "pert_time" in self._adata.obs.columns:
+            standardized_df = self._standardize_column(
+                standardized_df, "pert_time", is_dose=False
             )
 
-        def standardize_dose_time(self) -> pd.DataFrame:
-            """Standardize dose and time values."""
-            standardized_df = self._adata.obs.copy()
+        self._adata.obs = standardized_df
+        return standardized_df
 
-            if "pert_dose" in self._adata.obs.columns:
-                standardized_df = self._standardize_column(
-                    standardized_df, "pert_dose", is_dose=True
-                )
+    def _standardize_column(
+        self, df: pd.DataFrame, column: str, is_dose: bool
+    ) -> pd.DataFrame:
+        """Standardize values in a specific column."""
+        for idx, value in self._adata.obs[column].items():
+            if pd.isna(value) or (
+                isinstance(value, str) and (not value.strip() or value.lower() == "nan")
+            ):
+                df.at[idx, column] = None
+                continue
 
-            if "pert_time" in self._adata.obs.columns:
-                standardized_df = self._standardize_column(
-                    standardized_df, "pert_time", is_dose=False
-                )
+            try:
+                num, unit = ValueUnit.parse_value_unit(value, is_dose=is_dose)
+                df.at[idx, column] = f"{num}{unit}"
+            except ValueError:
+                continue
 
-            self._adata.obs = standardized_df
-            return standardized_df
-
-        def _standardize_column(
-            self, df: pd.DataFrame, column: str, is_dose: bool
-        ) -> pd.DataFrame:
-            """Standardize values in a specific column."""
-            for idx, value in self._adata.obs[column].items():
-                if pd.isna(value) or (
-                    isinstance(value, str)
-                    and (not value.strip() or value.lower() == "nan")
-                ):
-                    df.at[idx, column] = None
-                    continue
-
-                try:
-                    num, unit = ValueUnit.parse_value_unit(value, is_dose=is_dose)
-                    df.at[idx, column] = f"{num}{unit}"
-                except ValueError:
-                    continue
-
-            return df
-
-except ImportError as e:
-    raise PertValidatorUnavailable(
-        "Perturbation data validation requires lamindb, bionty, wetlab, ourprojects, and cellxgene-lamin"
-    ) from e
+        return df
