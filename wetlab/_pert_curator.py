@@ -154,13 +154,11 @@ class TimeHandler:
 try:
     import bionty as bt
     import lamindb as ln
-    from lamindb._curate import AnnDataCurator
+    from cellxgene_lamin import CellxGeneFields, Curate
 
     import wetlab as wl
 
-    # from cellxgene_lamin import CellxGeneFields, Curate
-
-    class PertCurator(AnnDataCurator):
+    class PertCurator(Curate):
         """Curator flow for Perturbation data."""
 
         PERT_COLUMNS = {"compound", "genetic", "biologic", "physical"}
@@ -174,18 +172,18 @@ try:
             pert_time: bool = True,
             *,
             verbosity: str = "hint",
-            # cxg_schema_version: Literal["5.0.0", "5.1.0"] = "5.1.0",
+            cxg_schema_version: Literal["5.0.0", "5.1.0"] = "5.1.0",
             using_key: str | None = None,
         ):
             """Initialize the curator with configuration and validation settings."""
-            self._setup_configuration(adata)
             self._setup_sources(using_key)
+            self._setup_compound_source()
 
             self._pert_time = pert_time
             self._pert_dose = pert_dose
 
             self._validate_initial_data(adata)
-            self._setup_compound_source()
+            self._setup_configuration(adata)
 
             super().__init__(
                 adata=adata,
@@ -195,19 +193,18 @@ try:
                 defaults=self.PT_DEFAULT_VALUES,
                 verbosity=verbosity,
                 organism=organism,
-                sources=self.PT_SOURCES,
-                # extra_sources=self.PT_SOURCES,
-                # schema_version=cxg_schema_version,
+                extra_sources=self.PT_SOURCES,
+                schema_version=cxg_schema_version,
             )
 
         def _setup_configuration(self, adata: ad.AnnData):
             """Set up default configuration values."""
-            self.PT_DEFAULT_VALUES = {
+            self.PT_DEFAULT_VALUES = CellxGeneFields.OBS_FIELD_DEFAULTS | {
                 "cell_line": "unknown",
                 "pert_target": "unknown",
             }
 
-            self.PT_CATEGORICALS = {
+            self.PT_CATEGORICALS = CellxGeneFields.OBS_FIELDS | {
                 k: v
                 for k, v in {
                     "cell_line": bt.CellLine.name,

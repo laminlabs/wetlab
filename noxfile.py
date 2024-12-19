@@ -21,6 +21,9 @@ def install(session: nox.Session) -> None:
     )
     run(session, f"uv pip install {SYSTEM} git+https://github.com/laminlabs/bionty")
     run(
+        session, f"uv pip install {SYSTEM} git+https://github.com/laminlabs/ourprojects"
+    )
+    run(
         session,
         f"uv pip install {SYSTEM} git+https://github.com/laminlabs/lamindb",
     )
