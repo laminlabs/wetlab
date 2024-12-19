@@ -362,5 +362,5 @@ try:
 
 except ImportError as e:
     raise PertValidatorUnavailable(
-        "Perturbation data validation requires bionty, lamindb, and wetlab"
+        "Perturbation data validation requires lamindb, bionty, wetlab, ourprojects, and cellxgene-lamin"
     ) from e
