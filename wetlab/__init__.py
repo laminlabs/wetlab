@@ -70,6 +70,7 @@ if _check_instance_setup():
     import lamindb
 
     del __getattr__  # delete so that imports work out
+    from . import pert
     from .models import (
         Biologic,
         Biosample,
