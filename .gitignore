@@ -7,6 +7,7 @@ test-wetlab
 test-wetlab-2
 docs/guide/modeling-perturbations
 test-pert-curator/
+test-pert-registries/
 
 # macOS
 .DS_Store
