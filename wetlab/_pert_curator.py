@@ -156,7 +156,13 @@ try:
     import lamindb as ln
     from cellxgene_lamin import CellxGeneFields, Curate
 
-    import wetlab as wl
+    from .models import (
+        Biologic,
+        Compound,
+        EnvironmentalPerturbation,
+        GeneticPerturbation,
+        PerturbationTarget,
+    )
 
     class PertCurator(Curate):
         """Curator flow for Perturbation data."""
@@ -208,11 +214,11 @@ try:
                 k: v
                 for k, v in {
                     "cell_line": bt.CellLine.name,
-                    "pert_target": wl.PerturbationTarget.name,
-                    "pert_genetic": wl.GeneticPerturbation.name,
-                    "pert_compound": wl.Compound.name,
-                    "pert_biologic": wl.Biologic.name,
-                    "pert_physical": wl.EnvironmentalPerturbation.name,
+                    "pert_target": PerturbationTarget.name,
+                    "pert_genetic": GeneticPerturbation.name,
+                    "pert_compound": Compound.name,
+                    "pert_biologic": Biologic.name,
+                    "pert_physical": EnvironmentalPerturbation.name,
                 }.items()
                 if k in adata.obs.columns
             }
@@ -277,7 +283,7 @@ try:
                     entity="wetlab.Compound", name="chebi"
                 ).first()
                 if not chebi_source:
-                    wl.Compound.add_source(
+                    Compound.add_source(
                         bt.Source.filter(entity="Drug", name="chebi").first()
                     )
 
