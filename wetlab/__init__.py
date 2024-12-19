@@ -69,6 +69,7 @@ def __getattr__(name):
 
 
 if _check_instance_setup():
+    print("wetlab is set up")
     import lamindb
 
     del __getattr__  # delete so that imports work out
