@@ -72,11 +72,12 @@ if _check_instance_setup():
     import lamindb as _lamindb
 
     del __getattr__  # delete so that imports work out
-    try:
-        from ._pert_curator import PertCurator
-    except ImportError:
-        # this is a hack until this no longer depends on it
-        PertCurator = "Please install cellxgene_lamin"  # type: ignore
+    # try:
+    from ._pert_curator import PertCurator
+
+    # except ImportError:
+    # this is a hack until this no longer depends on it
+    # PertCurator = "Please install cellxgene_lamin"  # type: ignore
     from .models import (
         Biologic,
         Biosample,
