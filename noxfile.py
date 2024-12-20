@@ -24,7 +24,7 @@ def install(session: nox.Session) -> None:
         session,
         f"uv pip install {SYSTEM} --no-deps git+https://github.com/laminlabs/cellxgene-lamin",
     )
-    run(session, f"uv pip install {SYSTEM} .[dev]")
+    run(session, f"uv pip install {SYSTEM} --no-deps .[dev]")
 
 
 @nox.session
