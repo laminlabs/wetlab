@@ -65,8 +65,6 @@ from .types import BiologicType, GeneticPerturbationSystem
 def __getattr__(name):
     if name != "models":
         _check_instance_setup(from_module="wetlab")
-    if name == "PertCurator" and isinstance(PertCurator, str):
-        raise ImportError(name)
     return globals()[name]
 
 
@@ -74,11 +72,7 @@ if _check_instance_setup():
     import lamindb as _lamindb
 
     del __getattr__  # delete so that imports work out
-    try:
-        from ._pert_curator import PertCurator
-    except ImportError:
-        # this is a hack until this no longer depends on it
-        PertCurator = "Please install cellxgene_lamin"  # type: ignore
+    from ._pert_curator import PertCurator
     from .models import (
         Biologic,
         Biosample,

@@ -5,9 +5,13 @@ import anndata as ad
 import bionty as bt
 import lamindb as ln
 import pandas as pd
-from cellxgene_lamin import CellxGeneFields, Curate
 from lamin_utils import colors, logger
 from lnschema_core.types import FieldAttr
+
+try:
+    from cellxgene_lamin import CellxGeneFields, Curate
+except ImportError:
+    Curate, CellxGeneFields = "Curate", "CellxGeneFields"
 
 from .models import (
     Biologic,
@@ -180,6 +184,8 @@ class PertCurator(Curate):
         using_key: str | None = None,
     ):
         """Initialize the curator with configuration and validation settings."""
+        if isinstance(Curate, str):
+            raise PertValidatorUnavailable("Please install cellxgene_lamin!")
         self._setup_sources(using_key)
         self._setup_compound_source()
 
