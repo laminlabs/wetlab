@@ -19,7 +19,7 @@ def lint(session: nox.Session) -> None:
 @nox.session
 def install(session: nox.Session) -> None:
     run(session, f"uv pip install {SYSTEM} --upgrade scanpy")
-    install_lamindb(session, branch="main", extras="bionty,aws,jupyter,ourprojects")
+    install_lamindb(session, branch="main", extras="bionty,aws,jupyter")
     run(
         session,
         f"uv pip install {SYSTEM} --no-deps git+https://github.com/laminlabs/cellxgene-lamin",
