@@ -1,18 +1,25 @@
-import re
-from typing import Literal, Optional, Tuple
+from __future__ import annotations
 
-import anndata as ad
+import re
+from typing import TYPE_CHECKING, Literal, Optional, Tuple
+
 import bionty as bt
 import lamindb as ln
 import pandas as pd
 from lamin_utils import colors, logger
-from lnschema_core.types import FieldAttr
 
 try:
-    from cellxgene_lamin import CellxGeneFields, Curate
+    from cellxgene_lamin import CellxGeneFields
+    from cellxgene_lamin import Curate as CellxGeneCurate
 except ImportError:
-    Curate = "Curate"
     CellxGeneFields = "CellxGeneFields"
+
+    class CellxGeneCurate:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError(
+                "cellxgene_lamin is not installed. Please install it to use PertCurator."
+            )
+
 
 from .models import (
     Biologic,
@@ -21,6 +28,10 @@ from .models import (
     GeneticPerturbation,
     PerturbationTarget,
 )
+
+if TYPE_CHECKING:
+    import anndata as ad
+    from lnschema_core.types import FieldAttr
 
 
 class ValidationError(SystemExit):
@@ -39,7 +50,7 @@ class ValueUnit:
     """Base class for handling value-unit combinations."""
 
     @staticmethod
-    def parse_value_unit(value: str, is_dose: bool = True) -> Optional[Tuple[str, str]]:
+    def parse_value_unit(value: str, is_dose: bool = True) -> tuple[str, str] | None:
         """Parse a string containing a value and unit into a tuple."""
         if not isinstance(value, str) or not value.strip():
             return None
@@ -167,7 +178,7 @@ class TimeHandler:
         return errors
 
 
-class PertCurator(Curate):
+class PertCurator(CellxGeneCurate):
     """Curator flow for Perturbation data."""
 
     PERT_COLUMNS = {"compound", "genetic", "biologic", "physical"}
@@ -185,8 +196,8 @@ class PertCurator(Curate):
         using_key: str | None = None,
     ):
         """Initialize the curator with configuration and validation settings."""
-        if isinstance(Curate, str):
-            raise PertValidatorUnavailable("Please install cellxgene_lamin!")
+        if isinstance(CellxGeneFields, str):
+            CellxGeneCurate()
         self._setup_sources(using_key)
         self._setup_compound_source()
 
