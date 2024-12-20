@@ -1,4 +1,5 @@
 import nox
+from laminci import upload_docs_artifact
 from laminci.nox import (
     SYSTEM,
     build_docs,
@@ -36,3 +37,4 @@ def test(session: nox.Session) -> None:
 def docs(session: nox.Session) -> None:
     run(session, "lamin init --storage ./docsbuild --schema bionty,wetlab")
     build_docs(session, strict=True)
+    upload_docs_artifact(aws=True)
