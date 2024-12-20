@@ -22,7 +22,7 @@ def install(session: nox.Session) -> None:
     install_lamindb(session, branch="main", extras="bionty,jupyter")
     run(
         session,
-        f"uv pip install {SYSTEM} --no-deps git+https://github.com/laminlabs/cellxgene-lamin",
+        f"uv pip install {SYSTEM} git+https://github.com/laminlabs/cellxgene-lamin",
     )
     run(session, f"uv pip install {SYSTEM} .[dev]")
 
