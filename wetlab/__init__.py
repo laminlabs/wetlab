@@ -59,6 +59,8 @@ __version__ = "0.39.1"
 
 from lamindb_setup import _check_instance_setup
 
+from .types import BiologicType, GeneticPerturbationSystem
+
 
 def __getattr__(name):
     if name != "models":
@@ -67,9 +69,10 @@ def __getattr__(name):
 
 
 if _check_instance_setup():
-    import lamindb
+    import lamindb as _lamindb
 
     del __getattr__  # delete so that imports work out
+    from ._pert_curator import PertCurator
     from .models import (
         Biologic,
         Biosample,
@@ -84,12 +87,3 @@ if _check_instance_setup():
         Techsample,
         Well,
     )
-    from .types import BiologicType, GeneticPerturbationSystem
-
-    # backwards compatibility
-    CombinationTreatment = CombinationPerturbation
-    CompoundTreatment = CompoundPerturbation
-    EnvironmentalTreatment = EnvironmentalPerturbation
-    GeneticTreatment = GeneticPerturbation
-    GeneticTreatmentSystem = GeneticPerturbationSystem
-    TreatmentTarget = PerturbationTarget
