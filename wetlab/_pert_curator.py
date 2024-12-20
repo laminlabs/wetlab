@@ -11,7 +11,8 @@ from lnschema_core.types import FieldAttr
 try:
     from cellxgene_lamin import CellxGeneFields, Curate
 except ImportError:
-    Curate, CellxGeneFields = "Curate", "CellxGeneFields"
+    Curate = "Curate"
+    CellxGeneFields = "CellxGeneFields"
 
 from .models import (
     Biologic,
