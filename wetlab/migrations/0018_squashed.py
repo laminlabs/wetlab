@@ -3,8 +3,8 @@
 import django.db.migrations.operations.special
 import django.db.models.deletion
 import django.utils.timezone
-import lnschema_core.ids
-import lnschema_core.users
+import lamindb.ids
+import lamindb.users
 from django.db import migrations, models
 
 # Functions from the following migrations need manual copying.
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_12, max_length=12, unique=True
+                        default=lamindb.ids.base62_12, max_length=12, unique=True
                     ),
                 ),
                 (
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 (
                     "collections",
                     models.ManyToManyField(
-                        related_name="biosamples", to="lnschema_core.collection"
+                        related_name="biosamples", to="lamindb.collection"
                     ),
                 ),
                 (
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
         migrations.CreateModel(
             name="ExperimentType",
@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_4, max_length=4, unique=True
+                        default=lamindb.ids.base62_4, max_length=4, unique=True
                     ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
@@ -105,17 +105,17 @@ class Migration(migrations.Migration):
                 (
                     "created_by",
                     models.ForeignKey(
-                        default=lnschema_core.users.current_user_id,
+                        default=lamindb.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="created_experiment_types",
-                        to="lnschema_core.user",
+                        to="lamindb.user",
                     ),
                 ),
             ],
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Experiment",
@@ -124,7 +124,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_8, max_length=8, unique=True
+                        default=lamindb.ids.base62_8, max_length=8, unique=True
                     ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
@@ -135,22 +135,22 @@ class Migration(migrations.Migration):
                 (
                     "artifacts",
                     models.ManyToManyField(
-                        related_name="experiments", to="lnschema_core.artifact"
+                        related_name="experiments", to="lamindb.artifact"
                     ),
                 ),
                 (
                     "collections",
                     models.ManyToManyField(
-                        related_name="experiments", to="lnschema_core.collection"
+                        related_name="experiments", to="lamindb.collection"
                     ),
                 ),
                 (
                     "created_by",
                     models.ForeignKey(
-                        default=lnschema_core.users.current_user_id,
+                        default=lamindb.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="created_experiments",
-                        to="lnschema_core.user",
+                        to="lamindb.user",
                     ),
                 ),
                 (
@@ -166,7 +166,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Techsample",
@@ -175,7 +175,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_12, max_length=12, unique=True
+                        default=lamindb.ids.base62_12, max_length=12, unique=True
                     ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
@@ -192,17 +192,17 @@ class Migration(migrations.Migration):
                 (
                     "created_by",
                     models.ForeignKey(
-                        default=lnschema_core.users.current_user_id,
+                        default=lamindb.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="created_techsamples",
-                        to="lnschema_core.user",
+                        to="lamindb.user",
                     ),
                 ),
             ],
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
         migrations.CreateModel(
             name="TreatmentTarget",
@@ -211,7 +211,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_8, max_length=8, unique=True
+                        default=lamindb.ids.base62_8, max_length=8, unique=True
                     ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=60)),
@@ -221,16 +221,16 @@ class Migration(migrations.Migration):
                 (
                     "artifacts",
                     models.ManyToManyField(
-                        related_name="treatment_targets", to="lnschema_core.artifact"
+                        related_name="treatment_targets", to="lamindb.artifact"
                     ),
                 ),
                 (
                     "created_by",
                     models.ForeignKey(
-                        default=lnschema_core.users.current_user_id,
+                        default=lamindb.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="created_treatment_targets",
-                        to="lnschema_core.user",
+                        to="lamindb.user",
                     ),
                 ),
                 (
@@ -243,7 +243,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Treatment",
@@ -252,7 +252,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_12, max_length=12, unique=True
+                        default=lamindb.ids.base62_12, max_length=12, unique=True
                     ),
                 ),
                 ("name", models.CharField(db_index=True, default=None, max_length=255)),
@@ -308,22 +308,22 @@ class Migration(migrations.Migration):
                 (
                     "artifacts",
                     models.ManyToManyField(
-                        related_name="treatments", to="lnschema_core.artifact"
+                        related_name="treatments", to="lamindb.artifact"
                     ),
                 ),
                 (
                     "collections",
                     models.ManyToManyField(
-                        related_name="treatments", to="lnschema_core.collection"
+                        related_name="treatments", to="lamindb.collection"
                     ),
                 ),
                 (
                     "created_by",
                     models.ForeignKey(
-                        default=lnschema_core.users.current_user_id,
+                        default=lamindb.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="created_treatments",
-                        to="lnschema_core.user",
+                        to="lamindb.user",
                     ),
                 ),
                 (
@@ -336,7 +336,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
         migrations.CreateModel(
             name="Well",
@@ -345,7 +345,7 @@ class Migration(migrations.Migration):
                 (
                     "uid",
                     models.CharField(
-                        default=lnschema_core.ids.base62_4, max_length=4, unique=True
+                        default=lamindb.ids.base62_4, max_length=4, unique=True
                     ),
                 ),
                 (
@@ -364,29 +364,27 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True, db_index=True)),
                 (
                     "artifacts",
-                    models.ManyToManyField(
-                        related_name="wells", to="lnschema_core.artifact"
-                    ),
+                    models.ManyToManyField(related_name="wells", to="lamindb.artifact"),
                 ),
                 (
                     "collections",
                     models.ManyToManyField(
-                        related_name="wells", to="lnschema_core.collection"
+                        related_name="wells", to="lamindb.collection"
                     ),
                 ),
                 (
                     "created_by",
                     models.ForeignKey(
-                        default=lnschema_core.users.current_user_id,
+                        default=lamindb.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="created_wells",
-                        to="lnschema_core.user",
+                        to="lamindb.user",
                     ),
                 ),
             ],
             options={
                 "unique_together": {("row", "column")},
             },
-            bases=(models.Model, lnschema_core.models.CanCurate),
+            bases=(models.Model, lamindb.models.CanCurate),
         ),
     ]

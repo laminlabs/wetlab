@@ -20,8 +20,8 @@ from bionty.models import (
 )
 from django.db import models
 from django.db.models import CASCADE, PROTECT, QuerySet
-from lnschema_core import ids
-from lnschema_core.fields import (
+from lamindb import ids
+from lamindb.fields import (
     BooleanField,
     CharField,
     DateField,
@@ -31,7 +31,7 @@ from lnschema_core.fields import (
     IntegerField,
     TextField,
 )
-from lnschema_core.models import (
+from lamindb.models import (
     Artifact,
     CanCurate,
     Feature,
