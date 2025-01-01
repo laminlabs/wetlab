@@ -20,8 +20,8 @@ from bionty.models import (
 )
 from django.db import models
 from django.db.models import CASCADE, PROTECT, QuerySet
-from lamindb import ids
-from lamindb.fields import (
+from lamindb.base import ids
+from lamindb.base.fields import (
     BooleanField,
     CharField,
     DateField,

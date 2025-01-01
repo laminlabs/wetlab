@@ -2,10 +2,10 @@
 
 import bionty.ids
 import django.db.models.deletion
-import lamindb.fields
-import lamindb.ids
+import lamidb.base.ids
+import lamidb.base.users
+import lamindb.base.fields
 import lamindb.models
-import lamindb.users
 from django.db import migrations, models
 
 
@@ -39,20 +39,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_combination_treatment",
@@ -61,9 +65,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -71,7 +75,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -82,7 +86,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -102,20 +106,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_compound",
@@ -124,9 +132,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -134,7 +142,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -145,7 +153,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -165,20 +173,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_compound_treatment",
@@ -187,9 +199,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -197,7 +209,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -208,7 +220,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -228,20 +240,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_environmental_treatment",
@@ -250,9 +266,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -260,7 +276,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -271,7 +287,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -291,20 +307,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_experiment",
@@ -313,9 +333,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -323,7 +343,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -334,7 +354,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -354,20 +374,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_genetic_treatment",
@@ -376,9 +400,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -386,7 +410,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -397,7 +421,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -417,20 +441,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_treatment_target",
@@ -439,9 +467,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -449,7 +477,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -460,7 +488,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -480,20 +508,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_well",
@@ -502,9 +534,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -512,7 +544,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -523,7 +555,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -543,25 +575,25 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_12,
+                        default=lamidb.base.ids.base62_12,
                         max_length=12,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -571,7 +603,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "batch",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -581,7 +613,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "description",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "_previous_runs",
@@ -607,9 +639,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -623,7 +655,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "organism",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         null=True,
                         on_delete=django.db.models.deletion.PROTECT,
@@ -633,7 +665,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -659,20 +691,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_biosample",
@@ -681,9 +717,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -691,7 +727,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -702,7 +738,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -713,7 +749,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "biosample",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="links_artifact",
@@ -731,35 +767,35 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_12,
+                        default=lamidb.base.ids.base62_12,
                         max_length=12,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=255
                     ),
                 ),
                 (
                     "description",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "ontology_id",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -781,9 +817,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -791,7 +827,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -809,7 +845,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactcombinationtreatment",
             name="combinationtreatment",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -821,16 +857,16 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         default=bionty.ids.ontology,
                         max_length=8,
@@ -839,13 +875,13 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=256
                     ),
                 ),
                 (
                     "ontology_id",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -855,7 +891,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "chembl_id",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -865,7 +901,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "abbr",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -876,11 +912,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "synonyms",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "description",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "_previous_runs",
@@ -896,9 +932,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -912,7 +948,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -923,7 +959,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "source",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         null=True,
                         on_delete=django.db.models.deletion.PROTECT,
@@ -944,7 +980,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactcompound",
             name="compound",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -956,41 +992,43 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_12,
+                        default=lamidb.base.ids.base62_12,
                         max_length=12,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=255
                     ),
                 ),
                 (
                     "concentration",
-                    lamindb.fields.FloatField(blank=True, default=None, null=True),
+                    lamindb.base.fields.FloatField(blank=True, default=None, null=True),
                 ),
                 (
                     "concentration_unit",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, default=None, max_length=32, null=True
                     ),
                 ),
                 (
                     "duration",
-                    lamindb.fields.DurationField(blank=True, default=None, null=True),
+                    lamindb.base.fields.DurationField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "_previous_runs",
@@ -1012,9 +1050,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1022,7 +1060,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1047,7 +1085,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactcompoundtreatment",
             name="compoundtreatment",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -1059,31 +1097,31 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_12,
+                        default=lamidb.base.ids.base62_12,
                         max_length=12,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=255
                     ),
                 ),
                 (
                     "ontology_id",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -1093,17 +1131,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "value",
-                    lamindb.fields.FloatField(blank=True, default=None, null=True),
+                    lamindb.base.fields.FloatField(blank=True, default=None, null=True),
                 ),
                 (
                     "unit",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, default=None, max_length=32, null=True
                     ),
                 ),
                 (
                     "duration",
-                    lamindb.fields.DurationField(blank=True, default=None, null=True),
+                    lamindb.base.fields.DurationField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "_previous_runs",
@@ -1119,9 +1159,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1129,7 +1169,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1155,7 +1195,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactenvironmentaltreatment",
             name="environmentaltreatment",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -1167,35 +1207,35 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_8,
+                        default=lamidb.base.ids.base62_8,
                         max_length=8,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=255
                     ),
                 ),
                 (
                     "description",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "date",
-                    lamindb.fields.DateField(
+                    lamindb.base.fields.DateField(
                         blank=True, db_index=True, default=None, null=True
                     ),
                 ),
@@ -1213,9 +1253,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1223,7 +1263,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1241,7 +1281,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactexperiment",
             name="experiment",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -1253,49 +1293,49 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_12,
+                        default=lamidb.base.ids.base62_12,
                         max_length=12,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=255
                     ),
                 ),
                 (
                     "system",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=32
                     ),
                 ),
                 (
                     "sequence",
-                    lamindb.fields.TextField(
+                    lamindb.base.fields.TextField(
                         blank=True, db_index=True, default=None, null=True
                     ),
                 ),
                 (
                     "on_target_score",
-                    lamindb.fields.FloatField(
+                    lamindb.base.fields.FloatField(
                         blank=True, db_index=True, default=None, null=True
                     ),
                 ),
                 (
                     "off_target_score",
-                    lamindb.fields.FloatField(
+                    lamindb.base.fields.FloatField(
                         blank=True, db_index=True, default=None, null=True
                     ),
                 ),
@@ -1313,9 +1353,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1323,7 +1363,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1348,7 +1388,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactgenetictreatment",
             name="genetictreatment",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -1360,37 +1400,37 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_12,
+                        default=lamidb.base.ids.base62_12,
                         max_length=12,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=255
                     ),
                 ),
                 (
                     "batch",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=60
                     ),
                 ),
                 (
                     "description",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "_previous_runs",
@@ -1410,9 +1450,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1420,7 +1460,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1440,20 +1480,24 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 ("id", models.BigAutoField(primary_key=True, serialize=False)),
                 (
                     "label_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "feature_ref_is_name",
-                    lamindb.fields.BooleanField(blank=True, default=None, null=True),
+                    lamindb.base.fields.BooleanField(
+                        blank=True, default=None, null=True
+                    ),
                 ),
                 (
                     "artifact",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="links_techsample",
@@ -1462,9 +1506,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1472,7 +1516,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "feature",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=None,
                         null=True,
@@ -1483,7 +1527,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1494,7 +1538,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "techsample",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="links_artifact",
@@ -1512,31 +1556,31 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_8,
+                        default=lamidb.base.ids.base62_8,
                         max_length=8,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True, db_index=True, default=None, max_length=60
                     ),
                 ),
                 (
                     "description",
-                    lamindb.fields.TextField(blank=True, default=None, null=True),
+                    lamindb.base.fields.TextField(blank=True, default=None, null=True),
                 ),
                 (
                     "_previous_runs",
@@ -1552,9 +1596,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1580,7 +1624,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1619,7 +1663,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifacttreatmenttarget",
             name="treatmenttarget",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -1631,25 +1675,25 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "created_at",
-                    lamindb.fields.DateTimeField(auto_now_add=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
                 ),
                 (
                     "updated_at",
-                    lamindb.fields.DateTimeField(auto_now=True, db_index=True),
+                    lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
                 ),
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 (
                     "uid",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
-                        default=lamindb.ids.base62_4,
+                        default=lamidb.base.ids.base62_4,
                         max_length=4,
                         unique=True,
                     ),
                 ),
                 (
                     "name",
-                    lamindb.fields.CharField(
+                    lamindb.base.fields.CharField(
                         blank=True,
                         db_index=True,
                         default=None,
@@ -1660,9 +1704,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "row",
-                    lamindb.fields.CharField(blank=True, default=None, max_length=4),
+                    lamindb.base.fields.CharField(
+                        blank=True, default=None, max_length=4
+                    ),
                 ),
-                ("column", lamindb.fields.IntegerField(blank=True)),
+                ("column", lamindb.base.fields.IntegerField(blank=True)),
                 (
                     "_previous_runs",
                     models.ManyToManyField(related_name="+", to="lamindb.run"),
@@ -1677,9 +1723,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_by",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
-                        default=lamindb.users.current_user_id,
+                        default=lamidb.base.users.current_user_id,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="+",
                         to="lamindb.user",
@@ -1687,7 +1733,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "run",
-                    lamindb.fields.ForeignKey(
+                    lamindb.base.fields.ForeignKey(
                         blank=True,
                         default=lamindb.models.current_run,
                         null=True,
@@ -1706,7 +1752,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="artifactwell",
             name="well",
-            field=lamindb.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
