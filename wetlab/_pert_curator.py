@@ -31,7 +31,7 @@ from .models import (
 
 if TYPE_CHECKING:
     import anndata as ad
-    from lamidb.base.types import FieldAttr
+    from lamindb.base.types import FieldAttr
 
 
 class ValidationError(SystemExit):
