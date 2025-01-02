@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_core", "0066_alter_artifact__feature_values_and_more"),
+        ("lamindb", "0066_alter_artifact__feature_values_and_more"),
         ("wetlab", "0022_remove_experiment_experiment_type_and_more"),
     ]
 
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="combination_treatments",
                 through="wetlab.ArtifactCombinationTreatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -99,7 +99,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="compounds",
                 through="wetlab.ArtifactCompound",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -112,7 +112,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="compound_treatments",
                 through="wetlab.ArtifactCompoundTreatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -125,7 +125,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="environmental_treatments",
                 through="wetlab.ArtifactEnvironmentalTreatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="experiments",
                 through="wetlab.ArtifactExperiment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -151,7 +151,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="genetic_treatments",
                 through="wetlab.ArtifactGeneticTreatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -164,7 +164,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="treatment_targets",
                 through="wetlab.ArtifactTreatmentTarget",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -177,7 +177,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="wells",
                 through="wetlab.ArtifactWell",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
     ]

@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lnschema_core", "0069_squashed"),
+        ("lamindb", "0069_squashed"),
         ("wetlab", "0025_squashed"),
     ]
 
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="biosamples",
                 through="wetlab.ArtifactBiosample",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.RemoveField(
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="techsamples",
                 through="wetlab.ArtifactTechsample",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
     ]

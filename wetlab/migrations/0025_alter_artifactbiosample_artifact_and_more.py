@@ -2,10 +2,10 @@
 
 import bionty.ids
 import django.db.models.deletion
-import lnschema_core.fields
-import lnschema_core.ids
-import lnschema_core.models
-import lnschema_core.users
+import lamindb.base.fields
+import lamindb.base.ids
+import lamindb.base.users
+import lamindb.models
 from django.db import migrations
 
 
@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("bionty", "0041_alter_artifactcellline_artifact_and_more"),
         (
-            "lnschema_core",
+            "lamindb",
             "0069_alter_artifact__accessor_alter_artifact__hash_type_and_more",
         ),
         ("wetlab", "0024_compound_chembl_id"),
@@ -23,17 +23,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactbiosample",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_biosample",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactbiosample",
             name="biosample",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -43,71 +43,67 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactbiosample",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactbiosample",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactbiosample",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactbiosample",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactbiosample",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactbiosample",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactbiosample",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_combination_treatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="combinationtreatment",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -117,71 +113,67 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactcombinationtreatment",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactcombinationtreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_compound",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="compound",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -191,71 +183,67 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactcompound",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactcompound",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactcompound",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_compound_treatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="compoundtreatment",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -265,87 +253,83 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactcompoundtreatment",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactcompoundtreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_environmental_treatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="environmentaltreatment",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -355,71 +339,67 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactenvironmentaltreatment",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactenvironmentaltreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_experiment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="experiment",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -429,90 +409,84 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactexperiment",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactexperiment",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactexperiment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_genetic_treatment",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactgenetictreatment",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="genetictreatment",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -522,90 +496,84 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactgenetictreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_techsample",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifacttechsample",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttechsample",
             name="techsample",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -615,71 +583,67 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_treatment_target",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifacttreatmenttarget",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifacttreatmenttarget",
             name="treatmenttarget",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -689,71 +653,67 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="artifactwell",
             name="artifact",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="links_well",
-                to="lnschema_core.artifact",
+                to="lamindb.artifact",
             ),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="feature",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifactwell",
-                to="lnschema_core.feature",
+                to="lamindb.feature",
             ),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="feature_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="label_ref_is_name",
-            field=lnschema_core.fields.BooleanField(
-                blank=True, default=None, null=True
-            ),
+            field=lamindb.base.fields.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="artifactwell",
             name="well",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
@@ -763,42 +723,42 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="biosample",
             name="batch",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=60, null=True
             ),
         ),
         migrations.AlterField(
             model_name="biosample",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="biosample",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="biosample",
             name="description",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="biosample",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255, null=True
             ),
         ),
         migrations.AlterField(
             model_name="biosample",
             name="organism",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
@@ -809,21 +769,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="biosample",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="biosample",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_12,
+                default=lamindb.base.ids.base62_12,
                 max_length=12,
                 unique=True,
             ),
@@ -831,61 +791,61 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="biosample",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="description",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255
             ),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="ontology_id",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=32, null=True
             ),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="combinationtreatment",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_12,
+                default=lamindb.base.ids.base62_12,
                 max_length=12,
                 unique=True,
             ),
@@ -893,12 +853,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="combinationtreatment",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="compound",
             name="abbr",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
                 db_index=True,
                 default=None,
@@ -910,61 +870,61 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="compound",
             name="chembl_id",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=32, null=True
             ),
         ),
         migrations.AlterField(
             model_name="compound",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="compound",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="compound",
             name="description",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="compound",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=256
             ),
         ),
         migrations.AlterField(
             model_name="compound",
             name="ontology_id",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=32, null=True
             ),
         ),
         migrations.AlterField(
             model_name="compound",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="compound",
             name="source",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
@@ -975,80 +935,80 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="compound",
             name="synonyms",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="compound",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, default=bionty.ids.ontology, max_length=8, unique=True
             ),
         ),
         migrations.AlterField(
             model_name="compound",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="concentration",
-            field=lnschema_core.fields.FloatField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.FloatField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="concentration_unit",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, default=None, max_length=32, null=True
             ),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="duration",
-            field=lnschema_core.fields.DurationField(
+            field=lamindb.base.fields.DurationField(
                 blank=True, default=None, null=True
             ),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255
             ),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="compoundtreatment",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_12,
+                default=lamindb.base.ids.base62_12,
                 max_length=12,
                 unique=True,
             ),
@@ -1056,63 +1016,63 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="compoundtreatment",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="duration",
-            field=lnschema_core.fields.DurationField(
+            field=lamindb.base.fields.DurationField(
                 blank=True, default=None, null=True
             ),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255
             ),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="ontology_id",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=32, null=True
             ),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_12,
+                default=lamindb.base.ids.base62_12,
                 max_length=12,
                 unique=True,
             ),
@@ -1120,73 +1080,73 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="unit",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, default=None, max_length=32, null=True
             ),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="environmentaltreatment",
             name="value",
-            field=lnschema_core.fields.FloatField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.FloatField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="date",
-            field=lnschema_core.fields.DateField(
+            field=lamindb.base.fields.DateField(
                 blank=True, db_index=True, default=None, null=True
             ),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="description",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255
             ),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="experiment",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_8,
+                default=lamindb.base.ids.base62_8,
                 max_length=8,
                 unique=True,
             ),
@@ -1194,77 +1154,77 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="experiment",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="off_target_score",
-            field=lnschema_core.fields.FloatField(
+            field=lamindb.base.fields.FloatField(
                 blank=True, db_index=True, default=None, null=True
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="on_target_score",
-            field=lnschema_core.fields.FloatField(
+            field=lamindb.base.fields.FloatField(
                 blank=True, db_index=True, default=None, null=True
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="sequence",
-            field=lnschema_core.fields.TextField(
+            field=lamindb.base.fields.TextField(
                 blank=True, db_index=True, default=None, null=True
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="system",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=32
             ),
         ),
         migrations.AlterField(
             model_name="genetictreatment",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_12,
+                default=lamindb.base.ids.base62_12,
                 max_length=12,
                 unique=True,
             ),
@@ -1272,61 +1232,61 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="genetictreatment",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="batch",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=60
             ),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="description",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255
             ),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="techsample",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_12,
+                default=lamindb.base.ids.base62_12,
                 max_length=12,
                 unique=True,
             ),
@@ -1334,54 +1294,54 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="techsample",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="treatmenttarget",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="treatmenttarget",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="treatmenttarget",
             name="description",
-            field=lnschema_core.fields.TextField(blank=True, default=None, null=True),
+            field=lamindb.base.fields.TextField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
             model_name="treatmenttarget",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=60
             ),
         ),
         migrations.AlterField(
             model_name="treatmenttarget",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="treatmenttarget",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_8,
+                default=lamindb.base.ids.base62_8,
                 max_length=8,
                 unique=True,
             ),
@@ -1389,33 +1349,33 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="treatmenttarget",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="well",
             name="column",
-            field=lnschema_core.fields.IntegerField(blank=True),
+            field=lamindb.base.fields.IntegerField(blank=True),
         ),
         migrations.AlterField(
             model_name="well",
             name="created_at",
-            field=lnschema_core.fields.DateTimeField(auto_now_add=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now_add=True, db_index=True),
         ),
         migrations.AlterField(
             model_name="well",
             name="created_by",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.users.current_user_id,
+                default=lamindb.base.users.current_user_id,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.user",
+                to="lamindb.user",
             ),
         ),
         migrations.AlterField(
             model_name="well",
             name="name",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
                 db_index=True,
                 default=None,
@@ -1427,28 +1387,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="well",
             name="row",
-            field=lnschema_core.fields.CharField(
-                blank=True, default=None, max_length=4
-            ),
+            field=lamindb.base.fields.CharField(blank=True, default=None, max_length=4),
         ),
         migrations.AlterField(
             model_name="well",
             name="run",
-            field=lnschema_core.fields.ForeignKey(
+            field=lamindb.base.fields.ForeignKey(
                 blank=True,
-                default=lnschema_core.models.current_run,
+                default=lamindb.models.current_run,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="+",
-                to="lnschema_core.run",
+                to="lamindb.run",
             ),
         ),
         migrations.AlterField(
             model_name="well",
             name="uid",
-            field=lnschema_core.fields.CharField(
+            field=lamindb.base.fields.CharField(
                 blank=True,
-                default=lnschema_core.ids.base62_4,
+                default=lamindb.base.ids.base62_4,
                 max_length=4,
                 unique=True,
             ),
@@ -1456,6 +1414,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="well",
             name="updated_at",
-            field=lnschema_core.fields.DateTimeField(auto_now=True, db_index=True),
+            field=lamindb.base.fields.DateTimeField(auto_now=True, db_index=True),
         ),
     ]
