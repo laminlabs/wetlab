@@ -243,10 +243,10 @@ class PertCurator(CellxGeneCurate):
     def _setup_sources(self, adata: ad.AnnData, using_key: str):
         """Set up data sources."""
         self.PT_SOURCES = {}
-        if "cell_line" in adata.obs.columns:
-            self.PT_SOURCES["cell_line"] = (
-                bt.Source.using(using_key).filter(name="depmap").first()
-            )
+        # if "cell_line" in adata.obs.columns:
+        #     self.PT_SOURCES["cell_line"] = (
+        #         bt.Source.using(using_key).filter(name="depmap").first()
+        #     )
         if "pert_compound" in adata.obs.columns:
             self.PT_SOURCES["pert_compound"] = (
                 bt.Source.using(using_key)
