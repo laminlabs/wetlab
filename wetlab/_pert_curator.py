@@ -198,14 +198,15 @@ class PertCurator(CellxGeneCurate):
         """Initialize the curator with configuration and validation settings."""
         if isinstance(CellxGeneFields, str):
             CellxGeneCurate()
-        self._setup_sources(using_key)
-        self._setup_compound_source()
 
         self._pert_time = pert_time
         self._pert_dose = pert_dose
 
         self._validate_initial_data(adata)
         self._setup_configuration(adata)
+
+        self._setup_sources(adata, using_key)
+        self._setup_compound_source()
 
         super().__init__(
             adata=adata,
@@ -239,14 +240,19 @@ class PertCurator(CellxGeneCurate):
             if k in adata.obs.columns
         }
 
-    def _setup_sources(self, using_key: str):
+    def _setup_sources(self, adata: ad.AnnData, using_key: str):
         """Set up data sources."""
-        self.PT_SOURCES = {
-            "cell_line": bt.Source.using(using_key).filter(name="depmap").first(),
-            "pert_compound": bt.Source.using(using_key)
-            .filter(entity="wetlab.Compound", name="chebi")
-            .first(),
-        }
+        self.PT_SOURCES = {}
+        # if "cell_line" in adata.obs.columns:
+        #     self.PT_SOURCES["cell_line"] = (
+        #         bt.Source.using(using_key).filter(name="depmap").first()
+        #     )
+        if "pert_compound" in adata.obs.columns:
+            self.PT_SOURCES["pert_compound"] = (
+                bt.Source.using(using_key)
+                .filter(entity="wetlab.Compound", name="chebi")
+                .first()
+            )
 
     def _validate_initial_data(self, adata: ad.AnnData):
         """Validate the initial data structure."""
