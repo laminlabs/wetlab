@@ -10,66 +10,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="artifactbiologic",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactbiosample",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactcombinationperturbation",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactcompound",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactcompoundperturbation",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactdonor",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactenvironmentalperturbation",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactexperiment",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactgeneticperturbation",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactperturbationtarget",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifacttechsample",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
-            model_name="artifactwell",
-            name="_branch_code",
-            field=models.SmallIntegerField(db_index=True, default=1),
-        ),
-        migrations.AddField(
             model_name="biologic",
             name="_branch_code",
             field=models.SmallIntegerField(db_index=True, default=1),
