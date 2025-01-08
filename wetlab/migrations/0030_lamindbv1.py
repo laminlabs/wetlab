@@ -72,61 +72,61 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="biologic",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="biosample",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="combinationperturbation",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="compound",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="compoundperturbation",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="donor",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="environmentalperturbation",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="experiment",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="geneticperturbation",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="perturbationtarget",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="techsample",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
         migrations.AddField(
             model_name="well",
             name="aux",
-            field=models.JSONField(default=None, null=True),
+            field=models.JSONField(db_default=None, null=True),
         ),
     ]
