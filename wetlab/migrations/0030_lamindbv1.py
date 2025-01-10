@@ -251,4 +251,52 @@ class Migration(migrations.Migration):
                 to="lamindb.space",
             ),
         ),
+        migrations.RemoveField(
+            model_name="biologic",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="biosample",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="combinationperturbation",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="compound",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="compoundperturbation",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="donor",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="environmentalperturbation",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="experiment",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="geneticperturbation",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="perturbationtarget",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="techsample",
+            name="_previous_runs",
+        ),
+        migrations.RemoveField(
+            model_name="well",
+            name="_previous_runs",
+        ),
     ]
