@@ -225,7 +225,6 @@ class PertCurator(CellxGeneCurate):
         self.PT_DEFAULT_VALUES = CellxGeneFields.OBS_FIELD_DEFAULTS | {
             "cell_line": "unknown",
             "pert_target": "unknown",
-            "tissue": "unknown",
         }
 
         self.PT_CATEGORICALS = CellxGeneFields.OBS_FIELDS | {
@@ -294,8 +293,10 @@ class PertCurator(CellxGeneCurate):
         """Process and map perturbation types."""
         for pert_type in pert_types:
             col_name = "pert_" + pert_type
-            adata.obs[col_name] = adata.obs["pert_name"].where(
-                adata.obs["pert_type"] == pert_type, None
+            adata.obs[col_name] = (
+                adata.obs["pert_name"]
+                .astype(str)
+                .where(adata.obs["pert_type"] == pert_type, None)
             )
             logger.important(f"mapped 'pert_name' to '{col_name}'")
 
