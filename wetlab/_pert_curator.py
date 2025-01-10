@@ -225,6 +225,7 @@ class PertCurator(CellxGeneCurate):
         self.PT_DEFAULT_VALUES = CellxGeneFields.OBS_FIELD_DEFAULTS | {
             "cell_line": "unknown",
             "pert_target": "unknown",
+            "tissue": "unknown",
         }
 
         self.PT_CATEGORICALS = CellxGeneFields.OBS_FIELDS | {
