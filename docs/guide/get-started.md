@@ -9,7 +9,7 @@ pip install wetlab
 Init your instance
 
 ```bash
-lamin init --storage ./test-wetlab --schema bionty,wetlab
+lamin init --storage ./test-wetlab --modules bionty,wetlab
 ```
 
 Everything else works exactly as for any other schema module and the core registries.

@@ -3,7 +3,7 @@
 Install and mount `wetlab` in a new instance:
 
 >>> pip install wetlab
->>> lamin init --storage ./test-wetlab --schema bionty,wetlab
+>>> lamin init --storage ./test-wetlab --modules bionty,wetlab
 
 Import the package:
 
