@@ -33,6 +33,7 @@ from lamindb.base.fields import (
 )
 from lamindb.models import (
     Artifact,
+    BasicRecord,
     CanCurate,
     Feature,
     LinkORM,
@@ -128,7 +129,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         super().__init__(*args, **kwargs)
 
 
-class ArtifactCompound(Record, LinkORM, TracksRun):
+class ArtifactCompound(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
     compound: Compound = ForeignKey(Compound, PROTECT, related_name="links_artifact")
@@ -170,7 +171,7 @@ class Experiment(Record, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the experiment."""
 
 
-class ArtifactExperiment(Record, LinkORM, TracksRun):
+class ArtifactExperiment(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_experiment")
     experiment: Experiment = ForeignKey(
@@ -220,7 +221,7 @@ class Well(Record, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the well."""
 
 
-class ArtifactWell(Record, LinkORM, TracksRun):
+class ArtifactWell(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_well")
     well: Well = ForeignKey(Well, PROTECT, related_name="links_artifact")
@@ -285,7 +286,7 @@ class PerturbationTarget(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactPerturbationTarget(Record, LinkORM, TracksRun):
+class ArtifactPerturbationTarget(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_perturbation_target"
@@ -370,7 +371,7 @@ class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactGeneticPerturbation(Record, LinkORM, TracksRun):
+class ArtifactGeneticPerturbation(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_genetic_perturbation"
@@ -456,7 +457,7 @@ class Biologic(Record, CanCurate, TracksRun, TracksUpdates):
         super().__init__(*args, **kwargs)
 
 
-class ArtifactBiologic(Record, LinkORM, TracksRun):
+class ArtifactBiologic(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biologic")
     biologic: Biologic = ForeignKey(Biologic, PROTECT, related_name="links_artifact")
@@ -517,7 +518,7 @@ class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactCompoundPerturbation(Record, LinkORM, TracksRun):
+class ArtifactCompoundPerturbation(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_compound_perturbation"
@@ -593,7 +594,7 @@ class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactEnvironmentalPerturbation(Record, LinkORM, TracksRun):
+class ArtifactEnvironmentalPerturbation(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_environmental_perturbation"
@@ -700,7 +701,7 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         return self.genetic.all().union(self.compound.all(), self.environmental.all())
 
 
-class ArtifactCombinationPerturbation(Record, LinkORM, TracksRun):
+class ArtifactCombinationPerturbation(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_combination_perturbation"
@@ -760,7 +761,7 @@ class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the biosample."""
 
 
-class ArtifactBiosample(Record, LinkORM, TracksRun):
+class ArtifactBiosample(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biosample")
     biosample: Biosample = ForeignKey(Biosample, PROTECT, related_name="links_artifact")
@@ -808,7 +809,7 @@ class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the techsample."""
 
 
-class ArtifactTechsample(Record, LinkORM, TracksRun):
+class ArtifactTechsample(BasicRecord, LinkORM, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_techsample")
     techsample: Techsample = ForeignKey(
@@ -872,7 +873,7 @@ class Donor(Record, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the donor."""
 
 
-class ArtifactDonor(Record, LinkORM, TracksRun):
+class ArtifactDonor(BasicRecord, LinkORM, TracksRun):
     """Link table between Artifacts and Donors."""
 
     id: int = models.BigAutoField(primary_key=True)
