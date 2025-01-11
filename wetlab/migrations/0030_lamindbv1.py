@@ -8,6 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("wetlab", "0029_artifactbiologic_biologic_artifactbiologic_biologic"),
+        ("bionty", "0043_lamindbv2_part2"),
     ]
 
     operations = [
