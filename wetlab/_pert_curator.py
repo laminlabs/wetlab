@@ -293,11 +293,11 @@ class PertCurator(CellxGeneCurate):
         """Process and map perturbation types."""
         for pert_type in pert_types:
             col_name = "pert_" + pert_type
-            adata.obs[col_name] = (
-                adata.obs["pert_name"]
-                .astype(str)
-                .where(adata.obs["pert_type"] == pert_type, None)
+            adata.obs[col_name] = adata.obs["pert_name"].where(
+                adata.obs["pert_type"] == pert_type, None
             )
+            if adata.obs[col_name].dtype.name == "category":
+                adata.obs[col_name].cat.remove_unused_categories()
             logger.important(f"mapped 'pert_name' to '{col_name}'")
 
     def _setup_compound_source(self):
