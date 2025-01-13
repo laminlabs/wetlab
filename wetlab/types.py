@@ -20,4 +20,5 @@ BiologicType = Literal[
     "hormone",
     "vaccine",
     "oligonucleotide",
+    "co-culture",
 ]
