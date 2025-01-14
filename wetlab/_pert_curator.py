@@ -242,7 +242,7 @@ class PertCurator(CellxGeneCurate):
             "pert_name",
             "pert_type",
         ]
-        self._adata.obs = adata.obs[
+        self._adata.obs = self._adata.obs[
             [col for col in first_columns if col in self._adata.obs.columns]
             + [col for col in self._adata.obs.columns if col not in first_columns]
         ]
