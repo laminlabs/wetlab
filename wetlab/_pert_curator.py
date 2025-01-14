@@ -219,33 +219,6 @@ class PertCurator(CellxGeneCurate):
             extra_sources=self.PT_SOURCES,
             schema_version=cxg_schema_version,
         )
-        first_columns = [
-            "pert_target",
-            "pert_genetic",
-            "pert_compound",
-            "pert_biologic",
-            "pert_physical",
-            "pert_dose",
-            "pert_time",
-            "organism",
-            "cell_line",
-            "cell_type",
-            "disease",
-            "tissue_type",
-            "tissue",
-            "assay",
-            "suspension_type",
-            "donor_id",
-            "sex",
-            "self_reported_ethnicity",
-            "development_stage",
-            "pert_name",
-            "pert_type",
-        ]
-        self._adata.obs = self._adata.obs[
-            [col for col in first_columns if col in self._adata.obs.columns]
-            + [col for col in self._adata.obs.columns if col not in first_columns]
-        ]
 
     def _setup_configuration(self, adata: ad.AnnData):
         """Set up default configuration values."""
@@ -346,6 +319,35 @@ class PertCurator(CellxGeneCurate):
             validated &= self._validate_dose_column()
         if self._pert_time:
             validated &= self._validate_time_column()
+
+        # sort columns
+        first_columns = [
+            "pert_target",
+            "pert_genetic",
+            "pert_compound",
+            "pert_biologic",
+            "pert_physical",
+            "pert_dose",
+            "pert_time",
+            "organism",
+            "cell_line",
+            "cell_type",
+            "disease",
+            "tissue_type",
+            "tissue",
+            "assay",
+            "suspension_type",
+            "donor_id",
+            "sex",
+            "self_reported_ethnicity",
+            "development_stage",
+            "pert_name",
+            "pert_type",
+        ]
+        self._adata.obs = self.adata.obs[
+            [col for col in first_columns if col in self.adata.obs.columns]
+            + [col for col in self.adata.obs.columns if col not in first_columns]
+        ]
 
         self._validated = validated
         return validated
