@@ -219,6 +219,33 @@ class PertCurator(CellxGeneCurate):
             extra_sources=self.PT_SOURCES,
             schema_version=cxg_schema_version,
         )
+        first_columns = [
+            "pert_target",
+            "pert_genetic",
+            "pert_compound",
+            "pert_biologic",
+            "pert_physical",
+            "pert_dose",
+            "pert_time",
+            "organism",
+            "cell_line",
+            "cell_type",
+            "disease",
+            "tissue_type",
+            "tissue",
+            "assay",
+            "suspension_type",
+            "donor_id",
+            "sex",
+            "self_reported_ethnicity",
+            "development_stage",
+            "pert_name",
+            "pert_type",
+        ]
+        self._adata.obs = adata.obs[
+            [col for col in first_columns if col in self._adata.obs.columns]
+            + [col for col in self._adata.obs.columns if col not in first_columns]
+        ]
 
     def _setup_configuration(self, adata: ad.AnnData):
         """Set up default configuration values."""
