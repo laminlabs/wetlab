@@ -2,6 +2,7 @@ from typing import Literal
 
 GeneticPerturbationSystem = Literal[
     "CRISPR-Cas9",
+    "CRISPR-Cas13",
     "CRISPRi",
     "CRISPRa",
     "shRNA",
