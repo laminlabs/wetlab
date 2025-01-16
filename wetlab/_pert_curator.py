@@ -24,6 +24,7 @@ except ImportError:
 from .models import (
     Biologic,
     Compound,
+    Donor,
     EnvironmentalPerturbation,
     GeneticPerturbation,
     PerturbationTarget,
@@ -220,37 +221,6 @@ class PertCurator(CellxGeneCurate):
             schema_version=cxg_schema_version,
         )
 
-        # sort columns
-        first_columns = [
-            "pert_target",
-            "pert_genetic",
-            "pert_compound",
-            "pert_biologic",
-            "pert_physical",
-            "pert_dose",
-            "pert_time",
-            "organism",
-            "cell_line",
-            "cell_type",
-            "disease",
-            "tissue_type",
-            "tissue",
-            "assay",
-            "suspension_type",
-            "donor_id",
-            "sex",
-            "self_reported_ethnicity",
-            "development_stage",
-            "pert_name",
-            "pert_type",
-        ]
-        sorted_columns = [
-            col for col in first_columns if col in self._adata.obs.columns
-        ] + [col for col in self._adata.obs.columns if col not in first_columns]
-        # must assign to self._df to ensure .standardize works correctly
-        self._df = self._adata.obs[sorted_columns]
-        self._adata.obs = self._df
-
     def _setup_configuration(self, adata: ad.AnnData):
         """Set up default configuration values."""
         self.PT_DEFAULT_VALUES = CellxGeneFields.OBS_FIELD_DEFAULTS | {
@@ -270,6 +240,8 @@ class PertCurator(CellxGeneCurate):
             }.items()
             if k in adata.obs.columns
         }
+        if "donor_id" in self.PT_CATEGORICALS:
+            self.PT_CATEGORICALS["donor_id"] = Donor.name
 
     def _setup_sources(self, adata: ad.AnnData, using_key: str):
         """Set up data sources."""
@@ -352,7 +324,43 @@ class PertCurator(CellxGeneCurate):
             validated &= self._validate_time_column()
 
         self._validated = validated
+
+        # sort columns
+        first_columns = [
+            "pert_target",
+            "pert_genetic",
+            "pert_compound",
+            "pert_biologic",
+            "pert_physical",
+            "pert_dose",
+            "pert_time",
+            "organism",
+            "cell_line",
+            "cell_type",
+            "disease",
+            "tissue_type",
+            "tissue",
+            "assay",
+            "suspension_type",
+            "donor_id",
+            "sex",
+            "self_reported_ethnicity",
+            "development_stage",
+            "pert_name",
+            "pert_type",
+        ]
+        sorted_columns = [
+            col for col in first_columns if col in self._adata.obs.columns
+        ] + [col for col in self._adata.obs.columns if col not in first_columns]
+        # must assign to self._df to ensure .standardize works correctly
+        self._df = self._adata.obs[sorted_columns]
+        self._adata.obs = self._df
         return validated
+
+    def standardize(self, key: str) -> pd.DataFrame:
+        """Standardize the AnnData object."""
+        super().standardize(key)
+        self._adata.obs = self._df
 
     def _validate_dose_column(self) -> bool:
         """Validate the dose column."""
