@@ -55,7 +55,7 @@ Types:
 
 """
 
-__version__ = "1.0a5"
+__version__ = "1.0.0"
 
 from lamindb_setup import _check_instance_setup
 
