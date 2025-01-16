@@ -70,18 +70,26 @@ def __getattr__(name):
 
 if _check_instance_setup():
     del __getattr__  # delete so that imports work out
-    from ._pert_curator import PertCurator
-    from .models import (
-        Biologic,
-        Biosample,
-        CombinationPerturbation,
-        Compound,
-        CompoundPerturbation,
-        Donor,
-        EnvironmentalPerturbation,
-        Experiment,
-        GeneticPerturbation,
-        PerturbationTarget,
-        Techsample,
-        Well,
-    )
+    try:
+      from ._pert_curator import PertCurator
+      from .models import (
+         Biologic,
+         Biosample,
+         CombinationPerturbation,
+         Compound,
+         CompoundPerturbation,
+         Donor,
+         EnvironmentalPerturbation,
+         Experiment,
+         GeneticPerturbation,
+         PerturbationTarget,
+         Techsample,
+         Well,
+      )
+    except RuntimeError as e:
+      if "isn't in an application in INSTALLED_APPS" in str(e):
+         raise RuntimeError(
+               "the 'wetlab' module is missing from this instance.\n"
+               "Please add it via the settings page on laminhub."
+         ) from e
+      raise
