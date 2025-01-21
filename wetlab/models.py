@@ -847,7 +847,7 @@ class Donor(Record, CanCurate, TracksRun, TracksUpdates):
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name/identifier of the donor."""
-    batch: str | None = CharField(max_length=60, default=None, db_index=True)
+    batch: str | None = CharField(max_length=60, default=None, null=True, db_index=True)
     """Batch label for the donor."""
     description: str | None = TextField(null=True, default=None)
     """Description of the donor."""
