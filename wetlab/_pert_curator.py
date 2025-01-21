@@ -240,8 +240,8 @@ class PertCurator(CellxGeneCurate):
             }.items()
             if k in adata.obs.columns
         }
-        if "donor_id" in self.PT_CATEGORICALS:
-            self.PT_CATEGORICALS["donor_id"] = Donor.name
+        # if "donor_id" in self.PT_CATEGORICALS:
+        #     self.PT_CATEGORICALS["donor_id"] = Donor.name
 
     def _setup_sources(self, adata: ad.AnnData, using_key: str):
         """Set up data sources."""
