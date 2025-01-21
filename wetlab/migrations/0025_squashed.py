@@ -10,23 +10,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    replaces = [
-        ("wetlab", "0001_initial_squashed_0012"),
-        ("wetlab", "0013_import_legacy_data"),
-        ("wetlab", "0014_rename_species_biosample_organism"),
-        ("wetlab", "0015_rename_files_biosample_artifacts_and_more"),
-        ("wetlab", "0016_rename_datasets_biosample_collections_and_more"),
-        ("wetlab", "0017_remove_biosample_artifacts"),
-        ("wetlab", "0018_well_created_at_well_created_by_well_updated_at"),
-        ("wetlab", "0018_squashed"),
-        ("wetlab", "0019_alter_treatment_system"),
-        ("wetlab", "0020_treatmenttarget_pathways_treatmenttarget_proteins_and_more"),
-        ("wetlab", "0021_alter_compoundtreatment_duration_unit_and_more"),
-        ("wetlab", "0022_remove_experiment_experiment_type_and_more"),
-        ("wetlab", "0023_compoundtreatment_duration_and_more"),
-        ("wetlab", "0024_compound_chembl_id"),
-        ("wetlab", "0025_alter_artifactbiosample_artifact_and_more"),
-    ]
+    initial = True
 
     dependencies = [
         ("lamindb", "0069_squashed"),
