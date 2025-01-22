@@ -39,7 +39,10 @@ class Migration(migrations.Migration):
         ("wetlab", "0034_lamindbv1_part6"),
     ]
 
-    dependencies = []  # type: ignore
+    dependencies = [
+        ("lamindb", "0081_squashed"),
+        ("bionty", "0048_squashed"),
+    ]
 
     operations = [
         migrations.CreateModel(
