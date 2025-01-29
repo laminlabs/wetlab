@@ -10,8 +10,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("bionty", "0041_squashed"),
-        ("lamindb", "0069_squashed"),
         ("wetlab", "0028_remove_combinationperturbation_compounds_and_more"),
     ]
 
