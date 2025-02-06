@@ -5,5 +5,4 @@
 
 guide/get-started
 guide/pert-registries
-guide/pert-curator
 ```

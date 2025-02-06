@@ -70,7 +70,8 @@ def __getattr__(name):
 
 if _check_instance_setup():
     del __getattr__  # delete so that imports work out
-    from ._pert_curator import PertCurator
+    from lamindb.curators import PertAnnDataCatCurator as PertCurator
+
     from .models import (
         Biologic,
         Biosample,
