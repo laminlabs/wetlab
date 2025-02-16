@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
     ]
 
     dependencies = [
-        ("bionty", "0049_squashed"),
+        ("bionty", "0049_alter_schemacellmarker_cellmarker_and_more"),
     ]
 
     operations = [
