@@ -4,11 +4,12 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "wetlab"
-authors = [{name = "Lamin Labs", email = "laminlabs@gmail.com"}]
+authors = [{name = "Lamin Labs", email = "open-source@lamin.ai"}]
 readme = "README.md"
 dynamic = ["version", "description"]
 dependencies = [
-    "lamindb[bionty]>=1.0.2,<2",
+    "lamindb>=1.1.0,<2",
+    "bionty>=1.1.0,<2",
 ]
 
 [project.urls]
