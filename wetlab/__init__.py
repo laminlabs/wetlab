@@ -11,9 +11,7 @@ Import the package:
 
 Create records:
 
->>> biosample = wl.Biosample(
-...    name="Sample 1",
-... ).save()
+>>> biosample = wl.Biosample(name="Sample 1").save()
 
 Basic registries:
 
@@ -55,7 +53,7 @@ Types:
 
 """
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 from lamindb_setup import _check_instance_setup
 
