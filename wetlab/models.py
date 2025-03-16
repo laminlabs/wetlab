@@ -44,26 +44,18 @@ from lamindb.models import (
 
 from .types import BiologicType, GeneticPerturbationSystem  # noqa
 
-# def _get_related_repr(instance, related_name: str) -> str:
-#     try:
-#         related_manager = getattr(instance, related_name)
-#         if instance.pk is not None and related_manager.exists():
-#             related_count = related_manager.count()
-#             related_repr = "\n".join(f"      {item}" for item in related_manager.all())
-#             return f"  {related_name} ({related_count}):\n{related_repr}"
-#     except (AttributeError, DatabaseError):
-#         return ""
-#     return ""
-
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
     """Models a (chemical) compound such as a drug.
 
-    Examples:
-        >>> compound = wl.Compound(
-        ...    name="Navitoclax",
-        ...    ontology_id="CHEMBL443684"
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        compound = wl.Compound(
+            name="Navitoclax",
+            ontology_id="CHEMBL443684"
+        ).save()
     """
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -76,7 +68,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
     """Internal id, valid only in one DB instance."""
     uid: str = CharField(unique=True, max_length=8, default=bionty_ids.ontology)
     """A universal id (hash of selected field)."""
-    name: str = CharField(max_length=256, db_index=True)
+    name: str = TextField(db_index=True)
     """Name of the compound."""
     ontology_id: str | None = CharField(
         max_length=32, db_index=True, null=True, default=None
@@ -143,11 +135,14 @@ class ArtifactCompound(BasicRecord, LinkORM, TracksRun):
 class Experiment(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a wetlab experiment.
 
-    Example:
-        >>> experiment = wl.Experiment(
-        ...     name="IPF mice vs control mice",
-        ...     description="Analysis of gene expression levels in different cell types of IPF.",
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        experiment = wl.Experiment(
+            name="IPF mice vs control mice",
+            description="Analysis of gene expression levels in different cell types of IPF.",
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -191,12 +186,15 @@ class ArtifactExperiment(BasicRecord, LinkORM, TracksRun):
 class Well(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
-    Example:
-        >>> well = wl.Well(
-        ...    name="Well A1",
-        ...    row="A",
-        ...    column=1,
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        well = wl.Well(
+            name="Well A1",
+            row="A",
+            column=1,
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -239,11 +237,15 @@ class ArtifactWell(BasicRecord, LinkORM, TracksRun):
 class PerturbationTarget(Record, CanCurate, TracksRun, TracksUpdates):
     """Models perturbation targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
-    Examples:
-        >>> gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
-        >>> gene_2 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000005").save()
-        >>> targets = wl.PerturbationTarget(name="TSPAN6_TNMD").save()
-        >>> targets.genes.set([gene_1, gene_2])
+    Example::
+
+        import bionty as bt
+        import wetlab as wl
+
+        gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
+        gene_2 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000005").save()
+        targets = wl.PerturbationTarget(name="TSPAN6_TNMD").save()
+        targets.genes.set([gene_1, gene_2])
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -315,14 +317,17 @@ class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
         off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
 
-    Examples:
-        >>> sicke_cell_perturbation = wl.GeneticPerturbation(
-        ...     system="CRISPR Cas9",
-        ...     name="Hemoglobin Sickle Cell Perturbation",
-        ...     sequence="AGCTGACCGTGA",
-        ...     on_target_score=85,
-        ...     off_target_score=15
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        sicke_cell_perturbation = wl.GeneticPerturbation(
+            system="CRISPR Cas9",
+            name="Hemoglobin Sickle Cell Perturbation",
+            sequence="AGCTGACCGTGA",
+            on_target_score=85,
+            off_target_score=15
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -353,7 +358,7 @@ class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     )
     """The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.."""
     targets: PerturbationTarget = models.ManyToManyField(
-        PerturbationTarget, related_name="genetic_targets"
+        PerturbationTarget, related_name="genetic_perturbations"
     )
     """Targets of the perturbation."""
     artifacts: Artifact = models.ManyToManyField(
@@ -393,11 +398,14 @@ class ArtifactGeneticPerturbation(BasicRecord, LinkORM, TracksRun):
 class Biologic(Record, CanCurate, TracksRun, TracksUpdates):
     """Proteins, peptides, antibodies, enzymes, growth factors, etc.
 
-    Examples:
-        >>> biologic = wl.Biologic(
-        ...    name="IFNG",
-        ...    type="cytokine",
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        biologic = wl.Biologic(
+            name="IFNG",
+            type="cytokine",
+        ).save()
     """
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -426,7 +434,7 @@ class Biologic(Record, CanCurate, TracksRun, TracksUpdates):
     )
     """Proteins associated with this biologic."""
     targets: PerturbationTarget = models.ManyToManyField(
-        PerturbationTarget, related_name="biologic_targets"
+        PerturbationTarget, related_name="biologics"
     )
     """Targets of the perturbation."""
     artifacts: Artifact = models.ManyToManyField(
@@ -474,10 +482,13 @@ class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     Args:
         name: The name of the compound perturbation.
 
-    Examples:
-        >>> aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
-        ...    name="Antibiotic cocktail",
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
+            name="Antibiotic cocktail",
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -498,7 +509,7 @@ class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     duration: timedelta | None = DurationField(null=True, default=None)
     """Duration of the compound perturbation."""
     targets: PerturbationTarget = models.ManyToManyField(
-        PerturbationTarget, related_name="compound_targets"
+        PerturbationTarget, related_name="compound_perturbations"
     )
     """Targets of the perturbation."""
     compound: Compound | None = ForeignKey("Compound", PROTECT, null=True, default=None)
@@ -547,13 +558,16 @@ class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         unit: A unit such as 'degrees celsius'.
         duration: Time duration of how long the perturbation was applied.
 
-    Examples:
-        >>> acid_perturbation = EnvironmentalPerturbation(
-        ...     name='Acid perturbation',
-        ...     ontology_id='EFO:0004416',
-        ...     value=1.5,
-        ...     unit='pH',
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        acid_perturbation = EnvironmentalPerturbation(
+            name='Acid perturbation',
+            ontology_id='EFO:0004416',
+            value=1.5,
+            unit='pH',
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -576,7 +590,7 @@ class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
     duration: timedelta | None = DurationField(null=True, default=None, blank=True)
     """Duration of the environmental perturbation."""
     targets: PerturbationTarget = models.ManyToManyField(
-        PerturbationTarget, related_name="environmental_targets"
+        PerturbationTarget, related_name="environmental_perturbations"
     )
     """Targets of the environmental perturbation."""
     artifacts: Artifact = models.ManyToManyField(
@@ -624,29 +638,32 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         description: A description of the CombinationPerturbation.
         ontology_id: An ontology ID of the CombinationPerturbation.
 
-    Examples:
-        >>> sc_perturbation = wl.GeneticPerturbation(
-        ...     system="CRISPR Cas9",
-        ...     name="Hemoglobin Sickle Cell perturbation",
-        ...     sequence="AGCTGACCGTGA",
-        ... ).save()
+    Example::
 
-        >>> cftr_perturbation = wl.GeneticPerturbation(
-        ...     system="CRISPR Cas9",
-        ...     name="Cystic Fibrosis CFTR Correction",
-        ...     sequence="TTGGTGGTGAACT",
-        ... ).save()
+        import wetlab as wl
 
-        >>> aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
-        ...    name="Aspirin",
-        ...    pubchem_id=2244
-        ... ).save()
+        sc_perturbation = wl.GeneticPerturbation(
+            system="CRISPR Cas9",
+            name="Hemoglobin Sickle Cell perturbation",
+            sequence="AGCTGACCGTGA",
+        ).save()
 
-        >>> comb_perturbation = wl.CombinationPerturbation(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
-        ...    description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
-        ... ).save()
-        >>> comb_perturbation.genetics.set([sc_perturbation, cftr_perturbation])
-        >>> comb_perturbation.compounds.add(aspirin_perturbation)
+        cftr_perturbation = wl.GeneticPerturbation(
+            system="CRISPR Cas9",
+            name="Cystic Fibrosis CFTR Correction",
+            sequence="TTGGTGGTGAACT",
+        ).save()
+
+        aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
+            name="Aspirin",
+            pubchem_id=2244
+        ).save()
+
+        comb_perturbation = wl.CombinationPerturbation(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
+            description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
+        ).save()
+        comb_perturbation.genetics.set([sc_perturbation, cftr_perturbation])
+        comb_perturbation.compounds.add(aspirin_perturbation)
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -723,11 +740,14 @@ class ArtifactCombinationPerturbation(BasicRecord, LinkORM, TracksRun):
 class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
-    Examples:
-        >>> biosample = wl.Biosample(
-        ...     name="control",
-        ...     batch="ctrl_1"
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        biosample = wl.Biosample(
+            name="control",
+            batch="ctrl_1"
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -779,11 +799,14 @@ class ArtifactBiosample(BasicRecord, LinkORM, TracksRun):
 class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
-    Examples:
-        >>> techsample = wl.Techsample(
-        ...     name="tech_1",
-        ...     batch="replicates_3"
-        ... ).save()
+    Example::
+
+        import wetlab as wl
+
+        techsample = wl.Techsample(
+            name="tech_1",
+            batch="replicates_3"
+        ).save()
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
@@ -829,13 +852,16 @@ class ArtifactTechsample(BasicRecord, LinkORM, TracksRun):
 class Donor(Record, CanCurate, TracksRun, TracksUpdates):
     """Models a donor that provides biospecimens for research.
 
-    Examples:
-        >>> donor = wl.Donor(
-        ...     name="donor_001",
-        ...     age=45,
-        ...     sex="M"
-        ... ).save()
-        >>> donor.diseases.add(disease)
+    Example::
+
+        import wetlab as wl
+
+        donor = wl.Donor(
+            name="donor_001",
+            age=45,
+            sex="M"
+        ).save()
+        donor.diseases.add(disease)
     """
 
     class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
