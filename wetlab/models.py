@@ -35,9 +35,9 @@ from lamindb.models import (
     Artifact,
     BasicRecord,
     CanCurate,
+    DBRecord,
     Feature,
     LinkORM,
-    Record,
     TracksRun,
     TracksUpdates,
 )
@@ -132,7 +132,7 @@ class ArtifactCompound(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Experiment(Record, CanCurate, TracksRun, TracksUpdates):
+class Experiment(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a wetlab experiment.
 
     Example::
@@ -145,7 +145,7 @@ class Experiment(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -183,7 +183,7 @@ class ArtifactExperiment(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Well(Record, CanCurate, TracksRun, TracksUpdates):
+class Well(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example::
@@ -197,7 +197,7 @@ class Well(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         unique_together = (("row", "column"),)
         abstract = False
 
@@ -234,7 +234,7 @@ class ArtifactWell(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class PerturbationTarget(Record, CanCurate, TracksRun, TracksUpdates):
+class PerturbationTarget(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models perturbation targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Example::
@@ -248,7 +248,7 @@ class PerturbationTarget(Record, CanCurate, TracksRun, TracksUpdates):
         targets.genes.set([gene_1, gene_2])
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -307,7 +307,7 @@ class ArtifactPerturbationTarget(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+class GeneticPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models genetic perturbations such as CRISPR.
 
     Args:
@@ -330,7 +330,7 @@ class GeneticPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -395,7 +395,7 @@ class ArtifactGeneticPerturbation(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biologic(Record, CanCurate, TracksRun, TracksUpdates):
+class Biologic(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Proteins, peptides, antibodies, enzymes, growth factors, etc.
 
     Example::
@@ -476,7 +476,7 @@ class ArtifactBiologic(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+class CompoundPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models compound perturbations such as drugs.
 
     Args:
@@ -491,7 +491,7 @@ class CompoundPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -548,7 +548,7 @@ class ArtifactCompoundPerturbation(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+class EnvironmentalPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models environmental perturbations such as heat, acid, or smoke perturbations.
 
     Args:
@@ -570,7 +570,7 @@ class EnvironmentalPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -627,7 +627,7 @@ class ArtifactEnvironmentalPerturbation(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
+class CombinationPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Combination of several perturbations.
 
     CombinationPerturbations model several perturbations jointly such as one or more :class:`wetlab.GeneticPerturbation`,
@@ -666,7 +666,7 @@ class CombinationPerturbation(Record, CanCurate, TracksRun, TracksUpdates):
         comb_perturbation.compounds.add(aspirin_perturbation)
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -737,7 +737,7 @@ class ArtifactCombinationPerturbation(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
+class Biosample(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Example::
@@ -750,7 +750,7 @@ class Biosample(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -796,7 +796,7 @@ class ArtifactBiosample(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
+class Techsample(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Example::
@@ -809,7 +809,7 @@ class Techsample(Record, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -849,7 +849,7 @@ class ArtifactTechsample(BasicRecord, LinkORM, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Donor(Record, CanCurate, TracksRun, TracksUpdates):
+class Donor(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a donor that provides biospecimens for research.
 
     Example::
@@ -864,7 +864,7 @@ class Donor(Record, CanCurate, TracksRun, TracksUpdates):
         donor.diseases.add(disease)
     """
 
-    class Meta(Record.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
