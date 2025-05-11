@@ -79,7 +79,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="Biologic",

@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactCompound",
@@ -149,7 +149,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactCompoundTreatment",
@@ -216,7 +216,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactEnvironmentalTreatment",
@@ -283,7 +283,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactExperiment",
@@ -350,7 +350,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactGeneticTreatment",
@@ -417,7 +417,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactTreatmentTarget",
@@ -484,7 +484,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="ArtifactWell",
@@ -551,7 +551,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="Biosample",
@@ -743,7 +743,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="CombinationTreatment",
@@ -1532,7 +1532,7 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
-            bases=(lamindb.models.LinkORM, models.Model),
+            bases=(lamindb.models.IsLink, models.Model),
         ),
         migrations.CreateModel(
             name="TreatmentTarget",
