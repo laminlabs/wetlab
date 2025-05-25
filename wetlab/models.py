@@ -33,11 +33,11 @@ from lamindb.base.fields import (
 )
 from lamindb.models import (
     Artifact,
-    BaseDBRecord,
+    BaseSQLRecord,
     CanCurate,
-    DBRecord,
     Feature,
     IsLink,
+    SQLRecord,
     TracksRun,
     TracksUpdates,
 )
@@ -121,7 +121,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         super().__init__(*args, **kwargs)
 
 
-class ArtifactCompound(BaseDBRecord, IsLink, TracksRun):
+class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
     compound: Compound = ForeignKey(Compound, PROTECT, related_name="links_artifact")
@@ -132,7 +132,7 @@ class ArtifactCompound(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Experiment(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class Experiment(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a wetlab experiment.
 
     Example::
@@ -145,7 +145,7 @@ class Experiment(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -166,7 +166,7 @@ class Experiment(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the experiment."""
 
 
-class ArtifactExperiment(BaseDBRecord, IsLink, TracksRun):
+class ArtifactExperiment(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_experiment")
     experiment: Experiment = ForeignKey(
@@ -183,7 +183,7 @@ class ArtifactExperiment(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Well(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class Well(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a well in a wetlab :class:`wetlab.Experiment` that is part of a microplate.
 
     Example::
@@ -197,7 +197,7 @@ class Well(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         unique_together = (("row", "column"),)
         abstract = False
 
@@ -219,7 +219,7 @@ class Well(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the well."""
 
 
-class ArtifactWell(BaseDBRecord, IsLink, TracksRun):
+class ArtifactWell(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_well")
     well: Well = ForeignKey(Well, PROTECT, related_name="links_artifact")
@@ -234,7 +234,7 @@ class ArtifactWell(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class PerturbationTarget(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models perturbation targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Example::
@@ -248,7 +248,7 @@ class PerturbationTarget(DBRecord, CanCurate, TracksRun, TracksUpdates):
         targets.genes.set([gene_1, gene_2])
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -288,7 +288,7 @@ class PerturbationTarget(DBRecord, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactPerturbationTarget(BaseDBRecord, IsLink, TracksRun):
+class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_perturbation_target"
@@ -307,7 +307,7 @@ class ArtifactPerturbationTarget(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class GeneticPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models genetic perturbations such as CRISPR.
 
     Args:
@@ -330,7 +330,7 @@ class GeneticPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -376,7 +376,7 @@ class GeneticPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactGeneticPerturbation(BaseDBRecord, IsLink, TracksRun):
+class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_genetic_perturbation"
@@ -395,7 +395,7 @@ class ArtifactGeneticPerturbation(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biologic(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class Biologic(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Proteins, peptides, antibodies, enzymes, growth factors, etc.
 
     Example::
@@ -465,7 +465,7 @@ class Biologic(DBRecord, CanCurate, TracksRun, TracksUpdates):
         super().__init__(*args, **kwargs)
 
 
-class ArtifactBiologic(BaseDBRecord, IsLink, TracksRun):
+class ArtifactBiologic(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biologic")
     biologic: Biologic = ForeignKey(Biologic, PROTECT, related_name="links_artifact")
@@ -476,7 +476,7 @@ class ArtifactBiologic(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CompoundPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models compound perturbations such as drugs.
 
     Args:
@@ -491,7 +491,7 @@ class CompoundPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -529,7 +529,7 @@ class CompoundPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactCompoundPerturbation(BaseDBRecord, IsLink, TracksRun):
+class ArtifactCompoundPerturbation(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_compound_perturbation"
@@ -548,7 +548,7 @@ class ArtifactCompoundPerturbation(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class EnvironmentalPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models environmental perturbations such as heat, acid, or smoke perturbations.
 
     Args:
@@ -570,7 +570,7 @@ class EnvironmentalPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -608,7 +608,7 @@ class EnvironmentalPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
     #     return "\n".join(filter(None, result))
 
 
-class ArtifactEnvironmentalPerturbation(BaseDBRecord, IsLink, TracksRun):
+class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_environmental_perturbation"
@@ -627,7 +627,7 @@ class ArtifactEnvironmentalPerturbation(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class CombinationPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Combination of several perturbations.
 
     CombinationPerturbations model several perturbations jointly such as one or more :class:`wetlab.GeneticPerturbation`,
@@ -666,7 +666,7 @@ class CombinationPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
         comb_perturbation.compounds.add(aspirin_perturbation)
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -718,7 +718,7 @@ class CombinationPerturbation(DBRecord, CanCurate, TracksRun, TracksUpdates):
         return self.genetic.all().union(self.compound.all(), self.environmental.all())
 
 
-class ArtifactCombinationPerturbation(BaseDBRecord, IsLink, TracksRun):
+class ArtifactCombinationPerturbation(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_combination_perturbation"
@@ -737,7 +737,7 @@ class ArtifactCombinationPerturbation(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Biosample(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class Biosample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a specimen derived from an organism, such as tissue, blood, or cells.
 
     Example::
@@ -750,7 +750,7 @@ class Biosample(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -781,7 +781,7 @@ class Biosample(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the biosample."""
 
 
-class ArtifactBiosample(BaseDBRecord, IsLink, TracksRun):
+class ArtifactBiosample(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biosample")
     biosample: Biosample = ForeignKey(Biosample, PROTECT, related_name="links_artifact")
@@ -796,7 +796,7 @@ class ArtifactBiosample(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Techsample(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class Techsample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models technical samples which represent a processed or derived sample in a lab created from raw biological materials.
 
     Example::
@@ -809,7 +809,7 @@ class Techsample(DBRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -832,7 +832,7 @@ class Techsample(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the techsample."""
 
 
-class ArtifactTechsample(BaseDBRecord, IsLink, TracksRun):
+class ArtifactTechsample(BaseSQLRecord, IsLink, TracksRun):
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_techsample")
     techsample: Techsample = ForeignKey(
@@ -849,7 +849,7 @@ class ArtifactTechsample(BaseDBRecord, IsLink, TracksRun):
     feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
-class Donor(DBRecord, CanCurate, TracksRun, TracksUpdates):
+class Donor(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Models a donor that provides biospecimens for research.
 
     Example::
@@ -864,7 +864,7 @@ class Donor(DBRecord, CanCurate, TracksRun, TracksUpdates):
         donor.diseases.add(disease)
     """
 
-    class Meta(DBRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -899,7 +899,7 @@ class Donor(DBRecord, CanCurate, TracksRun, TracksUpdates):
     """Artifacts linked to the donor."""
 
 
-class ArtifactDonor(BaseDBRecord, IsLink, TracksRun):
+class ArtifactDonor(BaseSQLRecord, IsLink, TracksRun):
     """Link table between Artifacts and Donors."""
 
     id: int = models.BigAutoField(primary_key=True)
