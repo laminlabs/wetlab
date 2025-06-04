@@ -10,7 +10,6 @@ from django.db.models import CASCADE, PROTECT
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lamindb", "0069_squashed"),
         ("wetlab", "0026_alter_biosample_artifacts_alter_techsample_artifacts"),
     ]
 
