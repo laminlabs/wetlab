@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0034_squashed"),
+        ("wetlab", "0034_lamindbv1_part6"),
     ]
 
     operations = [
