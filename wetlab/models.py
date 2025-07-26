@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import timedelta  # noqa
 from typing import overload
 
-from bionty import ids as bionty_ids
+from bionty import uids as bionty_ids
 from bionty.models import (
     BioRecord,
     CellLine,
@@ -66,7 +66,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: str = CharField(unique=True, max_length=8, default=bionty_ids.ontology)
+    uid: str = CharField(
+        unique=True, max_length=14, db_index=True, default=bionty_ids.ontology
+    )
     """A universal id (hash of selected field)."""
     name: str = TextField(db_index=True)
     """Name of the compound."""
@@ -82,9 +84,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         max_length=32, db_index=True, unique=True, null=True, default=None
     )
     """A unique abbreviation of compound."""
-    synonyms: str | None = TextField(null=True, default=None)
+    synonyms: str | None = TextField(null=True, default=None, db_index=True)
     """Bar-separated (|) synonyms that correspond to this compound."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the compound."""
     parents: Compound = models.ManyToManyField(
         "self", symmetrical=False, related_name="children"
@@ -150,11 +152,11 @@ class Experiment(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: str = CharField(unique=True, max_length=8, default=ids.base62_8)
+    uid: str = CharField(unique=True, max_length=8, default=ids.base62_8, db_index=True)
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name of the experiment."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the experiment."""
     date: DateField | None = DateField(
         default=None, null=True, db_index=True, blank=True
@@ -203,7 +205,7 @@ class Well(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=4, default=ids.base62_4)
+    uid: int = CharField(unique=True, max_length=4, default=ids.base62_4, db_index=True)
     """Universal id, valid across DB instances."""
     name: str | None = CharField(
         max_length=32, default=None, null=True, unique=True, db_index=True
@@ -253,11 +255,11 @@ class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=8, default=ids.base62_8)
+    uid: int = CharField(unique=True, max_length=8, default=ids.base62_8, db_index=True)
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=60, default=None, db_index=True)
     """Name of the perturbation target."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the perturbation target."""
     genes: Gene = models.ManyToManyField(
         "bionty.Gene", related_name="perturbation_targets"
@@ -335,7 +337,9 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the Genetic perturbation."""
@@ -345,7 +349,7 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         db_index=True,
     )
     """:class:`~wetlab.GeneticPerturbationSystem` used for the genetic perturbation."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the genetic perturbation."""
     sequence: str | None = models.TextField(null=True, default=None, db_index=True)
     """Sequence of the perturbation."""
@@ -415,7 +419,9 @@ class Biologic(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: str = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: str = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """A universal id (hash of selected field)."""
     name: str = CharField(unique=True, db_index=True)
     """Name of the compound."""
@@ -425,9 +431,9 @@ class Biologic(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         max_length=32, db_index=True, unique=True, null=True, default=None
     )
     """A unique abbreviation."""
-    synonyms: str | None = TextField(null=True, default=None)
+    synonyms: str | None = TextField(null=True, default=None, db_index=True)
     """Bar-separated (|) synonyms that correspond to this compound."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the compound."""
     proteins: Protein = models.ManyToManyField(
         "bionty.Protein", related_name="biologics"
@@ -496,11 +502,13 @@ class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the compound perturbation."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the compound perturbation."""
     concentration: float = FloatField(null=True, default=None, blank=True)
     """Concentration of the compound."""
@@ -575,13 +583,15 @@ class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str = CharField(max_length=255, default=None, db_index=True)
     """Name of the environmental perturbation."""
     ontology_id = CharField(max_length=32, db_index=True, null=True, default=None)
     """Ontology ID (EFO) of the environmental perturbation."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the environmental perturbation."""
     value: float | None = FloatField(null=True, default=None, blank=True)
     """The value of the environmental perturbation such as a temperature."""
@@ -671,11 +681,13 @@ class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name of the perturbation."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the combination perturbation."""
     ontology_id: str | None = CharField(
         max_length=32, db_index=True, null=True, default=None
@@ -755,13 +767,15 @@ class Biosample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True, null=True)
     """Name of the biosample."""
     batch: str | None = CharField(max_length=60, default=None, null=True, db_index=True)
     """Batch label of the biosample."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the biosample."""
     organism: Organism | None = ForeignKey(
         Organism, PROTECT, null=True, related_name="biosamples"
@@ -814,13 +828,15 @@ class Techsample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name of the techsample."""
     batch: str | None = CharField(max_length=60, default=None, db_index=True)
     """Batch label of the techsample."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the techsample."""
     biosamples: Biosample = models.ManyToManyField(
         Biosample, related_name="techsamples"
@@ -869,13 +885,15 @@ class Donor(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=12, default=ids.base62_12)
+    uid: int = CharField(
+        unique=True, max_length=12, default=ids.base62_12, db_index=True
+    )
     """Universal id, valid across DB instances."""
     name: str | None = CharField(max_length=255, default=None, db_index=True)
     """Name/identifier of the donor."""
     batch: str | None = CharField(max_length=60, default=None, db_index=True)
     """Batch label for the donor."""
-    description: str | None = TextField(null=True, default=None)
+    description: str | None = TextField(null=True, default=None, db_index=True)
     """Description of the donor."""
     age: int | None = IntegerField(null=True, db_index=True, default=None)
     """Age of the donor in years."""
