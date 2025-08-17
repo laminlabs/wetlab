@@ -13,7 +13,10 @@ try:
 except ImportError:
     RDKIT_AVAILABLE = False
     import warnings
-    warnings.warn("RDKit not available. SMILES normalization will be skipped.")
+    warnings.warn(
+        "RDKit not available. SMILES normalization will be skipped.",
+        stacklevel=2,
+    )
 
 from bionty import uids as bionty_ids
 from bionty.models import (
@@ -59,62 +62,6 @@ import logging
 
 # It's good practice to use logging for warnings/errors in a library function
 log = logging.getLogger(__name__)
-
-def standardize_smiles(smiles: str) -> str | None:
-    """
-    Generates a standardized, canonical SMILES string from an input SMILES.
-
-    This function follows the best-practice standardization workflow recommended by
-    Greg Landrum, the creator of RDKit. The steps are:
-    1. Parse the SMILES string.
-    2. Use rdMolStandardize.Cleanup() to apply a series of standard cleanups
-       (e.g., remove Hs, disconnect metal atoms, normalize, reionize).
-    3. Use rdMolStandardize.FragmentParent() to select the largest covalent
-       fragment, effectively removing salts and solvents.
-    4. Use rdMolStandardize.Uncharger() to neutralize the molecule.
-    5. Use rdMolStandardize.TautomerEnumerator().Canonicalize() to generate the
-       canonical tautomer.
-    6. Convert the final molecule object back to a canonical SMILES string.
-
-    Args:
-        smiles: The input SMILES string to standardize.
-
-    Returns:
-        The canonical, standardized SMILES string, or None if the input
-        SMILES is invalid.
-    """
-    try:
-        # Step 1: Parse SMILES
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is None:
-            log.warning(f"Could not parse SMILES: {smiles}")
-            return None
-
-        # Step 2: General cleanup
-        # removeHs, disconnect metal atoms, normalize the molecule, reionize the molecule
-        clean_mol = rdMolStandardize.Cleanup(mol)
-
-        # Step 3: Get the parent fragment
-        parent_mol = rdMolStandardize.FragmentParent(clean_mol)
-
-        # Step 4: Neutralize
-        # Note: The Uncharger class must be instantiated.
-        uncharger = rdMolStandardize.Uncharger()
-        uncharged_mol = uncharger.uncharge(parent_mol)
-
-        # Step 5: Generate canonical tautomer
-        # Note: The TautomerEnumerator class must be instantiated.
-        te = rdMolStandardize.TautomerEnumerator()
-        canonical_tautomer = te.Canonicalize(uncharged_mol)
-
-        # Step 6: Convert back to canonical SMILES string for output
-        canonical_smiles = Chem.MolToSmiles(canonical_tautomer, canonical=True)
-
-        return canonical_smiles
-
-    except Exception as e:
-        log.error(f"Failed to standardize SMILES '{smiles}': {e}")
-        return None
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
     """Models a (chemical) compound such as a drug.
@@ -205,7 +152,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
     ):
         smiles = kwargs.get('smiles')
         super().__init__(*args, **kwargs)
-        if smiles and not self._state.adding:  # Only process for new instances
+        if smiles and self._state.adding:  # Only process for new instances
             self._process_smiles(smiles)
 
     def _process_smiles(self, smiles_string: str) -> None:
@@ -222,7 +169,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
             # Store the original SMILES
             self.smiles = smiles_string
             # Normalize and store canonical SMILES
-            self.canonical_smiles = standardize_smiles(smiles_string)
+            self.canonical_smiles = Compound.standardize_smiles(smiles_string)
             self.inchikey = Chem.MolToInchiKey(Chem.MolFromSmiles(self.canonical_smiles))
             self.molweight = Descriptors.MolWt(Chem.MolFromSmiles(self.canonical_smiles))
             self.molformula = CalcMolFormula(Chem.MolFromSmiles(self.canonical_smiles))
@@ -252,6 +199,63 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         """
         self._process_smiles(new_smiles)
         self.save()
+
+    @staticmethod
+    def standardize_smiles(smiles: str) -> str | None:
+        """
+        Generates a standardized, canonical SMILES string from an input SMILES.
+
+        This function follows the best-practice standardization workflow recommended by
+        Greg Landrum, the creator of RDKit. The steps are:
+        1. Parse the SMILES string.
+        2. Use rdMolStandardize.Cleanup() to apply a series of standard cleanups
+        (e.g., remove Hs, disconnect metal atoms, normalize, reionize).
+        3. Use rdMolStandardize.FragmentParent() to select the largest covalent
+        fragment, effectively removing salts and solvents.
+        4. Use rdMolStandardize.Uncharger() to neutralize the molecule.
+        5. Use rdMolStandardize.TautomerEnumerator().Canonicalize() to generate the
+        canonical tautomer.
+        6. Convert the final molecule object back to a canonical SMILES string.
+
+        Args:
+            smiles: The input SMILES string to standardize.
+
+        Returns:
+            The canonical, standardized SMILES string, or None if the input
+            SMILES is invalid.
+        """
+        try:
+            # Step 1: Parse SMILES
+            mol = Chem.MolFromSmiles(smiles)
+            if mol is None:
+                log.warning(f"Could not parse SMILES: {smiles}")
+                return None
+
+            # Step 2: General cleanup
+            # removeHs, disconnect metal atoms, normalize the molecule, reionize the molecule
+            clean_mol = rdMolStandardize.Cleanup(mol)
+
+            # Step 3: Get the parent fragment
+            parent_mol = rdMolStandardize.FragmentParent(clean_mol)
+
+            # Step 4: Neutralize
+            # Note: The Uncharger class must be instantiated.
+            uncharger = rdMolStandardize.Uncharger()
+            uncharged_mol = uncharger.uncharge(parent_mol)
+
+            # Step 5: Generate canonical tautomer
+            # Note: The TautomerEnumerator class must be instantiated.
+            te = rdMolStandardize.TautomerEnumerator()
+            canonical_tautomer = te.Canonicalize(uncharged_mol)
+
+            # Step 6: Convert back to canonical SMILES string for output
+            canonical_smiles = Chem.MolToSmiles(canonical_tautomer, canonical=True)
+
+            return canonical_smiles
+
+        except Exception as e:
+            log.error(f"Failed to standardize SMILES '{smiles}': {e}")
+            return None
 
 
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
