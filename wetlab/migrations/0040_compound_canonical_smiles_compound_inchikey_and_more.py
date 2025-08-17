@@ -5,35 +5,44 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wetlab', '0039_squashed'),
+        ("wetlab", "0039_squashed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='compound',
-            name='canonical_smiles',
-            field=lamindb.base.fields.TextField(blank=True, db_index=True, default=None, null=True),
+            model_name="compound",
+            name="canonical_smiles",
+            field=lamindb.base.fields.TextField(
+                blank=True, db_index=True, default=None, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='compound',
-            name='inchikey',
-            field=lamindb.base.fields.TextField(blank=True, db_index=True, default=None, null=True),
+            model_name="compound",
+            name="inchikey",
+            field=lamindb.base.fields.TextField(
+                blank=True, db_index=True, default=None, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='compound',
-            name='molformula',
-            field=lamindb.base.fields.TextField(blank=True, db_index=True, default=None, null=True),
+            model_name="compound",
+            name="molformula",
+            field=lamindb.base.fields.TextField(
+                blank=True, db_index=True, default=None, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='compound',
-            name='molweight',
-            field=lamindb.base.fields.FloatField(blank=True, db_index=True, default=None, null=True),
+            model_name="compound",
+            name="molweight",
+            field=lamindb.base.fields.FloatField(
+                blank=True, db_index=True, default=None, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='compound',
-            name='smiles',
-            field=lamindb.base.fields.TextField(blank=True, db_index=True, default=None, null=True),
+            model_name="compound",
+            name="smiles",
+            field=lamindb.base.fields.TextField(
+                blank=True, db_index=True, default=None, null=True
+            ),
         ),
     ]

@@ -6,7 +6,7 @@ def test_smiles_normalization_on_create():
     """
     On create: sodium acetate 'CC(=O)[O-].[Na+]' should normalize to acetic acid
     without the counterion, have a valid InChIKey, MolWt, and MolFormula.
-    """ 
+    """
 
     # Skip cleanly if RDKit isn't available in the test env
     if not getattr(wl.models, "RDKIT_AVAILABLE", False):
@@ -26,7 +26,7 @@ def test_smiles_normalization_on_create():
     assert c.inchikey is not None and len(c.inchikey) > 0
     assert c.molweight is not None and c.molweight > 0
     # Acetic acid molecular formula
-    assert c.molformula in {"C2H4O2", "C2H4O2"}  # explicit, but keeps it readable
+    assert c.molformula in {"C2H4O2"}  # explicit, but keeps it readable
 
 
 def test_smiles_normalization_on_update():

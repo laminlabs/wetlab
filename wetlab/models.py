@@ -2,21 +2,26 @@ from __future__ import annotations
 
 from datetime import timedelta  # noqa
 from typing import overload
+
 try:
     from rdkit import Chem, rdBase
     from rdkit.Chem import Descriptors
-    from rdkit.Chem.rdMolDescriptors import CalcMolFormula
     from rdkit.Chem.MolStandardize import rdMolStandardize
-    rdBase.DisableLog('rdApp.info')
-    rdBase.DisableLog('rdApp.warning')
+    from rdkit.Chem.rdMolDescriptors import CalcMolFormula
+
+    rdBase.DisableLog("rdApp.info")
+    rdBase.DisableLog("rdApp.warning")
     RDKIT_AVAILABLE = True
 except ImportError:
     RDKIT_AVAILABLE = False
     import warnings
+
     warnings.warn(
         "RDKit not available. SMILES normalization will be skipped.",
         stacklevel=2,
     )
+
+import logging
 
 from bionty import uids as bionty_ids
 from bionty.models import (
@@ -58,10 +63,10 @@ from lamindb.models import (
 )
 
 from .types import BiologicType, GeneticPerturbationSystem  # noqa
-import logging
 
 # It's good practice to use logging for warnings/errors in a library function
 log = logging.getLogger(__name__)
+
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
     """Models a (chemical) compound such as a drug.
@@ -136,7 +141,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         description: str | None,
         parents: list[Compound],
         source: Source | None,
-        smiles: str | None = None
+        smiles: str | None = None,
     ): ...
 
     @overload
@@ -150,15 +155,14 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         *args,
         **kwargs,
     ):
-        smiles = kwargs.get('smiles')
+        smiles = kwargs.get("smiles")
         super().__init__(*args, **kwargs)
         if smiles and self._state.adding:  # Only process for new instances
             self._process_smiles(smiles)
 
     def _process_smiles(self, smiles_string: str) -> None:
-        """
-        Process and normalize SMILES string.
-        
+        """Process and normalize SMILES string.
+
         Args:
             smiles_string: Raw SMILES string to process
         """
@@ -170,30 +174,35 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
             self.smiles = smiles_string
             # Normalize and store canonical SMILES
             self.canonical_smiles = Compound.standardize_smiles(smiles_string)
-            self.inchikey = Chem.MolToInchiKey(Chem.MolFromSmiles(self.canonical_smiles))
-            self.molweight = Descriptors.MolWt(Chem.MolFromSmiles(self.canonical_smiles))
+            self.inchikey = Chem.MolToInchiKey(
+                Chem.MolFromSmiles(self.canonical_smiles)
+            )
+            self.molweight = Descriptors.MolWt(
+                Chem.MolFromSmiles(self.canonical_smiles)
+            )
             self.molformula = CalcMolFormula(Chem.MolFromSmiles(self.canonical_smiles))
-            
+
         except ValueError as e:
             self.smiles = smiles_string
             self.canonical_smiles = None
             self.inchikey = None
             self.molweight = None
             self.molformula = None
-            log.warning(f"Could not normalize SMILES for compound '{self.name}': {str(e)}")
+            log.warning(
+                f"Could not normalize SMILES for compound '{self.name}': {str(e)}"
+            )
 
     def save(self, *args, **kwargs):
         """Override save to ensure SMILES processing happens before database save."""
         # If SMILES was set but not processed yet, process it now
         if self.smiles and not self.canonical_smiles:
             self._process_smiles(self.smiles)
-        
+
         super().save(*args, **kwargs)
 
     def update_smiles(self, new_smiles: str) -> None:
-        """
-        Update the SMILES string and reprocess normalization.
-        
+        """Update the SMILES string and reprocess normalization.
+
         Args:
             new_smiles: New SMILES string to set
         """
@@ -202,8 +211,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
     @staticmethod
     def standardize_smiles(smiles: str) -> str | None:
-        """
-        Generates a standardized, canonical SMILES string from an input SMILES.
+        """Generates a standardized, canonical SMILES string from an input SMILES.
 
         This function follows the best-practice standardization workflow recommended by
         Greg Landrum, the creator of RDKit. The steps are:
