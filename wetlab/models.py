@@ -3,6 +3,26 @@ from __future__ import annotations
 from datetime import timedelta  # noqa
 from typing import overload
 
+try:
+    from rdkit import Chem, rdBase
+    from rdkit.Chem import Descriptors
+    from rdkit.Chem.MolStandardize import rdMolStandardize
+    from rdkit.Chem.rdMolDescriptors import CalcMolFormula
+
+    rdBase.DisableLog("rdApp.info")
+    rdBase.DisableLog("rdApp.warning")
+    RDKIT_AVAILABLE = True
+except ImportError:
+    RDKIT_AVAILABLE = False
+    import warnings
+
+    warnings.warn(
+        "RDKit not available. SMILES normalization will be skipped.",
+        stacklevel=2,
+    )
+
+import logging
+
 from bionty import uids as bionty_ids
 from bionty.models import (
     BioRecord,
@@ -44,6 +64,9 @@ from lamindb.models import (
 
 from .types import BiologicType, GeneticPerturbationSystem  # noqa
 
+# It's good practice to use logging for warnings/errors in a library function
+log = logging.getLogger(__name__)
+
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
     """Models a (chemical) compound such as a drug.
@@ -54,7 +77,8 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
         compound = wl.Compound(
             name="Navitoclax",
-            ontology_id="CHEMBL443684"
+            ontology_id="CHEMBL443684",
+            smiles="[H][C@@](CCN1CCOCC1)(CSC1=CC=CC=C1)NC1=C(C=C(C=C1)S(=O)(=O)NC(=O)C1=CC=C(C=C1)N1CCN(CC2=C(CCC(C)(C)C2)C2=CC=C(Cl)C=C2)CC1)S(=O)(=O)C(F)(F)F"
         ).save()
     """
 
@@ -80,6 +104,16 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         max_length=32, db_index=True, null=True, default=None
     )
     """Chembl ontology ID of the compound"""
+    smiles: str | None = TextField(null=True, default=None, db_index=True)
+    """Raw SMILES string as provided by user."""
+    canonical_smiles: str | None = TextField(null=True, default=None, db_index=True)
+    """Normalized and standardized canonical SMILES string."""
+    inchikey: str | None = TextField(null=True, default=None, db_index=True)
+    """InChIKey of the compound from the canonical SMILES."""
+    molweight: float | None = FloatField(null=True, default=None, db_index=True)
+    """MolWeight of the compound from the canonical SMILES."""
+    molformula: str | None = TextField(null=True, default=None, db_index=True)
+    """MolFormula of the compound from the canonical SMILES."""
     abbr: str | None = CharField(
         max_length=32, db_index=True, unique=True, null=True, default=None
     )
@@ -107,6 +141,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         description: str | None,
         parents: list[Compound],
         source: Source | None,
+        smiles: str | None = None,
     ): ...
 
     @overload
@@ -120,7 +155,115 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         *args,
         **kwargs,
     ):
+        smiles = kwargs.get("smiles")
         super().__init__(*args, **kwargs)
+        if smiles and self._state.adding:  # Only process for new instances
+            self._process_smiles(smiles)
+
+    def _process_smiles(self, smiles_string: str) -> None:
+        """Process and normalize SMILES string.
+
+        Args:
+            smiles_string: Raw SMILES string to process
+        """
+        if not RDKIT_AVAILABLE or not smiles_string:
+            log.warning("RDKit is not available. SMILES normalization will be skipped.")
+            return None
+        try:
+            # Store the original SMILES
+            self.smiles = smiles_string
+            # Normalize and store canonical SMILES
+            self.canonical_smiles = Compound.standardize_smiles(smiles_string)
+            self.inchikey = Chem.MolToInchiKey(
+                Chem.MolFromSmiles(self.canonical_smiles)
+            )
+            self.molweight = Descriptors.MolWt(
+                Chem.MolFromSmiles(self.canonical_smiles)
+            )
+            self.molformula = CalcMolFormula(Chem.MolFromSmiles(self.canonical_smiles))
+
+        except ValueError as e:
+            self.smiles = smiles_string
+            self.canonical_smiles = None
+            self.inchikey = None
+            self.molweight = None
+            self.molformula = None
+            log.warning(
+                f"Could not normalize SMILES for compound '{self.name}': {str(e)}"
+            )
+
+    def save(self, *args, **kwargs):
+        """Override save to ensure SMILES processing happens before database save."""
+        # If SMILES was set but not processed yet, process it now
+        if self.smiles and not self.canonical_smiles:
+            self._process_smiles(self.smiles)
+
+        super().save(*args, **kwargs)
+
+    def update_smiles(self, new_smiles: str) -> None:
+        """Update the SMILES string and reprocess normalization.
+
+        Args:
+            new_smiles: New SMILES string to set
+        """
+        self._process_smiles(new_smiles)
+        self.save()
+
+    @staticmethod
+    def standardize_smiles(smiles: str) -> str | None:
+        """Generates a standardized, canonical SMILES string from an input SMILES.
+
+        This function follows the best-practice standardization workflow recommended by
+        Greg Landrum, the creator of RDKit. The steps are:
+        1. Parse the SMILES string.
+        2. Use rdMolStandardize.Cleanup() to apply a series of standard cleanups
+        (e.g., remove Hs, disconnect metal atoms, normalize, reionize).
+        3. Use rdMolStandardize.FragmentParent() to select the largest covalent
+        fragment, effectively removing salts and solvents.
+        4. Use rdMolStandardize.Uncharger() to neutralize the molecule.
+        5. Use rdMolStandardize.TautomerEnumerator().Canonicalize() to generate the
+        canonical tautomer.
+        6. Convert the final molecule object back to a canonical SMILES string.
+
+        Args:
+            smiles: The input SMILES string to standardize.
+
+        Returns:
+            The canonical, standardized SMILES string, or None if the input
+            SMILES is invalid.
+        """
+        try:
+            # Step 1: Parse SMILES
+            mol = Chem.MolFromSmiles(smiles)
+            if mol is None:
+                log.warning(f"Could not parse SMILES: {smiles}")
+                return None
+
+            # Step 2: General cleanup
+            # removeHs, disconnect metal atoms, normalize the molecule, reionize the molecule
+            clean_mol = rdMolStandardize.Cleanup(mol)
+
+            # Step 3: Get the parent fragment
+            parent_mol = rdMolStandardize.FragmentParent(clean_mol)
+
+            # Step 4: Neutralize
+            # Note: The Uncharger class must be instantiated.
+            uncharger = rdMolStandardize.Uncharger()
+            uncharged_mol = uncharger.uncharge(parent_mol)
+
+            # Step 5: Generate canonical tautomer
+            # Note: The TautomerEnumerator class must be instantiated.
+            te = rdMolStandardize.TautomerEnumerator()
+            canonical_tautomer = te.Canonicalize(uncharged_mol)
+
+            # Step 6: Convert back to canonical SMILES string for output
+            canonical_smiles = Chem.MolToSmiles(canonical_tautomer, canonical=True)
+
+            return canonical_smiles
+
+        except Exception as e:
+            log.error(f"Failed to standardize SMILES '{smiles}': {e}")
+            return None
 
 
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
