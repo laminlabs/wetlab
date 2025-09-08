@@ -268,6 +268,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
 
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
     compound: Compound = ForeignKey(Compound, PROTECT, related_name="links_artifact")
@@ -314,6 +317,9 @@ class Experiment(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactExperiment(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_experiment")
     experiment: Experiment = ForeignKey(
@@ -368,6 +374,9 @@ class Well(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactWell(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_well")
     well: Well = ForeignKey(Well, PROTECT, related_name="links_artifact")
