@@ -541,6 +541,9 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_genetic_perturbation"
