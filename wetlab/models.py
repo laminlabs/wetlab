@@ -84,6 +84,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     _name_field: str = "name"
     _ontology_id_field: str = "ontology_id"
@@ -267,6 +268,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
 
 
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
     compound: Compound = ForeignKey(Compound, PROTECT, related_name="links_artifact")
@@ -292,6 +296,7 @@ class Experiment(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -312,6 +317,9 @@ class Experiment(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactExperiment(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_experiment")
     experiment: Experiment = ForeignKey(
@@ -344,6 +352,7 @@ class Well(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         unique_together = (("row", "column"),)
+        app_label = "wetlab"
         abstract = False
 
     id: int = models.AutoField(primary_key=True)
@@ -365,6 +374,9 @@ class Well(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactWell(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_well")
     well: Well = ForeignKey(Well, PROTECT, related_name="links_artifact")
@@ -395,6 +407,7 @@ class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -434,6 +447,9 @@ class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_perturbation_target"
@@ -477,6 +493,7 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -524,6 +541,9 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_genetic_perturbation"
@@ -557,6 +577,7 @@ class Biologic(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     _name_field: str = "name"
 
@@ -615,6 +636,9 @@ class Biologic(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactBiologic(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biologic")
     biologic: Biologic = ForeignKey(Biologic, PROTECT, related_name="links_artifact")
@@ -642,6 +666,7 @@ class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -681,6 +706,9 @@ class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactCompoundPerturbation(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_compound_perturbation"
@@ -723,6 +751,7 @@ class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -762,6 +791,9 @@ class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_environmental_perturbation"
@@ -821,6 +853,7 @@ class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -874,6 +907,9 @@ class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactCombinationPerturbation(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
         Artifact, CASCADE, related_name="links_combination_perturbation"
@@ -907,6 +943,7 @@ class Biosample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -939,6 +976,9 @@ class Biosample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactBiosample(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biosample")
     biosample: Biosample = ForeignKey(Biosample, PROTECT, related_name="links_artifact")
@@ -968,6 +1008,7 @@ class Techsample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -992,6 +1033,9 @@ class Techsample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactTechsample(BaseSQLRecord, IsLink, TracksRun):
+    class Meta:
+        app_label = "wetlab"
+
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_techsample")
     techsample: Techsample = ForeignKey(
@@ -1025,6 +1069,7 @@ class Donor(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
+        app_label = "wetlab"
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
@@ -1062,6 +1107,9 @@ class Donor(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 class ArtifactDonor(BaseSQLRecord, IsLink, TracksRun):
     """Link table between Artifacts and Donors."""
+
+    class Meta:
+        app_label = "wetlab"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_donor")

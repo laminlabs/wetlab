@@ -59,27 +59,39 @@ from lamindb_setup import _check_instance_setup
 
 from .types import BiologicType, GeneticPerturbationSystem
 
-
-def __getattr__(name):
-    if name != "models":
-        _check_instance_setup(from_module="wetlab")
-    return globals()[name]
+_check_instance_setup(from_module="wetlab")
 
 
-if _check_instance_setup():
-    del __getattr__  # delete so that imports work out
+from .models import (
+    Biologic,
+    Biosample,
+    CombinationPerturbation,
+    Compound,
+    CompoundPerturbation,
+    Donor,
+    EnvironmentalPerturbation,
+    Experiment,
+    GeneticPerturbation,
+    PerturbationTarget,
+    Techsample,
+    Well,
+)
 
-    from .models import (
-        Biologic,
-        Biosample,
-        CombinationPerturbation,
-        Compound,
-        CompoundPerturbation,
-        Donor,
-        EnvironmentalPerturbation,
-        Experiment,
-        GeneticPerturbation,
-        PerturbationTarget,
-        Techsample,
-        Well,
-    )
+__all__ = [
+    # registries
+    "Biologic",
+    "Biosample",
+    "CombinationPerturbation",
+    "Compound",
+    "CompoundPerturbation",
+    "Donor",
+    "EnvironmentalPerturbation",
+    "Experiment",
+    "GeneticPerturbation",
+    "PerturbationTarget",
+    "Techsample",
+    "Well",
+    # helper types
+    "BiologicType",
+    "GeneticPerturbationSystem",
+]
