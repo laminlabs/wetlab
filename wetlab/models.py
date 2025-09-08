@@ -438,7 +438,6 @@ class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
 
 class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
-
     class Meta:
         app_label = "wetlab"
 
