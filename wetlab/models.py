@@ -14,14 +14,6 @@ try:
     RDKIT_AVAILABLE = True
 except ImportError:
     RDKIT_AVAILABLE = False
-    import warnings
-
-    warnings.warn(
-        "RDKit not available. SMILES normalization will be skipped.",
-        stacklevel=2,
-    )
-
-import logging
 
 from bionty import uids as bionty_ids
 from bionty.models import (
@@ -40,6 +32,7 @@ from bionty.models import (
 )
 from django.db import models
 from django.db.models import CASCADE, PROTECT, QuerySet
+from lamin_utils import logger
 from lamindb.base import ids
 from lamindb.base.fields import (
     BooleanField,
@@ -63,9 +56,6 @@ from lamindb.models import (
 )
 
 from .types import BiologicType, GeneticPerturbationSystem  # noqa
-
-# It's good practice to use logging for warnings/errors in a library function
-log = logging.getLogger(__name__)
 
 
 class Compound(BioRecord, TracksRun, TracksUpdates):
@@ -168,8 +158,9 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
             smiles_string: Raw SMILES string to process
         """
         if not RDKIT_AVAILABLE or not smiles_string:
-            log.warning("RDKit is not available. SMILES normalization will be skipped.")
-            return None
+            raise ImportError(
+                "RDKit is not available. Please install: pip install rdkit"
+            )
         try:
             # Store the original SMILES
             self.smiles = smiles_string
@@ -189,8 +180,8 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
             self.inchikey = None
             self.molweight = None
             self.molformula = None
-            log.warning(
-                f"Could not normalize SMILES for compound '{self.name}': {str(e)}"
+            logger.warning(
+                f"could not normalize SMILES for compound '{self.name}': {str(e)}"
             )
 
     def save(self, *args, **kwargs):
@@ -233,38 +224,32 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
             The canonical, standardized SMILES string, or None if the input
             SMILES is invalid.
         """
-        try:
-            # Step 1: Parse SMILES
-            mol = Chem.MolFromSmiles(smiles)
-            if mol is None:
-                log.warning(f"Could not parse SMILES: {smiles}")
-                return None
+        # Step 1: Parse SMILES
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is None:
+            raise ValueError(f"Could not parse SMILES: {smiles}")
 
-            # Step 2: General cleanup
-            # removeHs, disconnect metal atoms, normalize the molecule, reionize the molecule
-            clean_mol = rdMolStandardize.Cleanup(mol)
+        # Step 2: General cleanup
+        # removeHs, disconnect metal atoms, normalize the molecule, reionize the molecule
+        clean_mol = rdMolStandardize.Cleanup(mol)
 
-            # Step 3: Get the parent fragment
-            parent_mol = rdMolStandardize.FragmentParent(clean_mol)
+        # Step 3: Get the parent fragment
+        parent_mol = rdMolStandardize.FragmentParent(clean_mol)
 
-            # Step 4: Neutralize
-            # Note: The Uncharger class must be instantiated.
-            uncharger = rdMolStandardize.Uncharger()
-            uncharged_mol = uncharger.uncharge(parent_mol)
+        # Step 4: Neutralize
+        # Note: The Uncharger class must be instantiated.
+        uncharger = rdMolStandardize.Uncharger()
+        uncharged_mol = uncharger.uncharge(parent_mol)
 
-            # Step 5: Generate canonical tautomer
-            # Note: The TautomerEnumerator class must be instantiated.
-            te = rdMolStandardize.TautomerEnumerator()
-            canonical_tautomer = te.Canonicalize(uncharged_mol)
+        # Step 5: Generate canonical tautomer
+        # Note: The TautomerEnumerator class must be instantiated.
+        te = rdMolStandardize.TautomerEnumerator()
+        canonical_tautomer = te.Canonicalize(uncharged_mol)
 
-            # Step 6: Convert back to canonical SMILES string for output
-            canonical_smiles = Chem.MolToSmiles(canonical_tautomer, canonical=True)
+        # Step 6: Convert back to canonical SMILES string for output
+        canonical_smiles = Chem.MolToSmiles(canonical_tautomer, canonical=True)
 
-            return canonical_smiles
-
-        except Exception as e:
-            log.error(f"Failed to standardize SMILES '{smiles}': {e}")
-            return None
+        return canonical_smiles
 
 
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
