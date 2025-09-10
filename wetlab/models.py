@@ -157,7 +157,7 @@ class Compound(BioRecord, TracksRun, TracksUpdates):
         Args:
             smiles_string: Raw SMILES string to process
         """
-        if not RDKIT_AVAILABLE or not smiles_string:
+        if not RDKIT_AVAILABLE:
             raise ImportError(
                 "RDKit is not available. Please install: pip install rdkit"
             )
