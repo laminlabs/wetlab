@@ -20,7 +20,7 @@ def lint(session: nox.Session) -> None:
 @nox.session
 def install(session: nox.Session) -> None:
     run(session, f"uv pip install {SYSTEM} --upgrade scanpy")
-    install_lamindb(session, branch="main", extras="bionty,jupyter")
+    install_lamindb(session, branch="main")
     run(session, f"uv pip install {SYSTEM} .[dev]")
 
 
