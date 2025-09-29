@@ -1,10 +1,13 @@
 from typing import Literal
 
 GeneticPerturbationSystem = Literal[
+    "control",
     "CRISPR-Cas9",
     "CRISPR-Cas13",
     "CRISPRi",
     "CRISPRa",
+    "overexpression",
+    "mutant overexpression",
     "shRNA",
     "siRNA",
     "transgene",
@@ -12,6 +15,7 @@ GeneticPerturbationSystem = Literal[
 ]
 
 BiologicType = Literal[
+    "control",
     "protein",
     "peptide",
     "antibody",
@@ -22,4 +26,5 @@ BiologicType = Literal[
     "vaccine",
     "oligonucleotide",
     "co-culture",
+    "ligand",
 ]
