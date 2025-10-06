@@ -6,7 +6,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0039_squashed"),
+        ("wetlab", "0039_alter_biologic_description_alter_biologic_synonyms_and_more"),
     ]
 
     operations = [
