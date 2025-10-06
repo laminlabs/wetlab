@@ -54,8 +54,8 @@ class Migration(migrations.Migration):
     ]
 
     dependencies = [
-        ("bionty", "0061_squashed"),
-        ("lamindb", "0132_squashed"),
+        ("bionty", "0061_remove_cellline_page_remove_cellmarker_page_and_more"),
+        ("lamindb", "0132_record_parents_record_reference_and_more"),
     ]
 
     operations = [
