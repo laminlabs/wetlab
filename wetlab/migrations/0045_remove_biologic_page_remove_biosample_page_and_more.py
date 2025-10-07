@@ -8,53 +8,5 @@ class Migration(migrations.Migration):
         ("wetlab", "0044_alter_biologic_is_locked_alter_biosample_is_locked_and_more"),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name="biologic",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="biosample",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="combinationperturbation",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="compound",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="compoundperturbation",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="donor",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="environmentalperturbation",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="experiment",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="geneticperturbation",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="perturbationtarget",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="techsample",
-            name="page",
-        ),
-        migrations.RemoveField(
-            model_name="well",
-            name="page",
-        ),
-    ]
+    # this migration reverts a migration that we meanwhile removed
+    operations = []  # type: ignore
