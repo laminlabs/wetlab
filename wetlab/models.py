@@ -528,6 +528,9 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "wetlab"
+        indexes = [
+            models.Index(fields=["artifact", "geneticperturbation"]),
+        ]
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
