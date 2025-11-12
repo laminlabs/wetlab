@@ -528,6 +528,7 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "wetlab"
+        # see https://laminlabs.slack.com/archives/C03P6D8U1PC/p1761756966506899
         indexes = [
             models.Index(fields=["artifact", "geneticperturbation"]),
         ]
