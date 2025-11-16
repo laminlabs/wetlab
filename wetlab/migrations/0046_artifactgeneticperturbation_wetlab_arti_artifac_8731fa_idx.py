@@ -5,8 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lamindb", "0139_squashed"),
-        ("wetlab", "0045_squashed"),
+        ("wetlab", "0045_remove_biologic_page_remove_biosample_page_and_more"),
     ]
 
     operations = [
