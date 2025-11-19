@@ -434,6 +434,9 @@ class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "wetlab"
+        indexes = [
+            models.Index(fields=["artifact", "perturbationtarget"]),
+        ]
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
