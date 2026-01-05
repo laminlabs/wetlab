@@ -5,6 +5,44 @@ import lamindb.base.fields
 from django.db import migrations
 
 
+def rename_branch_columns(apps, schema_editor):
+    """Rename _branch_code to branch_id across all models."""
+    tables = [
+        "wetlab_biologic",
+        "wetlab_biosample",
+        "wetlab_combinationperturbation",
+        "wetlab_compound",
+        "wetlab_compoundperturbation",
+        "wetlab_donor",
+        "wetlab_environmentalperturbation",
+        "wetlab_experiment",
+        "wetlab_geneticperturbation",
+        "wetlab_perturbationtarget",
+        "wetlab_techsample",
+        "wetlab_well",
+    ]
+
+    with schema_editor.connection.cursor() as cursor:
+        if schema_editor.connection.vendor == "postgresql":
+            for table in tables:
+                cursor.execute(
+                    f"ALTER TABLE {table} RENAME COLUMN _branch_code TO branch_id;"
+                )
+
+        elif schema_editor.connection.vendor == "sqlite":
+            # SQLite 3.25.0+ supports ALTER TABLE RENAME COLUMN
+            for table in tables:
+                try:
+                    cursor.execute(
+                        f"ALTER TABLE {table} RENAME COLUMN _branch_code TO branch_id;"
+                    )
+                except Exception as error:
+                    raise NotImplementedError(
+                        "This migration requires SQLite 3.25.0 or newer. "
+                        "Please upgrade SQLite or manually recreate the tables."
+                    ) from error
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ("lamindb", "0161_rename_branch_code_to_branch_id"),
@@ -12,6 +50,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Rename the columns at the database level
+        migrations.RunPython(
+            rename_branch_columns,
+            migrations.RunPython.noop,
+        ),
         migrations.RemoveField(
             model_name="artifactbiologic",
             name="feature_ref_is_name",
