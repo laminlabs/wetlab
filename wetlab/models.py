@@ -262,8 +262,6 @@ class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
     feature: Feature = ForeignKey(
         Feature, PROTECT, null=True, default=None, related_name="links_artifactcompound"
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class Experiment(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -317,8 +315,6 @@ class ArtifactExperiment(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactexperiment",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class Well(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -372,8 +368,6 @@ class ArtifactWell(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactwell",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -452,8 +446,6 @@ class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactperturbationtarget",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -550,8 +542,6 @@ class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactgeneticperturbation",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class Biologic(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -637,8 +627,6 @@ class ArtifactBiologic(BaseSQLRecord, IsLink, TracksRun):
     feature: Feature = ForeignKey(
         Feature, PROTECT, null=True, default=None, related_name="links_artifactbiologic"
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -715,8 +703,6 @@ class ArtifactCompoundPerturbation(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactcompoundperturbation",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -800,8 +786,6 @@ class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactenvironmentalperturbation",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -916,8 +900,6 @@ class ArtifactCombinationPerturbation(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactcombinationperturbation",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class Biosample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -981,8 +963,6 @@ class ArtifactBiosample(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifactbiosample",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class Techsample(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -1040,8 +1020,6 @@ class ArtifactTechsample(BaseSQLRecord, IsLink, TracksRun):
         default=None,
         related_name="links_artifacttechsample",
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
 
 
 class Donor(SQLRecord, CanCurate, TracksRun, TracksUpdates):
@@ -1109,5 +1087,3 @@ class ArtifactDonor(BaseSQLRecord, IsLink, TracksRun):
     feature: Feature = ForeignKey(
         Feature, PROTECT, null=True, default=None, related_name="links_artifactdonor"
     )
-    label_ref_is_name: bool | None = BooleanField(null=True, default=None)
-    feature_ref_is_name: bool | None = BooleanField(null=True, default=None)
