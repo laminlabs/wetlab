@@ -89,6 +89,8 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
     """MolWeight of the compound from the canonical SMILES."""
     molformula: str | None = TextField(null=True, db_index=True)
     """MolFormula of the compound from the canonical SMILES."""
+    moa: str | None = TextField(null=True, db_index=True)
+    """Mechanism of action of the compound."""
     targets: PerturbationTarget = models.ManyToManyField(
         "PerturbationTarget", related_name="compounds"
     )
@@ -245,7 +247,7 @@ class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
     )
 
 
-class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
+class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
     """Models perturbation targets such as :class:`~bionty.Gene`, :class:`~bionty.Pathway`, and :class:`~bionty.Protein`.
 
     Example::
@@ -259,18 +261,14 @@ class PerturbationTarget(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         targets.genes.set([gene_1, gene_2])
     """
 
-    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
 
-    id: int = models.AutoField(primary_key=True)
-    """Internal id, valid only in one DB instance."""
-    uid: int = CharField(unique=True, max_length=8, default=ids.base62_8, db_index=True)
+    uid: str = CharField(unique=True, max_length=8, default=ids.base62_8, db_index=True)
     """Universal id, valid across DB instances."""
-    name: str = CharField(max_length=60, db_index=True)
+    name: str = CharField(db_index=True)
     """Name of the perturbation target."""
-    description: str | None = TextField(null=True, db_index=True)
-    """Description of the perturbation target."""
     genes: Gene = models.ManyToManyField(
         "bionty.Gene", related_name="perturbation_targets"
     )
@@ -314,7 +312,7 @@ class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
     )
 
 
-class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
+class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
     """Models genetic perturbations such as CRISPR.
 
     Args:
@@ -337,13 +335,11 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
 
-    id: int = models.AutoField(primary_key=True)
-    """Internal id, valid only in one DB instance."""
-    uid: int = CharField(
+    uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
     )
     """Universal id, valid across DB instances."""
@@ -352,12 +348,9 @@ class GeneticPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     type: GeneticPerturbationSystem = models.CharField(
         max_length=32,
         db_index=True,
+        null=True,
     )
     """:class:`~wetlab.GeneticPerturbationSystem` used for the genetic perturbation."""
-    description: str | None = TextField(null=True, db_index=True)
-    """Description of the genetic perturbation."""
-    synonyms: str | None = TextField(null=True, db_index=True)
-    """Synonyms of the genetic perturbation."""
     sequence: str | None = models.TextField(null=True, db_index=True)
     """Sequence of the perturbation."""
     on_target_score: float | None = FloatField(null=True, default=None, db_index=True)
@@ -496,7 +489,7 @@ class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
 
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
-    uid: int = CharField(
+    uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
     )
     """Universal id, valid across DB instances."""
@@ -540,7 +533,7 @@ class ArtifactCompoundPerturbation(BaseSQLRecord, IsLink, TracksRun):
     )
 
 
-class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
+class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
     """Models environmental perturbations such as heat, acid, or smoke perturbations.
 
     Args:
@@ -562,13 +555,11 @@ class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
 
-    id: int = models.AutoField(primary_key=True)
-    """Internal id, valid only in one DB instance."""
-    uid: int = CharField(
+    uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
     )
     """Universal id, valid across DB instances."""
@@ -576,8 +567,6 @@ class EnvironmentalPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
     """Name of the environmental perturbation."""
     ontology_id = CharField(max_length=32, db_index=True, null=True)
     """Ontology ID (EFO) of the environmental perturbation."""
-    description: str | None = TextField(null=True, db_index=True)
-    """Description of the environmental perturbation."""
     value: float | None = FloatField(null=True, default=None)
     """The value of the environmental perturbation such as a temperature."""
     unit: str | None = CharField(max_length=32, null=True)
@@ -616,7 +605,7 @@ class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
     )
 
 
-class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
+class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
     """Combination of several perturbations.
 
     CombinationPerturbations model several perturbations jointly such as one or more :class:`wetlab.GeneticPerturbation`,
@@ -659,16 +648,12 @@ class CombinationPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    id: int = models.AutoField(primary_key=True)
-    """Internal id, valid only in one DB instance."""
-    uid: int = CharField(
+    uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
     )
     """Universal id, valid across DB instances."""
     name: str | None = CharField(db_index=True)
     """Name of the perturbation."""
-    description: str | None = TextField(null=True, db_index=True)
-    """Description of the combination perturbation."""
     genetic_perturbations: GeneticPerturbation = models.ManyToManyField(
         GeneticPerturbation, related_name="combination_perturbations"
     )
