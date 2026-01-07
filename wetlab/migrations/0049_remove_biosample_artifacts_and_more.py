@@ -86,7 +86,7 @@ def export_tables_to_parquet(apps, schema_editor):
 
     if exported:
         logger.important(
-            f"\nAll exports completed. Files saved to: {export_dir}\nTo keep using these records, you can create them in the Record registry."
+            f"All exports completed. Files saved to: {export_dir}\n  To keep using these records, you can create them in the Record registry."
         )
 
 
