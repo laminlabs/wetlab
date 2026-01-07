@@ -11,17 +11,7 @@ Import the package:
 
 Create records:
 
->>> biosample = wl.Biosample(name="Sample 1").save()
-
-Basic registries:
-
-.. autosummary::
-   :toctree: .
-
-   Experiment
-   Biosample
-   Techsample
-   Donor
+>>> biologic = wl.Biologic(name="IFNG").save()
 
 Perturbation registries:
 
@@ -64,33 +54,23 @@ _check_instance_setup(from_module="wetlab")
 
 from .models import (
     Biologic,
-    Biosample,
     CombinationPerturbation,
     Compound,
     CompoundPerturbation,
-    Donor,
     EnvironmentalPerturbation,
-    Experiment,
     GeneticPerturbation,
     PerturbationTarget,
-    Techsample,
-    Well,
 )
 
 __all__ = [
     # registries
     "Biologic",
-    "Biosample",
     "CombinationPerturbation",
     "Compound",
     "CompoundPerturbation",
-    "Donor",
     "EnvironmentalPerturbation",
-    "Experiment",
     "GeneticPerturbation",
     "PerturbationTarget",
-    "Techsample",
-    "Well",
     # helper types
     "BiologicType",
     "GeneticPerturbationSystem",
