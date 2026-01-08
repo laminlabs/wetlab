@@ -30,7 +30,6 @@ Auxiliary registries:
 .. autosummary::
    :toctree: .
 
-   Well
    PerturbationTarget
 
 Types:
