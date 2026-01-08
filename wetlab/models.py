@@ -266,6 +266,8 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
+    _name_field: str = "name"
+
     uid: str = CharField(unique=True, max_length=8, default=ids.base62_8, db_index=True)
     """Universal id, valid across DB instances."""
     name: str = CharField(db_index=True)
@@ -339,6 +341,8 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
+
+    _name_field: str = "name"
 
     uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
@@ -488,6 +492,8 @@ class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
+    _name_field: str = "name"
+
     id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid: str = CharField(
@@ -559,6 +565,8 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
+
+    _name_field: str = "name"
 
     uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
@@ -645,9 +653,11 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
         comb_perturbation.compounds.add(aspirin_perturbation)
     """
 
-    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
+
+    _name_field: str = "name"
 
     uid: str = CharField(
         unique=True, max_length=12, default=ids.base62_12, db_index=True
