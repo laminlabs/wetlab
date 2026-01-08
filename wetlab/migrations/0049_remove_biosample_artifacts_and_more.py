@@ -495,11 +495,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name="compound",
-            name="id",
-            field=models.BigAutoField(primary_key=True, serialize=False),
-        ),
-        migrations.AlterField(
-            model_name="compound",
             name="ontology_id",
             field=lamindb.base.fields.CharField(
                 blank=True, db_index=True, default=None, max_length=255, null=True

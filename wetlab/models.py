@@ -67,7 +67,7 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    id: int = models.BigAutoField(primary_key=True)
+    id: int = models.AutoField(primary_key=True)
     """Internal id, valid only in one DB instance."""
     uid: str = CharField(
         unique=True, max_length=14, db_index=True, default=bionty_ids.ontology
