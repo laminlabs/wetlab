@@ -174,6 +174,7 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
             self._process_smiles(self.smiles)
 
         super().save(*args, **kwargs)
+        return self
 
     def update_smiles(self, new_smiles: str) -> None:
         """Update the SMILES string and reprocess normalization.
