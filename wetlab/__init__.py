@@ -42,7 +42,7 @@ Types:
 
 """
 
-__version__ = "2.0a1"
+__version__ = "2.0a2"
 
 from lamindb_setup import _check_instance_setup
 
