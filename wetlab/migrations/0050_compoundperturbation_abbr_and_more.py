@@ -117,6 +117,7 @@ def re_encode_uids_python(apps, schema_editor):
     batch_size = 10000
 
     models_config = [
+        ("Compound", "ontology_id", "name"),
         ("Biologic", "ontology_id", "name"),
         ("CombinationPerturbation", "ontology_id", "name"),
         ("CompoundPerturbation", "ontology_id", "name"),
