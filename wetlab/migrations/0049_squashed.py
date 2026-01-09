@@ -51,6 +51,10 @@ class Migration(migrations.Migration):
         ("wetlab", "0043_biologic_is_locked_biosample_is_locked_and_more"),
         ("wetlab", "0044_alter_biologic_is_locked_alter_biosample_is_locked_and_more"),
         ("wetlab", "0045_remove_biologic_page_remove_biosample_page_and_more"),
+        ("wetlab", "0046_artifactgeneticperturbation_wetlab_arti_artifac_8731fa_idx"),
+        ("wetlab", "0047_artifactperturbationtarget_wetlab_arti_artifac_2674c5_idx"),
+        ("wetlab", "0048_remove_artifactbiologic_feature_ref_is_name_and_more"),
+        ("wetlab", "0049_remove_biosample_artifacts_and_more"),
     ]
 
     dependencies = [
