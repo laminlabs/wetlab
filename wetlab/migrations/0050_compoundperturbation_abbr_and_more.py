@@ -6,6 +6,158 @@ import lamindb.base.fields
 from django.db import migrations
 
 
+def re_encode_uids(apps, schema_editor):
+    """Re-encode UIDs for all wetlab models in batches of 10k using raw SQL."""
+    batch_size = 10000
+    connection = schema_editor.connection
+    db_vendor = connection.vendor
+
+    # Create a SQL function to do base62 encoding from hash
+    if db_vendor == "postgresql":
+        # Create the base62 encoding function in PostgreSQL
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                CREATE OR REPLACE FUNCTION hash_to_base62(input_text TEXT, n_char INTEGER)
+                RETURNS TEXT AS $$
+                DECLARE
+                    alphabet TEXT := '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                    hash_bytes BYTEA;
+                    num BIGINT;
+                    result TEXT := '';
+                    remainder INTEGER;
+                BEGIN
+                    -- Get SHA256 hash
+                    hash_bytes := digest(input_text, 'sha256');
+
+                    -- Convert first 8 bytes to bigint
+                    num := ('x' || encode(substring(hash_bytes, 1, 8), 'hex'))::bit(64)::bigint;
+
+                    -- Convert to base62
+                    WHILE num > 0 AND length(result) < n_char LOOP
+                        remainder := num % 62;
+                        result := substring(alphabet, remainder + 1, 1) || result;
+                        num := num / 62;
+                    END LOOP;
+
+                    -- Pad with zeros if needed
+                    WHILE length(result) < n_char LOOP
+                        result := '0' || result;
+                    END LOOP;
+
+                    RETURN substring(result, 1, n_char);
+                END;
+                $$ LANGUAGE plpgsql IMMUTABLE;
+            """)
+    elif db_vendor == "sqlite":
+        # SQLite doesn't have the same functions, we'll need a different approach
+        print("SQLite detected - using Python-based encoding")
+        re_encode_uids_python(apps, schema_editor)
+        return
+
+    # Define models with their specific configurations
+    # Format: (model_name, ontology_id_field, name_field)
+    models_config = [
+        ("Biologic", "ontology_id", "name"),
+        ("CombinationPerturbation", "ontology_id", "name"),
+        ("CompoundPerturbation", "ontology_id", "name"),
+        ("EnvironmentalPerturbation", "ontology_id", "name"),
+        ("GeneticPerturbation", "ontology_id", "name"),
+        ("PerturbationTarget", "ontology_id", "name"),
+    ]
+
+    for model_name, ontology_id_field, name_field in models_config:
+        Model = apps.get_model("wetlab", model_name)
+        table_name = Model._meta.db_table
+
+        # Get min and max IDs
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT COUNT(*), MIN(id), MAX(id) FROM {table_name}")
+            count, min_id, max_id = cursor.fetchone()
+
+            if count == 0 or min_id is None:
+                continue
+
+            print(f"Re-encoding UIDs for {model_name}: {count} records")
+
+        # Process in batches
+        current_id = min_id
+        while current_id <= max_id:
+            next_id = current_id + batch_size
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"""
+                    UPDATE {table_name}
+                    SET uid = CASE
+                        WHEN {ontology_id_field} IS NOT NULL AND {ontology_id_field} != ''
+                            THEN hash_to_base62({ontology_id_field}, 14)
+                        WHEN {name_field} IS NOT NULL AND {name_field} != ''
+                            THEN hash_to_base62({name_field}, 14)
+                        ELSE uid
+                    END
+                    WHERE id >= %s AND id < %s
+                """,
+                    [current_id, next_id],
+                )
+
+            print(f"  Processed up to ID {min(next_id, max_id)}")
+            current_id = next_id
+
+    # Clean up the temporary function
+    if db_vendor == "postgresql":
+        with connection.cursor() as cursor:
+            cursor.execute("DROP FUNCTION IF EXISTS hash_to_base62(TEXT, INTEGER)")
+
+
+def re_encode_uids_python(apps, schema_editor):
+    """Fallback Python implementation for databases without the necessary SQL functions."""
+    from bionty.uids import ontology
+    from django.db import transaction
+
+    batch_size = 10000
+
+    models_config = [
+        ("Biologic", "ontology_id", "name"),
+        ("CombinationPerturbation", "ontology_id", "name"),
+        ("CompoundPerturbation", "ontology_id", "name"),
+        ("EnvironmentalPerturbation", "ontology_id", "name"),
+        ("GeneticPerturbation", "ontology_id", "name"),
+        ("PerturbationTarget", "ontology_id", "name"),
+    ]
+
+    for model_name, ontology_id_field, name_field in models_config:
+        Model = apps.get_model("wetlab", model_name)
+
+        total_count = Model.objects.count()
+        if total_count == 0:
+            continue
+
+        print(f"Re-encoding UIDs for {model_name}: {total_count} records")
+
+        offset = 0
+        while offset < total_count:
+            with transaction.atomic():
+                records = Model.objects.all()[offset : offset + batch_size]
+
+                updates = []
+                for record in records:
+                    str_to_encode = getattr(record, ontology_id_field, "") or ""
+                    if not str_to_encode:
+                        str_to_encode = getattr(record, name_field, "") or ""
+
+                    if str_to_encode:
+                        new_uid = ontology(str_to_encode)
+                        if new_uid != record.uid:
+                            record.uid = new_uid
+                            updates.append(record)
+
+                if updates:
+                    Model.objects.bulk_update(updates, ["uid"], batch_size=1000)
+
+            offset += batch_size
+            print(f"  Processed {min(offset, total_count)}/{total_count} records")
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ("bionty", "0064_alter_cellline_uid_alter_cellmarker_uid_and_more"),
@@ -109,4 +261,6 @@ class Migration(migrations.Migration):
                 unique=True,
             ),
         ),
+        # Run the data migration to re-encode existing UIDs
+        migrations.RunPython(re_encode_uids),
     ]
