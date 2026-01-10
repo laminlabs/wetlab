@@ -583,7 +583,6 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
     Args:
         name: A name of the CombinationPerturbation that summarizes all applied perturbations.
         description: A description of the CombinationPerturbation.
-        ontology_id: An ontology ID of the CombinationPerturbation.
 
     Example::
 
