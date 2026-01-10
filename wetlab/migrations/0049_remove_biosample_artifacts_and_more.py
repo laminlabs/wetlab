@@ -38,47 +38,73 @@ def export_tables_to_parquet(apps, schema_editor):
         try:
             Model = apps.get_model("wetlab", model_name)
 
-            # Get all data from the model
-            queryset = Model.objects.all()
+            # Check if there's any data
+            if not Model.objects.exists():
+                continue
 
-            if queryset.exists():
-                exported = True
-                # Convert to list of dicts, handling related fields
-                data = []
-                for obj in queryset:
-                    row = {}
-                    for field in Model._meta.get_fields():
-                        if field.concrete:
-                            if field.many_to_many:
-                                # Handle M2M fields - store as list of IDs
-                                m2m_manager = getattr(obj, field.name, None)
-                                if m2m_manager is not None:
-                                    row[field.name] = list(
-                                        m2m_manager.values_list("pk", flat=True)
-                                    )
-                                else:
-                                    row[field.name] = []
-                            else:
-                                # Handle regular and foreign key fields
-                                value = getattr(obj, field.name, None)
-                                if (
-                                    hasattr(field, "related_model")
-                                    and value is not None
-                                ):
-                                    row[field.name] = (
-                                        value.pk if hasattr(value, "pk") else value
-                                    )
-                                else:
-                                    row[field.name] = value
-                    data.append(row)
+            exported = True
 
-                # Convert to DataFrame and export
-                df = pd.DataFrame(data)
-                output_path = export_dir / f"{model_name}.parquet"
-                df.to_parquet(output_path, index=False)
-                logger.important(
-                    f"Exported {len(df)} rows from {model_name} to {output_path}"
-                )
+            # Get field names, excluding many-to-many fields
+            regular_fields = []
+            m2m_fields = []
+
+            for field in Model._meta.get_fields():
+                if field.concrete:
+                    if field.many_to_many:
+                        m2m_fields.append(field.name)
+                    else:
+                        # For FK fields, get the _id field name
+                        if hasattr(field, "related_model") and field.related_model:
+                            regular_fields.append(f"{field.name}_id")
+                        else:
+                            regular_fields.append(field.name)
+
+            # Fetch all data at once using .values()
+            data = list(Model.objects.values(*regular_fields))
+
+            # Handle M2M fields separately if any exist
+            if m2m_fields:
+                {row["id"]: idx for idx, row in enumerate(data)}
+
+                for m2m_field_name in m2m_fields:
+                    # Get the through table and fetch all relationships at once
+                    m2m_field = Model._meta.get_field(m2m_field_name)
+                    through_model = m2m_field.remote_field.through
+
+                    # Get the field names for the source and target
+                    source_field = None
+                    target_field = None
+                    for f in through_model._meta.get_fields():
+                        if hasattr(f, "related_model"):
+                            if f.related_model == Model:
+                                source_field = f.name
+                            elif f.related_model == m2m_field.related_model:
+                                target_field = f.name
+
+                    if source_field and target_field:
+                        # Fetch all M2M relationships at once
+                        m2m_data = through_model.objects.values_list(
+                            f"{source_field}_id", f"{target_field}_id"
+                        )
+
+                        # Group by source ID
+                        m2m_dict = {}
+                        for source_id, target_id in m2m_data:
+                            if source_id not in m2m_dict:
+                                m2m_dict[source_id] = []
+                            m2m_dict[source_id].append(target_id)
+
+                        # Add M2M data to rows
+                        for row in data:
+                            row[m2m_field_name] = m2m_dict.get(row["id"], [])
+
+            # Convert to DataFrame and export
+            df = pd.DataFrame(data)
+            output_path = export_dir / f"{model_name}.parquet"
+            df.to_parquet(output_path, index=False)
+            logger.important(
+                f"Exported {len(df)} rows from {model_name} to {output_path}"
+            )
 
         except Exception as e:
             logger.error(f"Error exporting {model_name}: {e}")

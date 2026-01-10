@@ -15,7 +15,6 @@ try:
 except ImportError:
     RDKIT_AVAILABLE = False
 
-from bionty import uids as bionty_ids
 from bionty.models import (
     BioRecord,
     Gene,
@@ -27,7 +26,6 @@ from bionty.models import (
 from django.db import models
 from django.db.models import CASCADE, PROTECT, QuerySet
 from lamin_utils import logger
-from lamindb.base import ids
 from lamindb.base.fields import (
     CharField,
     DurationField,
@@ -38,10 +36,8 @@ from lamindb.base.fields import (
 from lamindb.models import (
     Artifact,
     BaseSQLRecord,
-    CanCurate,
     Feature,
     IsLink,
-    SQLRecord,
     TracksRun,
     TracksUpdates,
 )
@@ -67,13 +63,9 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    id: int = models.AutoField(primary_key=True)
-    """Internal id, valid only in one DB instance."""
-    uid: str = CharField(
-        unique=True, max_length=14, db_index=True, default=bionty_ids.ontology
-    )
-    """A universal id (hash of selected field)."""
-    name: str = TextField(db_index=True)
+    name: str = TextField(
+        db_index=True
+    )  # compound names can be very long, therefore TextField
     """Name of the compound."""
     type: str | None = CharField(max_length=32, db_index=True, null=True)
     """Type of the compound."""
@@ -266,10 +258,6 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    _name_field: str = "name"
-
-    uid: str = CharField(unique=True, max_length=8, default=ids.base62_8, db_index=True)
-    """Universal id, valid across DB instances."""
     name: str = CharField(db_index=True)
     """Name of the perturbation target."""
     genes: Gene = models.ManyToManyField(
@@ -342,12 +330,6 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    _name_field: str = "name"
-
-    uid: str = CharField(
-        unique=True, max_length=12, default=ids.base62_12, db_index=True
-    )
-    """Universal id, valid across DB instances."""
     name: str = CharField(db_index=True)
     """Name of the Genetic perturbation."""
     type: GeneticPerturbationSystem = models.CharField(
@@ -415,12 +397,6 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    _name_field: str = "name"
-
-    uid: str = CharField(
-        unique=True, max_length=12, default=ids.base62_12, db_index=True
-    )
-    """A universal id (hash of selected field)."""
     name: str = CharField(db_index=True)
     """Name of the compound."""
     type: BiologicType = CharField(max_length=32, db_index=True)
@@ -473,7 +449,7 @@ class ArtifactBiologic(BaseSQLRecord, IsLink, TracksRun):
     )
 
 
-class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
+class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
     """Models compound perturbations such as drugs.
 
     Args:
@@ -488,22 +464,12 @@ class CompoundPerturbation(SQLRecord, CanCurate, TracksRun, TracksUpdates):
         ).save()
     """
 
-    class Meta(SQLRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
+    class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "wetlab"
 
-    _name_field: str = "name"
-
-    id: int = models.AutoField(primary_key=True)
-    """Internal id, valid only in one DB instance."""
-    uid: str = CharField(
-        unique=True, max_length=12, default=ids.base62_12, db_index=True
-    )
-    """Universal id, valid across DB instances."""
     name: str = CharField(db_index=True)
     """Name of the compound perturbation."""
-    description: str | None = TextField(null=True, db_index=True)
-    """Description of the compound perturbation."""
     concentration: float = FloatField(null=True, default=None)
     """Concentration of the compound."""
     concentration_unit: str = CharField(max_length=32, null=True)
@@ -566,12 +532,6 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    _name_field: str = "name"
-
-    uid: str = CharField(
-        unique=True, max_length=12, default=ids.base62_12, db_index=True
-    )
-    """Universal id, valid across DB instances."""
     name: str = CharField(db_index=True)
     """Name of the environmental perturbation."""
     ontology_id = CharField(max_length=32, db_index=True, null=True)
@@ -623,7 +583,6 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
     Args:
         name: A name of the CombinationPerturbation that summarizes all applied perturbations.
         description: A description of the CombinationPerturbation.
-        ontology_id: An ontology ID of the CombinationPerturbation.
 
     Example::
 
@@ -657,12 +616,6 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
         abstract = False
         app_label = "wetlab"
 
-    _name_field: str = "name"
-
-    uid: str = CharField(
-        unique=True, max_length=12, default=ids.base62_12, db_index=True
-    )
-    """Universal id, valid across DB instances."""
     name: str | None = CharField(db_index=True)
     """Name of the perturbation."""
     genetic_perturbations: GeneticPerturbation = models.ManyToManyField(
