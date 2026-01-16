@@ -7,11 +7,11 @@ Install and mount `pertdb` in a new instance:
 
 Import the package:
 
->>> import pertdb as wl
+>>> import pertdb
 
 Create records:
 
->>> biologic = wl.Biologic(name="IFNG").save()
+>>> biologic = pertdb.Biologic(name="IFNG").save()
 
 Perturbation registries:
 
