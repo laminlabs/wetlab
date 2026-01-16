@@ -62,6 +62,8 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, HasOntologyId.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_compound"
 
     name: str = TextField(
         db_index=True
@@ -231,6 +233,8 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactcompound"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
@@ -257,6 +261,8 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_perturbationtarget"
 
     name: str = CharField(db_index=True)
     """Name of the perturbation target."""
@@ -283,6 +289,8 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
 class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactperturbationtarget"
         indexes = [
             models.Index(fields=["artifact", "perturbationtarget"]),
         ]
@@ -329,6 +337,8 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_geneticperturbation"
 
     name: str = CharField(db_index=True)
     """Name of the Genetic perturbation."""
@@ -359,6 +369,8 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
 class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactgeneticperturbation"
         # see https://laminlabs.slack.com/archives/C03P6D8U1PC/p1761756966506899
         indexes = [
             models.Index(fields=["artifact", "geneticperturbation"]),
@@ -396,6 +408,8 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_biologic"
 
     name: str = CharField(db_index=True)
     """Name of the compound."""
@@ -440,6 +454,8 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
 class ArtifactBiologic(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactbiologic"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biologic")
@@ -467,6 +483,8 @@ class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_compoundperturbation"
 
     name: str = CharField(db_index=True)
     """Name of the compound perturbation."""
@@ -489,6 +507,8 @@ class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
 class ArtifactCompoundPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactcompoundperturbation"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
@@ -531,6 +551,8 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_environmentalperturbation"
 
     name: str = CharField(db_index=True)
     """Name of the environmental perturbation."""
@@ -557,6 +579,8 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
 class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactenvironmentalperturbation"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
@@ -615,6 +639,8 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_combinationperturbation"
 
     name: str | None = CharField(db_index=True)
     """Name of the perturbation."""
@@ -649,6 +675,8 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
 class ArtifactCombinationPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
         app_label = "pertdb"
+        # TODO: remove after deprecation period
+        db_table = "wetlab_artifactcombinationperturbation"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
