@@ -1,13 +1,13 @@
-"""Basic wetlab entities [`source <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__].
+"""Basic pertdb entities [`source <https://github.com/laminlabs/pertdb/blob/main/pertdb/models.py>`__].
 
-Install and mount `wetlab` in a new instance:
+Install and mount `pertdb` in a new instance:
 
->>> pip install wetlab
->>> lamin init --storage ./test-wetlab --modules bionty,wetlab
+>>> pip install pertdb
+>>> lamin init --storage ./test-pertdb --modules bionty,pertdb
 
 Import the package:
 
->>> import wetlab as wl
+>>> import pertdb as wl
 
 Create records:
 
@@ -48,7 +48,7 @@ from lamindb_setup import _check_instance_setup
 
 from .types import BiologicType, GeneticPerturbationSystem
 
-_check_instance_setup(from_module="wetlab")
+_check_instance_setup(from_module="pertdb")
 
 
 from .models import (

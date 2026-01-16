@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0044_alter_biologic_is_locked_alter_biosample_is_locked_and_more"),
+        ("pertdb", "0044_alter_biologic_is_locked_alter_biosample_is_locked_and_more"),
     ]
 
     # this migration reverts a migration that we meanwhile removed

@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0045_remove_biologic_page_remove_biosample_page_and_more"),
+        ("pertdb", "0045_remove_biologic_page_remove_biosample_page_and_more"),
     ]
 
     operations = [
@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
             model_name="artifactgeneticperturbation",
             index=models.Index(
                 fields=["artifact", "geneticperturbation"],
-                name="wetlab_arti_artifac_8731fa_idx",
+                name="pertdb_arti_artifac_8731fa_idx",
             ),
         ),
     ]

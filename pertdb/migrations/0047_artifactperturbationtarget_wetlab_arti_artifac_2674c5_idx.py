@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0046_artifactgeneticperturbation_wetlab_arti_artifac_8731fa_idx"),
+        ("pertdb", "0046_artifactgeneticperturbation_pertdb_arti_artifac_8731fa_idx"),
     ]
 
     operations = [
@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
             model_name="artifactperturbationtarget",
             index=models.Index(
                 fields=["artifact", "perturbationtarget"],
-                name="wetlab_arti_artifac_2674c5_idx",
+                name="pertdb_arti_artifac_2674c5_idx",
             ),
         ),
     ]

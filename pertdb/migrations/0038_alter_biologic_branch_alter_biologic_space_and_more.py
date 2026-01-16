@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
     dependencies = [
         ("lamindb", "0104_alter_branch_uid"),
-        ("wetlab", "0037_rename__branch_code_biologic_branch_and_more"),
+        ("pertdb", "0037_rename__branch_code_biologic_branch_and_more"),
     ]
 
     operations = [

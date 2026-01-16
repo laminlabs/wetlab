@@ -1,5 +1,5 @@
 # Reference
 
 ```{eval-rst}
-.. automodule:: wetlab
+.. automodule:: pertdb
 ```

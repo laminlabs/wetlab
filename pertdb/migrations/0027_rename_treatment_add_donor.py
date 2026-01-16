@@ -11,7 +11,7 @@ from django.db.models import CASCADE, PROTECT
 class Migration(migrations.Migration):
     dependencies = [
         ("lamindb", "0069_squashed"),
-        ("wetlab", "0026_alter_biosample_artifacts_alter_techsample_artifacts"),
+        ("pertdb", "0026_alter_biosample_artifacts_alter_techsample_artifacts"),
     ]
 
     operations = [
@@ -205,7 +205,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="donors",
-                        through="wetlab.ArtifactDonor",
+                        through="pertdb.ArtifactDonor",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -277,7 +277,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=PROTECT,
                 related_name="links_artifact",
-                to="wetlab.donor",
+                to="pertdb.donor",
             ),
         ),
         # Add related_name changes for perturbation targets
@@ -427,7 +427,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                through="wetlab.ArtifactCombinationPerturbation",
+                through="pertdb.ArtifactCombinationPerturbation",
                 to="lamindb.artifact",
             ),
         ),
@@ -435,7 +435,7 @@ class Migration(migrations.Migration):
             model_name="combinationperturbation",
             name="compounds",
             field=models.ManyToManyField(
-                related_name="compound_perturbations", to="wetlab.compoundperturbation"
+                related_name="compound_perturbations", to="pertdb.compoundperturbation"
             ),
         ),
         migrations.AlterField(
@@ -443,14 +443,14 @@ class Migration(migrations.Migration):
             name="environmentals",
             field=models.ManyToManyField(
                 related_name="environmental_perturbations",
-                to="wetlab.environmentalperturbation",
+                to="pertdb.environmentalperturbation",
             ),
         ),
         migrations.AlterField(
             model_name="combinationperturbation",
             name="genetics",
             field=models.ManyToManyField(
-                related_name="genetic_perturbations", to="wetlab.geneticperturbation"
+                related_name="genetic_perturbations", to="pertdb.geneticperturbation"
             ),
         ),
         migrations.AlterField(
@@ -458,7 +458,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="compound_perturbations",
-                through="wetlab.ArtifactCompoundPerturbation",
+                through="pertdb.ArtifactCompoundPerturbation",
                 to="lamindb.artifact",
             ),
         ),
@@ -467,7 +467,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="environmental_perturbations",
-                through="wetlab.ArtifactEnvironmentalPerturbation",
+                through="pertdb.ArtifactEnvironmentalPerturbation",
                 to="lamindb.artifact",
             ),
         ),
@@ -476,7 +476,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="genetic_perturbations",
-                through="wetlab.ArtifactGeneticPerturbation",
+                through="pertdb.ArtifactGeneticPerturbation",
                 to="lamindb.artifact",
             ),
         ),
@@ -485,7 +485,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="perturbation_targets",
-                through="wetlab.ArtifactPerturbationTarget",
+                through="pertdb.ArtifactPerturbationTarget",
                 to="lamindb.artifact",
             ),
         ),

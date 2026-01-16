@@ -36,7 +36,7 @@ def export_tables_to_parquet(apps, schema_editor):
 
     for model_name in models_to_export:
         try:
-            Model = apps.get_model("wetlab", model_name)
+            Model = apps.get_model("pertdb", model_name)
 
             # Check if there's any data
             if not Model.objects.exists():
@@ -119,7 +119,7 @@ def export_tables_to_parquet(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ("bionty", "0063_remove_experimentalfactor_instrument_and_more"),
-        ("wetlab", "0048_remove_artifactbiologic_feature_ref_is_name_and_more"),
+        ("pertdb", "0048_remove_artifactbiologic_feature_ref_is_name_and_more"),
     ]
 
     operations = [
@@ -412,7 +412,7 @@ class Migration(migrations.Migration):
             model_name="compound",
             name="targets",
             field=models.ManyToManyField(
-                related_name="compounds", to="wetlab.perturbationtarget"
+                related_name="compounds", to="pertdb.perturbationtarget"
             ),
         ),
         migrations.AddField(

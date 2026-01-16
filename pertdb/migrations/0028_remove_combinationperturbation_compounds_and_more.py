@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0027_rename_treatment_add_donor"),
+        ("pertdb", "0027_rename_treatment_add_donor"),
     ]
 
     operations = [
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 default=None,
                 null=True,
                 on_delete=django.db.models.deletion.PROTECT,
-                to="wetlab.compound",
+                to="pertdb.compound",
             ),
         ),
         migrations.RenameField(
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name="environmental_perturbations",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                to="wetlab.environmentalperturbation",
+                to="pertdb.environmentalperturbation",
             ),
         ),
         migrations.RenameField(
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             name="genetic_perturbations",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                to="wetlab.geneticperturbation",
+                to="pertdb.geneticperturbation",
             ),
         ),
         migrations.RenameField(
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
             name="compound_perturbations",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                to="wetlab.compoundperturbation",
+                to="pertdb.compoundperturbation",
             ),
         ),
         migrations.AddField(

@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0031_alter_biologic_space_alter_biosample_space_and_more"),
+        ("pertdb", "0031_alter_biologic_space_alter_biosample_space_and_more"),
     ]
 
     operations = [

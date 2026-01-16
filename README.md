@@ -1,3 +1,3 @@
-# `wetlab`: Wetlab registries
+# `pertdb`: Wetlab registries
 
-Read the docs: [docs.lamin.ai/wetlab](https://docs.lamin.ai/wetlab).
+Read the docs: [docs.lamin.ai/pertdb](https://docs.lamin.ai/pertdb).

@@ -6,7 +6,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0032_rename_aux_biologic__aux_rename_aux_biosample__aux_and_more"),
+        ("pertdb", "0032_rename_aux_biologic__aux_rename_aux_biosample__aux_and_more"),
     ]
 
     operations = [

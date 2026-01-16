@@ -6,22 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         ("lamindb", "0069_squashed"),
-        ("wetlab", "0025_squashed"),
+        ("pertdb", "0025_squashed"),
     ]
 
     operations = [
         migrations.RunSQL(
             f"""
-            INSERT INTO wetlab_artifactbiosample (artifact_id, biosample_id, feature_id, created_by_id, created_at)
+            INSERT INTO pertdb_artifactbiosample (artifact_id, biosample_id, feature_id, created_by_id, created_at)
             SELECT artifact_id, biosample_id, NULL, {1}, CURRENT_TIMESTAMP
-            FROM wetlab_biosample_artifacts;
+            FROM pertdb_biosample_artifacts;
             """
         ),
         migrations.RunSQL(
             f"""
-            INSERT INTO wetlab_artifacttechsample (artifact_id, techsample_id, feature_id, created_by_id, created_at)
+            INSERT INTO pertdb_artifacttechsample (artifact_id, techsample_id, feature_id, created_by_id, created_at)
             SELECT artifact_id, techsample_id, NULL, {1}, CURRENT_TIMESTAMP
-            FROM wetlab_techsample_artifacts;
+            FROM pertdb_techsample_artifacts;
             """
         ),
         migrations.RemoveField(
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="biosamples",
-                through="wetlab.ArtifactBiosample",
+                through="pertdb.ArtifactBiosample",
                 to="lamindb.artifact",
             ),
         ),
@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
             name="artifacts",
             field=models.ManyToManyField(
                 related_name="techsamples",
-                through="wetlab.ArtifactTechsample",
+                through="pertdb.ArtifactTechsample",
                 to="lamindb.artifact",
             ),
         ),

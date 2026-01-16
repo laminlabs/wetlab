@@ -6,7 +6,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0043_biologic_is_locked_biosample_is_locked_and_more"),
+        ("pertdb", "0043_biologic_is_locked_biosample_is_locked_and_more"),
     ]
 
     operations = [

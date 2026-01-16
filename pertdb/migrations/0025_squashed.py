@@ -736,7 +736,7 @@ class Migration(migrations.Migration):
                         blank=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="links_artifact",
-                        to="wetlab.biosample",
+                        to="pertdb.biosample",
                     ),
                 ),
             ],
@@ -794,7 +794,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="combination_treatments",
-                        through="wetlab.ArtifactCombinationTreatment",
+                        through="pertdb.ArtifactCombinationTreatment",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -832,7 +832,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.combinationtreatment",
+                to="pertdb.combinationtreatment",
             ),
         ),
         migrations.CreateModel(
@@ -909,7 +909,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="compounds",
-                        through="wetlab.ArtifactCompound",
+                        through="pertdb.ArtifactCompound",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -926,7 +926,7 @@ class Migration(migrations.Migration):
                 (
                     "parents",
                     models.ManyToManyField(
-                        related_name="children", to="wetlab.compound"
+                        related_name="children", to="pertdb.compound"
                     ),
                 ),
                 (
@@ -967,7 +967,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.compound",
+                to="pertdb.compound",
             ),
         ),
         migrations.CreateModel(
@@ -1021,14 +1021,14 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="compound_treatments",
-                        through="wetlab.ArtifactCompoundTreatment",
+                        through="pertdb.ArtifactCompoundTreatment",
                         to="lamindb.artifact",
                     ),
                 ),
                 (
                     "compounds",
                     models.ManyToManyField(
-                        related_name="compounds", to="wetlab.compound"
+                        related_name="compounds", to="pertdb.compound"
                     ),
                 ),
                 (
@@ -1062,7 +1062,7 @@ class Migration(migrations.Migration):
             model_name="combinationtreatment",
             name="compounds",
             field=models.ManyToManyField(
-                related_name="compound_treatments", to="wetlab.compoundtreatment"
+                related_name="compound_treatments", to="pertdb.compoundtreatment"
             ),
         ),
         migrations.AddField(
@@ -1072,7 +1072,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.compoundtreatment",
+                to="pertdb.compoundtreatment",
             ),
         ),
         migrations.CreateModel(
@@ -1136,7 +1136,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="environmental_treatments",
-                        through="wetlab.ArtifactEnvironmentalTreatment",
+                        through="pertdb.ArtifactEnvironmentalTreatment",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1172,7 +1172,7 @@ class Migration(migrations.Migration):
             name="environmentals",
             field=models.ManyToManyField(
                 related_name="environmental_treatments",
-                to="wetlab.environmentaltreatment",
+                to="pertdb.environmentaltreatment",
             ),
         ),
         migrations.AddField(
@@ -1182,7 +1182,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.environmentaltreatment",
+                to="pertdb.environmentaltreatment",
             ),
         ),
         migrations.CreateModel(
@@ -1230,7 +1230,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="experiments",
-                        through="wetlab.ArtifactExperiment",
+                        through="pertdb.ArtifactExperiment",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1268,7 +1268,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.experiment",
+                to="pertdb.experiment",
             ),
         ),
         migrations.CreateModel(
@@ -1330,7 +1330,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="genetic_treatments",
-                        through="wetlab.ArtifactGeneticTreatment",
+                        through="pertdb.ArtifactGeneticTreatment",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1365,7 +1365,7 @@ class Migration(migrations.Migration):
             model_name="combinationtreatment",
             name="genetics",
             field=models.ManyToManyField(
-                related_name="genetic_treatments", to="wetlab.genetictreatment"
+                related_name="genetic_treatments", to="pertdb.genetictreatment"
             ),
         ),
         migrations.AddField(
@@ -1375,7 +1375,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.genetictreatment",
+                to="pertdb.genetictreatment",
             ),
         ),
         migrations.CreateModel(
@@ -1428,7 +1428,7 @@ class Migration(migrations.Migration):
                 (
                     "biosamples",
                     models.ManyToManyField(
-                        related_name="techsamples", to="wetlab.biosample"
+                        related_name="techsamples", to="pertdb.biosample"
                     ),
                 ),
                 (
@@ -1525,7 +1525,7 @@ class Migration(migrations.Migration):
                         blank=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="links_artifact",
-                        to="wetlab.techsample",
+                        to="pertdb.techsample",
                     ),
                 ),
             ],
@@ -1573,7 +1573,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="treatment_targets",
-                        through="wetlab.ArtifactTreatmentTarget",
+                        through="pertdb.ArtifactTreatmentTarget",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1626,21 +1626,21 @@ class Migration(migrations.Migration):
             model_name="genetictreatment",
             name="targets",
             field=models.ManyToManyField(
-                related_name="genetic_targets", to="wetlab.treatmenttarget"
+                related_name="genetic_targets", to="pertdb.treatmenttarget"
             ),
         ),
         migrations.AddField(
             model_name="environmentaltreatment",
             name="targets",
             field=models.ManyToManyField(
-                related_name="environmental_targets", to="wetlab.treatmenttarget"
+                related_name="environmental_targets", to="pertdb.treatmenttarget"
             ),
         ),
         migrations.AddField(
             model_name="compoundtreatment",
             name="targets",
             field=models.ManyToManyField(
-                related_name="compound_targets", to="wetlab.treatmenttarget"
+                related_name="compound_targets", to="pertdb.treatmenttarget"
             ),
         ),
         migrations.AddField(
@@ -1650,7 +1650,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.treatmenttarget",
+                to="pertdb.treatmenttarget",
             ),
         ),
         migrations.CreateModel(
@@ -1700,7 +1700,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="wells",
-                        through="wetlab.ArtifactWell",
+                        through="pertdb.ArtifactWell",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1739,7 +1739,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.well",
+                to="pertdb.well",
             ),
         ),
     ]

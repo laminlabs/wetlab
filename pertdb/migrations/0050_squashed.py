@@ -15,47 +15,47 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     replaces = [
-        ("wetlab", "0001_initial_squashed_0012"),
-        ("wetlab", "0013_import_legacy_data"),
-        ("wetlab", "0014_rename_species_biosample_organism"),
-        ("wetlab", "0015_rename_files_biosample_artifacts_and_more"),
-        ("wetlab", "0016_rename_datasets_biosample_collections_and_more"),
-        ("wetlab", "0017_remove_biosample_artifacts"),
-        ("wetlab", "0018_well_created_at_well_created_by_well_updated_at"),
-        ("wetlab", "0018_squashed"),
-        ("wetlab", "0019_alter_treatment_system"),
-        ("wetlab", "0020_treatmenttarget_pathways_treatmenttarget_proteins_and_more"),
-        ("wetlab", "0021_alter_compoundtreatment_duration_unit_and_more"),
-        ("wetlab", "0022_remove_experiment_experiment_type_and_more"),
-        ("wetlab", "0023_compoundtreatment_duration_and_more"),
-        ("wetlab", "0024_compound_chembl_id"),
-        ("wetlab", "0025_alter_artifactbiosample_artifact_and_more"),
-        ("wetlab", "0025_squashed"),
-        ("wetlab", "0026_alter_biosample_artifacts_alter_techsample_artifacts"),
-        ("wetlab", "0027_rename_treatment_add_donor"),
-        ("wetlab", "0028_remove_combinationperturbation_compounds_and_more"),
-        ("wetlab", "0029_artifactbiologic_biologic_artifactbiologic_biologic"),
-        ("wetlab", "0030_lamindbv1"),
-        ("wetlab", "0031_alter_biologic_space_alter_biosample_space_and_more"),
-        ("wetlab", "0032_rename_aux_biologic__aux_rename_aux_biosample__aux_and_more"),
-        ("wetlab", "0033_alter_biologic__aux_alter_biosample__aux_and_more"),
-        ("wetlab", "0034_lamindbv1_part6"),
-        ("wetlab", "0035_alter_biologic_targets_alter_compound_name_and_more"),
-        ("wetlab", "0036_alter_artifactbiologic_options_and_more"),
-        ("wetlab", "0037_rename__branch_code_biologic_branch_and_more"),
-        ("wetlab", "0038_alter_biologic_branch_alter_biologic_space_and_more"),
-        ("wetlab", "0039_alter_biologic_description_alter_biologic_synonyms_and_more"),
-        ("wetlab", "0040_compound_canonical_smiles_compound_inchikey_and_more"),
-        ("wetlab", "0041_alter_artifactbiologic_options_and_more"),
-        ("wetlab", "0042_biologic_page_biosample_page_and_more"),
-        ("wetlab", "0043_biologic_is_locked_biosample_is_locked_and_more"),
-        ("wetlab", "0044_alter_biologic_is_locked_alter_biosample_is_locked_and_more"),
-        ("wetlab", "0045_remove_biologic_page_remove_biosample_page_and_more"),
-        ("wetlab", "0046_artifactgeneticperturbation_wetlab_arti_artifac_8731fa_idx"),
-        ("wetlab", "0047_artifactperturbationtarget_wetlab_arti_artifac_2674c5_idx"),
-        ("wetlab", "0048_remove_artifactbiologic_feature_ref_is_name_and_more"),
-        ("wetlab", "0049_remove_biosample_artifacts_and_more"),
-        ("wetlab", "0050_compoundperturbation_abbr_and_more"),
+        ("pertdb", "0001_initial_squashed_0012"),
+        ("pertdb", "0013_import_legacy_data"),
+        ("pertdb", "0014_rename_species_biosample_organism"),
+        ("pertdb", "0015_rename_files_biosample_artifacts_and_more"),
+        ("pertdb", "0016_rename_datasets_biosample_collections_and_more"),
+        ("pertdb", "0017_remove_biosample_artifacts"),
+        ("pertdb", "0018_well_created_at_well_created_by_well_updated_at"),
+        ("pertdb", "0018_squashed"),
+        ("pertdb", "0019_alter_treatment_system"),
+        ("pertdb", "0020_treatmenttarget_pathways_treatmenttarget_proteins_and_more"),
+        ("pertdb", "0021_alter_compoundtreatment_duration_unit_and_more"),
+        ("pertdb", "0022_remove_experiment_experiment_type_and_more"),
+        ("pertdb", "0023_compoundtreatment_duration_and_more"),
+        ("pertdb", "0024_compound_chembl_id"),
+        ("pertdb", "0025_alter_artifactbiosample_artifact_and_more"),
+        ("pertdb", "0025_squashed"),
+        ("pertdb", "0026_alter_biosample_artifacts_alter_techsample_artifacts"),
+        ("pertdb", "0027_rename_treatment_add_donor"),
+        ("pertdb", "0028_remove_combinationperturbation_compounds_and_more"),
+        ("pertdb", "0029_artifactbiologic_biologic_artifactbiologic_biologic"),
+        ("pertdb", "0030_lamindbv1"),
+        ("pertdb", "0031_alter_biologic_space_alter_biosample_space_and_more"),
+        ("pertdb", "0032_rename_aux_biologic__aux_rename_aux_biosample__aux_and_more"),
+        ("pertdb", "0033_alter_biologic__aux_alter_biosample__aux_and_more"),
+        ("pertdb", "0034_lamindbv1_part6"),
+        ("pertdb", "0035_alter_biologic_targets_alter_compound_name_and_more"),
+        ("pertdb", "0036_alter_artifactbiologic_options_and_more"),
+        ("pertdb", "0037_rename__branch_code_biologic_branch_and_more"),
+        ("pertdb", "0038_alter_biologic_branch_alter_biologic_space_and_more"),
+        ("pertdb", "0039_alter_biologic_description_alter_biologic_synonyms_and_more"),
+        ("pertdb", "0040_compound_canonical_smiles_compound_inchikey_and_more"),
+        ("pertdb", "0041_alter_artifactbiologic_options_and_more"),
+        ("pertdb", "0042_biologic_page_biosample_page_and_more"),
+        ("pertdb", "0043_biologic_is_locked_biosample_is_locked_and_more"),
+        ("pertdb", "0044_alter_biologic_is_locked_alter_biosample_is_locked_and_more"),
+        ("pertdb", "0045_remove_biologic_page_remove_biosample_page_and_more"),
+        ("pertdb", "0046_artifactgeneticperturbation_pertdb_arti_artifac_8731fa_idx"),
+        ("pertdb", "0047_artifactperturbationtarget_pertdb_arti_artifac_2674c5_idx"),
+        ("pertdb", "0048_remove_artifactbiologic_feature_ref_is_name_and_more"),
+        ("pertdb", "0049_remove_biosample_artifacts_and_more"),
+        ("pertdb", "0050_compoundperturbation_abbr_and_more"),
     ]
 
     dependencies = [
@@ -552,7 +552,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="biologics",
-                        through="wetlab.ArtifactBiologic",
+                        through="pertdb.ArtifactBiologic",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -630,7 +630,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.biologic",
+                to="pertdb.biologic",
             ),
         ),
         migrations.CreateModel(
@@ -710,7 +710,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="combination_perturbations",
-                        through="wetlab.ArtifactCombinationPerturbation",
+                        through="pertdb.ArtifactCombinationPerturbation",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -782,7 +782,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.combinationperturbation",
+                to="pertdb.combinationperturbation",
             ),
         ),
         migrations.CreateModel(
@@ -928,7 +928,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="compounds",
-                        through="wetlab.ArtifactCompound",
+                        through="pertdb.ArtifactCompound",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -958,7 +958,7 @@ class Migration(migrations.Migration):
                 (
                     "parents",
                     models.ManyToManyField(
-                        related_name="children", to="wetlab.compound"
+                        related_name="children", to="pertdb.compound"
                     ),
                 ),
                 (
@@ -1010,7 +1010,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.compound",
+                to="pertdb.compound",
             ),
         ),
         migrations.CreateModel(
@@ -1106,7 +1106,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="compound_perturbations",
-                        through="wetlab.ArtifactCompoundPerturbation",
+                        through="pertdb.ArtifactCompoundPerturbation",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1129,7 +1129,7 @@ class Migration(migrations.Migration):
                         default=None,
                         null=True,
                         on_delete=django.db.models.deletion.PROTECT,
-                        to="wetlab.compound",
+                        to="pertdb.compound",
                     ),
                 ),
                 (
@@ -1186,7 +1186,7 @@ class Migration(migrations.Migration):
             name="compound_perturbations",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                to="wetlab.compoundperturbation",
+                to="pertdb.compoundperturbation",
             ),
         ),
         migrations.AddField(
@@ -1196,7 +1196,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.compoundperturbation",
+                to="pertdb.compoundperturbation",
             ),
         ),
         migrations.CreateModel(
@@ -1302,7 +1302,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="environmental_perturbations",
-                        through="wetlab.ArtifactEnvironmentalPerturbation",
+                        through="pertdb.ArtifactEnvironmentalPerturbation",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1372,7 +1372,7 @@ class Migration(migrations.Migration):
             name="environmental_perturbations",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                to="wetlab.environmentalperturbation",
+                to="pertdb.environmentalperturbation",
             ),
         ),
         migrations.AddField(
@@ -1382,7 +1382,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.environmentalperturbation",
+                to="pertdb.environmentalperturbation",
             ),
         ),
         migrations.CreateModel(
@@ -1476,7 +1476,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="genetic_perturbations",
-                        through="wetlab.ArtifactGeneticPerturbation",
+                        through="pertdb.ArtifactGeneticPerturbation",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1546,7 +1546,7 @@ class Migration(migrations.Migration):
             name="genetic_perturbations",
             field=models.ManyToManyField(
                 related_name="combination_perturbations",
-                to="wetlab.geneticperturbation",
+                to="pertdb.geneticperturbation",
             ),
         ),
         migrations.AddField(
@@ -1556,7 +1556,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.geneticperturbation",
+                to="pertdb.geneticperturbation",
             ),
         ),
         migrations.CreateModel(
@@ -1636,7 +1636,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="perturbation_targets",
-                        through="wetlab.ArtifactPerturbationTarget",
+                        through="pertdb.ArtifactPerturbationTarget",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -1723,7 +1723,7 @@ class Migration(migrations.Migration):
             model_name="geneticperturbation",
             name="targets",
             field=models.ManyToManyField(
-                related_name="genetic_perturbations", to="wetlab.perturbationtarget"
+                related_name="genetic_perturbations", to="pertdb.perturbationtarget"
             ),
         ),
         migrations.AddField(
@@ -1731,21 +1731,21 @@ class Migration(migrations.Migration):
             name="targets",
             field=models.ManyToManyField(
                 related_name="environmental_perturbations",
-                to="wetlab.perturbationtarget",
+                to="pertdb.perturbationtarget",
             ),
         ),
         migrations.AddField(
             model_name="compound",
             name="targets",
             field=models.ManyToManyField(
-                related_name="compounds", to="wetlab.perturbationtarget"
+                related_name="compounds", to="pertdb.perturbationtarget"
             ),
         ),
         migrations.AddField(
             model_name="biologic",
             name="targets",
             field=models.ManyToManyField(
-                related_name="biologics", to="wetlab.perturbationtarget"
+                related_name="biologics", to="pertdb.perturbationtarget"
             ),
         ),
         migrations.AddField(
@@ -1755,14 +1755,14 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.perturbationtarget",
+                to="pertdb.perturbationtarget",
             ),
         ),
         migrations.AddIndex(
             model_name="artifactgeneticperturbation",
             index=models.Index(
                 fields=["artifact", "geneticperturbation"],
-                name="wetlab_arti_artifac_8731fa_idx",
+                name="pertdb_arti_artifac_8731fa_idx",
             ),
         ),
         migrations.AlterUniqueTogether(
@@ -1773,7 +1773,7 @@ class Migration(migrations.Migration):
             model_name="artifactperturbationtarget",
             index=models.Index(
                 fields=["artifact", "perturbationtarget"],
-                name="wetlab_arti_artifac_2674c5_idx",
+                name="pertdb_arti_artifac_2674c5_idx",
             ),
         ),
     ]

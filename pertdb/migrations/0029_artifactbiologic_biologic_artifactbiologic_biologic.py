@@ -10,7 +10,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0028_remove_combinationperturbation_compounds_and_more"),
+        ("pertdb", "0028_remove_combinationperturbation_compounds_and_more"),
     ]
 
     operations = [
@@ -145,7 +145,7 @@ class Migration(migrations.Migration):
                     "artifacts",
                     models.ManyToManyField(
                         related_name="biologics",
-                        through="wetlab.ArtifactBiologic",
+                        through="pertdb.ArtifactBiologic",
                         to="lamindb.artifact",
                     ),
                 ),
@@ -179,7 +179,7 @@ class Migration(migrations.Migration):
                 (
                     "targets",
                     models.ManyToManyField(
-                        related_name="biologic_targets", to="wetlab.perturbationtarget"
+                        related_name="biologic_targets", to="pertdb.perturbationtarget"
                     ),
                 ),
             ],
@@ -195,7 +195,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="links_artifact",
-                to="wetlab.biologic",
+                to="pertdb.biologic",
             ),
         ),
     ]

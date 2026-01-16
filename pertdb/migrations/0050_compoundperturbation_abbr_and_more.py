@@ -7,7 +7,7 @@ from django.db import migrations
 
 
 def re_encode_uids(apps, schema_editor):
-    """Re-encode UIDs for all wetlab models in batches of 10k using Python."""
+    """Re-encode UIDs for all pertdb models in batches of 10k using Python."""
     from bionty.uids import ontology
     from django.db import transaction
 
@@ -26,7 +26,7 @@ def re_encode_uids(apps, schema_editor):
     ]
 
     for model_name, ontology_id_field, name_field in models_config:
-        Model = apps.get_model("wetlab", model_name)
+        Model = apps.get_model("pertdb", model_name)
 
         total_count = Model.objects.count()
         if total_count == 0:
@@ -152,7 +152,7 @@ def re_encode_uids(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ("bionty", "0064_alter_cellline_uid_alter_cellmarker_uid_and_more"),
-        ("wetlab", "0049_remove_biosample_artifacts_and_more"),
+        ("pertdb", "0049_remove_biosample_artifacts_and_more"),
     ]
 
     operations = [

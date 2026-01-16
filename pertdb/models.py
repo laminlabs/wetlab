@@ -50,7 +50,7 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
 
     Example::
 
-        import wetlab as wl
+        import pertdb as wl
 
         compound = wl.Compound(
             name="Navitoclax",
@@ -61,7 +61,7 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, HasOntologyId.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str = TextField(
         db_index=True
@@ -230,7 +230,7 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
 
 class ArtifactCompound(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_compound")
@@ -246,7 +246,7 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
     Example::
 
         import bionty as bt
-        import wetlab as wl
+        import pertdb as wl
 
         gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
         gene_2 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000005").save()
@@ -256,7 +256,7 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str = CharField(db_index=True)
     """Name of the perturbation target."""
@@ -282,7 +282,7 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactPerturbationTarget(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
         indexes = [
             models.Index(fields=["artifact", "perturbationtarget"]),
         ]
@@ -308,14 +308,14 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Args:
         name: The name of the genetic perturbation.
-        system: The :class:`~wetlab.GeneticPerturbationSystem` used to apply the genetic perturbation.
+        system: The :class:`~pertdb.GeneticPerturbationSystem` used to apply the genetic perturbation.
                 Must be one of 'CRISPR Cas9', 'CRISPRi', 'CRISPRa', 'shRNA', 'siRNA', 'transgene', 'transient transfection'.
         on_target_score: The on-target score, indicating the likelihood of the guide RNA successfully targeting the intended DNA sequence.
         off_target_score: The off-target score, indicating the likelihood of the guide RNA targeting unintended DNA sequences.
 
     Example::
 
-        import wetlab as wl
+        import pertdb as wl
 
         sicke_cell_perturbation = wl.GeneticPerturbation(
             system="CRISPR Cas9",
@@ -328,7 +328,7 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str = CharField(db_index=True)
     """Name of the Genetic perturbation."""
@@ -337,7 +337,7 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
         db_index=True,
         null=True,
     )
-    """:class:`~wetlab.GeneticPerturbationSystem` used for the genetic perturbation."""
+    """:class:`~pertdb.GeneticPerturbationSystem` used for the genetic perturbation."""
     sequence: str | None = models.TextField(null=True, db_index=True)
     """Sequence of the perturbation."""
     on_target_score: float | None = FloatField(null=True, default=None, db_index=True)
@@ -358,7 +358,7 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactGeneticPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
         # see https://laminlabs.slack.com/archives/C03P6D8U1PC/p1761756966506899
         indexes = [
             models.Index(fields=["artifact", "geneticperturbation"]),
@@ -385,7 +385,7 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import wetlab as wl
+        import pertdb as wl
 
         biologic = wl.Biologic(
             name="IFNG",
@@ -395,7 +395,7 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str = CharField(db_index=True)
     """Name of the compound."""
@@ -439,7 +439,7 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactBiologic(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(Artifact, CASCADE, related_name="links_biologic")
@@ -457,7 +457,7 @@ class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import wetlab as wl
+        import pertdb as wl
 
         aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
             name="Antibiotic cocktail",
@@ -466,7 +466,7 @@ class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str = CharField(db_index=True)
     """Name of the compound perturbation."""
@@ -488,7 +488,7 @@ class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactCompoundPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
@@ -518,7 +518,7 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import wetlab as wl
+        import pertdb as wl
 
         acid_perturbation = EnvironmentalPerturbation(
             name='Acid perturbation',
@@ -530,7 +530,7 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str = CharField(db_index=True)
     """Name of the environmental perturbation."""
@@ -556,7 +556,7 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(
@@ -577,8 +577,8 @@ class ArtifactEnvironmentalPerturbation(BaseSQLRecord, IsLink, TracksRun):
 class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
     """Combination of several perturbations.
 
-    CombinationPerturbations model several perturbations jointly such as one or more :class:`wetlab.GeneticPerturbation`,
-    :class:`wetlab.CompoundPerturbation`, and :class:`wetlab.EnvironmentalPerturbation` records.
+    CombinationPerturbations model several perturbations jointly such as one or more :class:`pertdb.GeneticPerturbation`,
+    :class:`pertdb.CompoundPerturbation`, and :class:`pertdb.EnvironmentalPerturbation` records.
 
     Args:
         name: A name of the CombinationPerturbation that summarizes all applied perturbations.
@@ -586,7 +586,7 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import wetlab as wl
+        import pertdb as wl
 
         sc_perturbation = wl.GeneticPerturbation(
             system="CRISPR Cas9",
@@ -614,22 +614,22 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     class Meta(BioRecord.Meta, TracksRun.Meta, TracksUpdates.Meta):
         abstract = False
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     name: str | None = CharField(db_index=True)
     """Name of the perturbation."""
     genetic_perturbations: GeneticPerturbation = models.ManyToManyField(
         GeneticPerturbation, related_name="combination_perturbations"
     )
-    """:class:`wetlab.GeneticPerturbation` perturbations."""
+    """:class:`pertdb.GeneticPerturbation` perturbations."""
     compound_perturbations: CompoundPerturbation = models.ManyToManyField(
         CompoundPerturbation, related_name="combination_perturbations"
     )
-    """:class:`wetlab.CompoundPerturbation` perturbations."""
+    """:class:`pertdb.CompoundPerturbation` perturbations."""
     environmental_perturbations: EnvironmentalPerturbation = models.ManyToManyField(
         EnvironmentalPerturbation, related_name="combination_perturbations"
     )
-    """:class:`wetlab.EnvironmentalPerturbation` perturbations."""
+    """:class:`pertdb.EnvironmentalPerturbation` perturbations."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
         through="ArtifactCombinationperturbation",
@@ -648,7 +648,7 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
 
 class ArtifactCombinationPerturbation(BaseSQLRecord, IsLink, TracksRun):
     class Meta:
-        app_label = "wetlab"
+        app_label = "pertdb"
 
     id: int = models.BigAutoField(primary_key=True)
     artifact: Artifact = ForeignKey(

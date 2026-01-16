@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0034_lamindbv1_part6"),
+        ("pertdb", "0034_lamindbv1_part6"),
     ]
 
     operations = [
@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name="biologic",
             name="targets",
             field=models.ManyToManyField(
-                related_name="biologics", to="wetlab.perturbationtarget"
+                related_name="biologics", to="pertdb.perturbationtarget"
             ),
         ),
         migrations.AlterField(
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             model_name="compoundperturbation",
             name="targets",
             field=models.ManyToManyField(
-                related_name="compound_perturbations", to="wetlab.perturbationtarget"
+                related_name="compound_perturbations", to="pertdb.perturbationtarget"
             ),
         ),
         migrations.AlterField(
@@ -36,14 +36,14 @@ class Migration(migrations.Migration):
             name="targets",
             field=models.ManyToManyField(
                 related_name="environmental_perturbations",
-                to="wetlab.perturbationtarget",
+                to="pertdb.perturbationtarget",
             ),
         ),
         migrations.AlterField(
             model_name="geneticperturbation",
             name="targets",
             field=models.ManyToManyField(
-                related_name="genetic_perturbations", to="wetlab.perturbationtarget"
+                related_name="genetic_perturbations", to="pertdb.perturbationtarget"
             ),
         ),
     ]

@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
     dependencies = [
         ("lamindb", "0124_page_artifact_page_collection_page_feature_page_and_more"),
-        ("wetlab", "0041_alter_artifactbiologic_options_and_more"),
+        ("pertdb", "0041_alter_artifactbiologic_options_and_more"),
     ]
 
     # this migration was later reverted, so we do not need to run it

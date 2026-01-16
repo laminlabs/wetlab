@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("wetlab", "0029_artifactbiologic_biologic_artifactbiologic_biologic"),
+        ("pertdb", "0029_artifactbiologic_biologic_artifactbiologic_biologic"),
     ]
 
     operations = [

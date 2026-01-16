@@ -8,18 +8,18 @@ from django.db import migrations
 def rename_branch_columns(apps, schema_editor):
     """Rename _branch_code to branch_id across all models."""
     tables = [
-        "wetlab_biologic",
-        "wetlab_biosample",
-        "wetlab_combinationperturbation",
-        "wetlab_compound",
-        "wetlab_compoundperturbation",
-        "wetlab_donor",
-        "wetlab_environmentalperturbation",
-        "wetlab_experiment",
-        "wetlab_geneticperturbation",
-        "wetlab_perturbationtarget",
-        "wetlab_techsample",
-        "wetlab_well",
+        "pertdb_biologic",
+        "pertdb_biosample",
+        "pertdb_combinationperturbation",
+        "pertdb_compound",
+        "pertdb_compoundperturbation",
+        "pertdb_donor",
+        "pertdb_environmentalperturbation",
+        "pertdb_experiment",
+        "pertdb_geneticperturbation",
+        "pertdb_perturbationtarget",
+        "pertdb_techsample",
+        "pertdb_well",
     ]
 
     with schema_editor.connection.cursor() as cursor:
@@ -46,7 +46,7 @@ def rename_branch_columns(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ("lamindb", "0161_rename_branch_code_to_branch_id"),
-        ("wetlab", "0047_artifactperturbationtarget_wetlab_arti_artifac_2674c5_idx"),
+        ("pertdb", "0047_artifactperturbationtarget_pertdb_arti_artifac_2674c5_idx"),
     ]
 
     operations = [

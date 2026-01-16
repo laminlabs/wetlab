@@ -1,5 +1,5 @@
+import pertdb as wl
 import pytest
-import wetlab as wl
 
 
 def test_smiles_normalization_on_create():
