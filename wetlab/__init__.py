@@ -45,7 +45,13 @@ Types:
 __version__ = "2.0.0"
 
 from lamin_utils import logger
-from pertdb import *  # noqa:F403
+
+try:
+    from pertdb import *  # noqa:F403
+except ImportError:
+    logger.warning(
+        "pertdb is not installed. please install it with `pip install pertdb`"
+    )
 
 logger.warning(
     "please `import pertdb` instead of `import wetlab`. The wetlab module was renamed. Everything else stays the same."
