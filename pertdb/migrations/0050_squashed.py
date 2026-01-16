@@ -119,6 +119,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactbiologic"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -177,6 +178,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactcombinationperturbation"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -235,6 +237,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactcompound"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -293,6 +296,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactcompoundperturbation"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -351,6 +355,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactenvironmentalperturbation"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -409,6 +414,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactgeneticperturbation"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -467,6 +473,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={"db_table": "wetlab_artifactperturbationtarget"},
             bases=(lamindb.models.sqlrecord.IsLink, models.Model),
         ),
         migrations.CreateModel(
@@ -620,6 +627,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_biologic",
             },
             bases=(models.Model, lamindb.models.can_curate.CanCurate),
         ),
@@ -772,6 +780,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_combinationperturbation",
             },
             bases=(models.Model, lamindb.models.can_curate.CanCurate),
         ),
@@ -996,6 +1005,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_compound",
             },
             bases=(
                 models.Model,
@@ -1178,6 +1188,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_compoundperturbation",
             },
             bases=(models.Model, lamindb.models.can_curate.CanCurate),
         ),
@@ -1364,6 +1375,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_environmentalperturbation",
             },
             bases=(models.Model, lamindb.models.can_curate.CanCurate),
         ),
@@ -1538,6 +1550,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_geneticperturbation",
             },
             bases=(models.Model, lamindb.models.can_curate.CanCurate),
         ),
@@ -1716,6 +1729,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+                "db_table": "wetlab_perturbationtarget",
             },
             bases=(models.Model, lamindb.models.can_curate.CanCurate),
         ),
