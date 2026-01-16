@@ -42,17 +42,35 @@ Types:
 
 """
 
-__version__ = "2.0.1"
+__version__ = "2.0.0"
 
-from lamin_utils import logger
+from lamindb_setup import _check_instance_setup
 
-try:
-    from pertdb import *  # noqa:F403
-except ImportError:
-    logger.warning(
-        "pertdb is not installed. please install it with `pip install pertdb`"
-    )
+from .types import BiologicType, GeneticPerturbationSystem
 
-logger.warning(
-    "please `import pertdb` instead of `import wetlab`. The wetlab module was renamed. Everything else stays the same."
+_check_instance_setup(from_module="wetlab")
+
+
+from .models import (
+    Biologic,
+    CombinationPerturbation,
+    Compound,
+    CompoundPerturbation,
+    EnvironmentalPerturbation,
+    GeneticPerturbation,
+    PerturbationTarget,
 )
+
+__all__ = [
+    # registries
+    "Biologic",
+    "CombinationPerturbation",
+    "Compound",
+    "CompoundPerturbation",
+    "EnvironmentalPerturbation",
+    "GeneticPerturbation",
+    "PerturbationTarget",
+    # helper types
+    "BiologicType",
+    "GeneticPerturbationSystem",
+]
