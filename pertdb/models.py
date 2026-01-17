@@ -50,9 +50,9 @@ class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
 
     Example::
 
-        import pertdb as wl
+        import pertdb
 
-        compound = wl.Compound(
+        compound = pertdb.Compound(
             name="Navitoclax",
             ontology_id="CHEMBL443684",
             smiles="[H][C@@](CCN1CCOCC1)(CSC1=CC=CC=C1)NC1=C(C=C(C=C1)S(=O)(=O)NC(=O)C1=CC=C(C=C1)N1CCN(CC2=C(CCC(C)(C)C2)C2=CC=C(Cl)C=C2)CC1)S(=O)(=O)C(F)(F)F"
@@ -250,11 +250,11 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
     Example::
 
         import bionty as bt
-        import pertdb as wl
+        import pertdb
 
         gene_1 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000003").save()
         gene_2 = bt.Gene.from_source(ensembl_gene_id="ENSG00000000005").save()
-        targets = wl.PerturbationTarget(name="TSPAN6_TNMD").save()
+        targets = pertdb.PerturbationTarget(name="TSPAN6_TNMD").save()
         targets.genes.set([gene_1, gene_2])
     """
 
@@ -323,9 +323,9 @@ class GeneticPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import pertdb as wl
+        import pertdb
 
-        sicke_cell_perturbation = wl.GeneticPerturbation(
+        sicke_cell_perturbation = pertdb.GeneticPerturbation(
             system="CRISPR Cas9",
             name="Hemoglobin Sickle Cell Perturbation",
             sequence="AGCTGACCGTGA",
@@ -397,9 +397,9 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import pertdb as wl
+        import pertdb
 
-        biologic = wl.Biologic(
+        biologic = pertdb.Biologic(
             name="IFNG",
             type="cytokine",
         ).save()
@@ -473,9 +473,9 @@ class CompoundPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import pertdb as wl
+        import pertdb
 
-        aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
+        aspirin_perturbation = compound_perturbation = pertdb.CompoundPerturbation(
             name="Antibiotic cocktail",
         ).save()
     """
@@ -538,7 +538,7 @@ class EnvironmentalPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import pertdb as wl
+        import pertdb
 
         acid_perturbation = EnvironmentalPerturbation(
             name='Acid perturbation',
@@ -610,26 +610,26 @@ class CombinationPerturbation(BioRecord, TracksRun, TracksUpdates):
 
     Example::
 
-        import pertdb as wl
+        import pertdb
 
-        sc_perturbation = wl.GeneticPerturbation(
+        sc_perturbation = pertdb.GeneticPerturbation(
             system="CRISPR Cas9",
             name="Hemoglobin Sickle Cell perturbation",
             sequence="AGCTGACCGTGA",
         ).save()
 
-        cftr_perturbation = wl.GeneticPerturbation(
+        cftr_perturbation = pertdb.GeneticPerturbation(
             system="CRISPR Cas9",
             name="Cystic Fibrosis CFTR Correction",
             sequence="TTGGTGGTGAACT",
         ).save()
 
-        aspirin_perturbation = compound_perturbation = wl.CompoundPerturbation(
+        aspirin_perturbation = compound_perturbation = pertdb.CompoundPerturbation(
             name="Aspirin",
             pubchem_id=2244
         ).save()
 
-        comb_perturbation = wl.CombinationPerturbation(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
+        comb_perturbation = pertdb.CombinationPerturbation(name="Hemoglobin Sickle Cell and CFTR Correction with Aspirin",
             description="Targets both sickle cell anemia and cystic fibrosis, using CRISPR Cas9 and Aspirin for anti-inflammatory support."
         ).save()
         comb_perturbation.genetics.set([sc_perturbation, cftr_perturbation])
