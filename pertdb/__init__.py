@@ -1,19 +1,16 @@
-"""Basic pertdb entities [`source <https://github.com/laminlabs/pertdb/blob/main/pertdb/models.py>`__].
+"""Registries for perturbations and their targets [`source <https://github.com/laminlabs/pertdb/blob/main/pertdb/models.py>`__].
 
-Install and mount `pertdb` in a new instance:
+Install and mount `pertdb` in a new instance::
 
->>> pip install pertdb
->>> lamin init --storage ./test-pertdb --modules bionty,pertdb
+    pip install pertdb
+    lamin init --storage ./test-pertdb --modules bionty,pertdb
 
-Import the package:
+Import the package and create an object::
 
->>> import pertdb
+    import pertdb
+    biologic = pertdb.Biologic(name="IFNG").save()
 
-Create records:
-
->>> biologic = pertdb.Biologic(name="IFNG").save()
-
-Perturbation registries:
+Main registries:
 
 .. autosummary::
    :toctree: .
@@ -32,7 +29,7 @@ Auxiliary registries:
 
    PerturbationTarget
 
-Types:
+Helper types:
 
 .. autosummary::
    :toctree: .
