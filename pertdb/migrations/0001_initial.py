@@ -1818,9 +1818,7 @@ except Exception:
 
 
 class Migration(migrations.Migration):
-    replaces = [
-        ("pertdb", "0001_initial"),
-    ]
+    initial = True
 
     dependencies = [
         ("bionty", "0064_squashed"),
