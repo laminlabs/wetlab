@@ -10,19 +10,57 @@ import lamindb.models.can_curate
 import lamindb.models.has_parents
 import lamindb.models.run
 import lamindb.models.sqlrecord
-from django.db import migrations, models
+from django.core.exceptions import ImproperlyConfigured
+from django.db import connection, migrations, models
 
 
-class Migration(migrations.Migration):
-    replaces = [
-        ("pertdb", "0001_initial"),
-    ]
+def check_wetlab_migration_status(apps, schema_editor):
+    """Check wetlab migration status and raise error if migration is needed."""
+    with connection.cursor() as cursor:
+        # Check if any wetlab migrations exist
+        cursor.execute(
+            "SELECT name FROM django_migrations WHERE app = 'wetlab' ORDER BY id"
+        )
+        wetlab_migrations = [row[0] for row in cursor.fetchall()]
 
-    dependencies = [
-        ("bionty", "0064_squashed"),
-    ]
+        if wetlab_migrations:
+            # Check if wetlab migration 0049 exists
+            if "0049_remove_biosample_artifacts_and_more" in wetlab_migrations:
+                # Migration 0049 exists, so wetlab is up to date - this is fine
+                return
+            else:
+                # Wetlab migrations exist but not 0049 - need to migrate first
+                raise ImproperlyConfigured(
+                    "Found wetlab migrations but not up to version 2. "
+                    "Please install wetlab and migrate up to v2 before migrating pertdb."
+                )
 
-    operations = [
+
+def get_operations():
+    """Get migration operations, checking if wetlab migration 0049 exists first."""
+    try:
+        with connection.cursor() as cursor:
+            # Check if wetlab migration 0049 exists
+            cursor.execute(
+                "SELECT 1 FROM django_migrations WHERE app = 'wetlab' AND name = '0049_remove_biosample_artifacts_and_more'"
+            )
+            has_wetlab_0049 = cursor.fetchone() is not None
+
+            if has_wetlab_0049:
+                # If wetlab 0049 exists, return empty operations (no-op migration)
+                # because the tables already exist from wetlab
+                return []
+    except Exception:
+        # If we can't check (e.g., table doesn't exist yet), proceed with normal operations
+        pass
+
+    # Return the normal operations list
+    return _get_normal_operations()
+
+
+def _get_normal_operations():
+    """Return the normal migration operations."""
+    return [
         migrations.CreateModel(
             name="ArtifactBiologic",
             fields=[
@@ -1751,3 +1789,41 @@ class Migration(migrations.Migration):
             ),
         ),
     ]
+
+
+# Build operations list conditionally based on wetlab migration status
+_normal_operations = _get_normal_operations()
+
+# Try to check if wetlab 0049 exists - if so, skip all operations
+try:
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT 1 FROM django_migrations WHERE app = 'wetlab' AND name = '0049_remove_biosample_artifacts_and_more'"
+        )
+        has_wetlab_0049 = cursor.fetchone() is not None
+        if has_wetlab_0049:
+            # If wetlab 0049 exists, tables already exist - use empty operations
+            _operations = []
+        else:
+            # Add RunPython check as first operation, then normal operations
+            _operations = [
+                migrations.RunPython(check_wetlab_migration_status)
+            ] + _normal_operations
+except Exception:
+    # If we can't check (e.g., django_migrations table doesn't exist yet),
+    # use normal operations with the check
+    _operations = [
+        migrations.RunPython(check_wetlab_migration_status)
+    ] + _normal_operations
+
+
+class Migration(migrations.Migration):
+    replaces = [
+        ("pertdb", "0001_initial"),
+    ]
+
+    dependencies = [
+        ("bionty", "0064_squashed"),
+    ]
+
+    operations = _operations
