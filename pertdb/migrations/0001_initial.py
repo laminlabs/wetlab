@@ -1774,7 +1774,7 @@ def _get_normal_operations():
             model_name="artifactgeneticperturbation",
             index=models.Index(
                 fields=["artifact", "geneticperturbation"],
-                name="pertdb_arti_artifac_8731fa_idx",
+                name="wetlab_arti_artifac_8731fa_idx",
             ),
         ),
         migrations.AlterUniqueTogether(
@@ -1785,7 +1785,7 @@ def _get_normal_operations():
             model_name="artifactperturbationtarget",
             index=models.Index(
                 fields=["artifact", "perturbationtarget"],
-                name="pertdb_arti_artifac_2674c5_idx",
+                name="wetlab_arti_artifac_2674c5_idx",
             ),
         ),
     ]
