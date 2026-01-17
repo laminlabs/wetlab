@@ -1,19 +1,16 @@
-"""Basic wetlab entities [`source <https://github.com/laminlabs/wetlab/blob/main/wetlab/models.py>`__].
+"""Registries for perturbations and their targets [`source <https://github.com/laminlabs/pertdb/blob/main/pertdb/models.py>`__].
 
-Install and mount `wetlab` in a new instance:
+Install and mount `pertdb` in a new instance::
 
->>> pip install wetlab
->>> lamin init --storage ./test-wetlab --modules bionty,wetlab
+    pip install pertdb
+    lamin init --storage ./test-pertdb --modules bionty,pertdb
 
-Import the package:
+Import the package and create an object::
 
->>> import wetlab as wl
+    import pertdb
+    biologic = pertdb.Biologic(name="IFNG").save()
 
-Create records:
-
->>> biologic = wl.Biologic(name="IFNG").save()
-
-Perturbation registries:
+Main registries:
 
 .. autosummary::
    :toctree: .
@@ -32,7 +29,7 @@ Auxiliary registries:
 
    PerturbationTarget
 
-Types:
+Helper types:
 
 .. autosummary::
    :toctree: .
@@ -48,7 +45,7 @@ from lamindb_setup import _check_instance_setup
 
 from .types import BiologicType, GeneticPerturbationSystem
 
-_check_instance_setup(from_module="wetlab")
+_check_instance_setup(from_module="pertdb")
 
 
 from .models import (

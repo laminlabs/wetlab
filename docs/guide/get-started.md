@@ -3,13 +3,13 @@
 Install all required dependencies:
 
 ```bash
-pip install wetlab
+pip install pertdb
 ```
 
 Init your instance
 
 ```bash
-lamin init --storage ./test-wetlab --modules bionty,wetlab
+lamin init --storage ./test-pertdb --modules bionty,pertdb
 ```
 
 Everything else works exactly as for any other schema module and the core registries.

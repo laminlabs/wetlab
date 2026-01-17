@@ -1,5 +1,5 @@
+import pertdb
 import pytest
-import wetlab as wl
 
 
 def test_smiles_normalization_on_create():
@@ -9,11 +9,11 @@ def test_smiles_normalization_on_create():
     """
 
     # Skip cleanly if RDKit isn't available in the test env
-    if not getattr(wl.models, "RDKIT_AVAILABLE", False):
+    if not getattr(pertdb.models, "RDKIT_AVAILABLE", False):
         pytest.skip("RDKit not available; skipping SMILES normalization tests.")
 
     salt_smiles = "CC(=O)[O-].[Na+]"  # sodium acetate (salted form)
-    c = wl.Compound(name="Sodium acetate (test)", smiles=salt_smiles)
+    c = pertdb.Compound(name="Sodium acetate (test)", smiles=salt_smiles)
     c.save()  # save() should ensure normalization has run
 
     assert c.canonical_smiles is not None
@@ -33,11 +33,11 @@ def test_smiles_normalization_on_update():
     """
     update_smiles() should reprocess and refresh canonical fields.
     """
-    if not getattr(wl.models, "RDKIT_AVAILABLE", False):
+    if not getattr(pertdb.models, "RDKIT_AVAILABLE", False):
         pytest.skip("RDKit not available; skipping SMILES normalization tests.")
 
     # Start with methane
-    c = wl.Compound(name="Update test", smiles="C")
+    c = pertdb.Compound(name="Update test", smiles="C")
     c.save()
     assert c.canonical_smiles == "C"
 
