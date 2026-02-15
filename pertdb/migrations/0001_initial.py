@@ -1794,7 +1794,8 @@ def _get_normal_operations():
 # Build operations list conditionally based on wetlab migration status
 _normal_operations = _get_normal_operations()
 
-# Try to check if wetlab 0049 exists - if so, skip all operations
+# If wetlab 0049 exists, tables already exist: update Django state only (no SQL).
+# Otherwise run full CreateModel operations (DB + state).
 try:
     with connection.cursor() as cursor:
         cursor.execute(
@@ -1802,10 +1803,14 @@ try:
         )
         has_wetlab_0049 = cursor.fetchone() is not None
         if has_wetlab_0049:
-            # If wetlab 0049 exists, tables already exist - use empty operations
-            _operations = []
+            _operations = [
+                migrations.RunPython(check_wetlab_migration_status),
+                migrations.SeparateDatabaseAndState(
+                    database_operations=[],
+                    state_operations=_normal_operations,
+                ),
+            ]
         else:
-            # Add RunPython check as first operation, then normal operations
             _operations = [
                 migrations.RunPython(check_wetlab_migration_status)
             ] + _normal_operations
