@@ -7,7 +7,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("lamindb", "0182_squashed"),
+        ("lamindb", "0183_squashed"),
         ("pertdb", "0001_initial"),
     ]
 
