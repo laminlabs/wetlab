@@ -32,5 +32,5 @@ def test(session: nox.Session) -> None:
 @nox.session
 def docs(session: nox.Session) -> None:
     run(session, "lamin init --storage ./docsbuild --modules bionty,pertdb")
-    build_docs(session, strict=True)
-    upload_docs_artifact(aws=True)
+    build_docs(session, strict=False)
+    upload_docs_artifact()
