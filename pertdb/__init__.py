@@ -39,7 +39,7 @@ Helper types:
 
 """
 
-__version__ = "2.1.1"
+__version__ = "2.2a1"
 
 from lamindb_setup import _check_instance_setup
 
