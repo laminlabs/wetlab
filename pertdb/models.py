@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import timedelta  # noqa
-from typing import overload
+from typing import TYPE_CHECKING, overload
 
 try:
     from rdkit import Chem, rdBase
@@ -17,10 +17,7 @@ except ImportError:
 
 from bionty.models import (
     BioRecord,
-    Gene,
     HasOntologyId,
-    Pathway,
-    Protein,
     Source,
 )
 from django.db import models
@@ -43,6 +40,9 @@ from lamindb.models import (
 )
 
 from .types import BiologicType, GeneticPerturbationSystem  # noqa
+
+if TYPE_CHECKING:
+    import bionty
 
 
 class Compound(BioRecord, HasOntologyId, TracksRun, TracksUpdates):
@@ -266,18 +266,18 @@ class PerturbationTarget(BioRecord, TracksRun, TracksUpdates):
 
     name: str = CharField(db_index=True)
     """Name of the perturbation target."""
-    genes: Gene = models.ManyToManyField(
+    genes: bionty.Gene = models.ManyToManyField(
         "bionty.Gene", related_name="perturbation_targets"
     )
     """Genes of the perturbation target, link to :class:`~bionty.Gene` records."""
-    pathways: Pathway = models.ManyToManyField(
+    pathways: bionty.Pathway = models.ManyToManyField(
         "bionty.Pathway", related_name="perturbation_targets"
     )
-    """Pathways of the perturbation target, link to :class:`bionty.Pathway` records."""
-    proteins: Protein = models.ManyToManyField(
+    """Pathways of the perturbation target, link to :class:`~bionty.Pathway` records."""
+    proteins: bionty.Protein = models.ManyToManyField(
         "bionty.Protein", related_name="perturbation_targets"
     )
-    """Proteins of the perturbation target, link to :class:`bionty.Protein` records."""
+    """Proteins of the perturbation target, link to :class:`~bionty.Protein` records."""
     artifacts: Artifact = models.ManyToManyField(
         Artifact,
         through="ArtifactperturbationTarget",
@@ -415,7 +415,7 @@ class Biologic(BioRecord, TracksRun, TracksUpdates):
     """Name of the compound."""
     type: BiologicType = CharField(max_length=32, db_index=True)
     """The type."""
-    proteins: Protein = models.ManyToManyField(
+    proteins: bionty.Protein = models.ManyToManyField(
         "bionty.Protein", related_name="biologics"
     )
     """Proteins associated with this biologic."""
